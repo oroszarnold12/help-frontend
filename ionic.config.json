@@ -1,0 +1,7 @@
+{
+  "name": "styoudent-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
