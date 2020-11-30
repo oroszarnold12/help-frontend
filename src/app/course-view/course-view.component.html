@@ -4,10 +4,31 @@
     [options]="options"
     (ionSlideDidChange)="ionSlideDidChange()"
   >
-    <ion-slide> Announcements </ion-slide>
-    <ion-slide> Assignment </ion-slide>
+    <ion-slide>
+      <div class="slide">
+        <h2>Announcements</h2>
+        <p>
+          {{ course.announcements[0].name }}
+        </p>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="slide">
+        <h2>Assignments</h2>
+        <p>
+          {{ course.assignments[0].name }}
+        </p>
+      </div>
+    </ion-slide>
     <ion-slide> Grades </ion-slide>
-    <ion-slide> Discussions </ion-slide>
+    <ion-slide>
+      <div class="slide">
+        <h2>Discussions</h2>
+        <p>
+          {{ course.discussions[0].name }}
+        </p>
+      </div>
+    </ion-slide>
     <ion-slide> Files </ion-slide>
     <ion-slide>
       <div class="slide">
