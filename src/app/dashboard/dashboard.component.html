@@ -1,15 +1,8 @@
-<ion-content>
-  <ion-grid>
+<ion-content class="content">
+  <ion-grid fixed="true">
     <ion-row wrap>
       <ion-col *ngFor="let course of courses">
-        <ion-card>
-          <ion-card-title>
-            {{ course.name }}
-          </ion-card-title>
-          <ion-card-content>
-            {{ course.description }}
-          </ion-card-content>
-        </ion-card>
+        <app-course-card [course]="course"></app-course-card>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <a
+      [style]="
+        backButtonService.isActive() ? 'display:visible' : 'visibility:hidden'
+      "
+      class="account-icon"
+      (click)="backClicked()"
+    >
+      <ion-icon name="chevron-back-outline"></ion-icon
+    ></a>
+    <ion-buttons slot="end">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-menu side="end" menuId="accountMenu" contentId="main">
+  <ion-header>
+    <ion-toolbar color="medium">
+      <ion-title>
+        <ion-icon name="person-circle-outline" class="account-icon"></ion-icon>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item button>Settings</ion-item>
+      <ion-item button>Log out</ion-item>
+      <ion-item button (click)="closeMenu()"> Close </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>

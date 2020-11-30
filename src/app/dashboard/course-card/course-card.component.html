@@ -1,0 +1,50 @@
+<ion-card color="light" class="card">
+  <div class="div">
+    <ion-card-header class="header-grid">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-card-title>{{ course.name }}</ion-card-title>
+          </ion-col>
+          <ion-col class="course-button">
+            <ion-icon
+              name="chevron-forward-outline"
+              routerLink="/courses/{{ course.id }}"
+            ></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-header>
+  </div>
+
+  <ion-card-content>
+    <ion-text color="tertiary">This is the shortname.</ion-text>
+  </ion-card-content>
+
+  <ion-footer class="footer">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button color="medium" class="navbutton">
+            <ion-icon name="notifications-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button color="medium" class="navbutton">
+            <ion-icon name="reader-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button color="medium" class="navbutton">
+            <ion-icon name="folder-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button color="medium" class="navbutton">
+            <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-footer>
+</ion-card>

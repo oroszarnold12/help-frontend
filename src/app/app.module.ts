@@ -10,9 +10,18 @@ import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HttpClientModule } from "@angular/common/http";
 import { DashboardComponent } from "./dashboard/dashboard.component";
+import { CourseCardComponent } from "./dashboard/course-card/course-card.component";
+import { TopbarComponent } from "./topbar/topbar.component";
+import { CourseViewComponent } from "./course-view/course-view.component";
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent],
+  declarations: [
+    AppComponent,
+    DashboardComponent,
+    CourseCardComponent,
+    TopbarComponent,
+    CourseViewComponent,
+  ],
   entryComponents: [],
   imports: [
     BrowserModule,

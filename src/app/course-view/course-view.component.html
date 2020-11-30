@@ -1,0 +1,47 @@
+<ion-content class="content" *ngIf="!!course">
+  <ion-slides
+    #slides
+    [options]="options"
+    (ionSlideDidChange)="ionSlideDidChange()"
+  >
+    <ion-slide> Announcements </ion-slide>
+    <ion-slide> Assignment </ion-slide>
+    <ion-slide> Grades </ion-slide>
+    <ion-slide> Discussions </ion-slide>
+    <ion-slide> Files </ion-slide>
+    <ion-slide>
+      <div class="slide">
+        <h2>Description</h2>
+        <p>
+          {{ course.description }}
+        </p>
+      </div>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
+
+<ion-segment
+  (ionChange)="segmentChanged($event)"
+  value="5"
+  scrollable
+  #segments
+>
+  <ion-segment-button value="0">
+    <ion-label>Announcements</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="1">
+    <ion-label>Assignment</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="2">
+    <ion-label>Grades</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="3">
+    <ion-label>Discussions</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="4">
+    <ion-label>Files</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="5">
+    <ion-label>Description</ion-label>
+  </ion-segment-button>
+</ion-segment>

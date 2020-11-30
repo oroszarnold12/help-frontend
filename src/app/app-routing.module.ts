@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 import { DashboardComponent } from "./dashboard/dashboard.component";
+import { CourseViewComponent } from "./course-view/course-view.component";
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: "dashboard",
     component: DashboardComponent,
+  },
+  {
+    path: "courses/:id",
+    component: CourseViewComponent,
   },
 ];
 
