@@ -13,6 +13,8 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
 import { CourseCardComponent } from "./dashboard/course-card/course-card.component";
 import { TopbarComponent } from "./topbar/topbar.component";
 import { CourseViewComponent } from "./course-view/course-view.component";
+import { LogInComponent } from "./log-in/log-in.component";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { CourseViewComponent } from "./course-view/course-view.component";
     CourseCardComponent,
     TopbarComponent,
     CourseViewComponent,
+    LogInComponent,
   ],
   entryComponents: [],
   imports: [
@@ -28,6 +31,7 @@ import { CourseViewComponent } from "./course-view/course-view.component";
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [
     StatusBar,
