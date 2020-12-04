@@ -8,13 +8,14 @@ import { StatusBar } from "@ionic-native/status-bar/ngx";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { CourseCardComponent } from "./dashboard/course-card/course-card.component";
 import { TopbarComponent } from "./topbar/topbar.component";
 import { CourseViewComponent } from "./course-view/course-view.component";
 import { LogInComponent } from "./log-in/log-in.component";
 import { FormsModule } from "@angular/forms";
+import { TokenInterceptor } from "./interceptor/token.interceptor";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,11 @@ import { FormsModule } from "@angular/forms";
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
