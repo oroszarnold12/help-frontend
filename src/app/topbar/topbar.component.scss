@@ -1,5 +1,13 @@
 .account-icon {
   font-size: 30px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.account-name {
+  display: inline-block;
+  font-size: smaller;
+  vertical-align: super;
 }
 
 .topbar {

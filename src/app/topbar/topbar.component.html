@@ -10,6 +10,12 @@
       <ion-icon name="chevron-back-outline"></ion-icon
     ></a>
     <ion-buttons slot="end">
+      <div *ngIf="username">
+        <ion-icon name="person-circle-outline" class="account-icon"></ion-icon>
+        <div class="account-name">
+          {{ username }}
+        </div>
+      </div>
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
@@ -19,7 +25,15 @@
   <ion-header>
     <ion-toolbar color="medium">
       <ion-title>
-        <ion-icon name="person-circle-outline" class="account-icon"></ion-icon>
+        <div *ngIf="username">
+          <ion-icon
+            name="person-circle-outline"
+            class="account-icon"
+          ></ion-icon>
+          <div class="account-name">
+            {{ username }}
+          </div>
+        </div>
       </ion-title>
     </ion-toolbar>
   </ion-header>

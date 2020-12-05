@@ -6,6 +6,7 @@ import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
+import { ToasterService } from "../shared/toaster.service";
 
 @Component({
   selector: "app-course-view",
@@ -18,14 +19,14 @@ export class CourseViewComponent implements OnInit {
   @ViewChild("slides") slides: IonSlides;
   @ViewChild("segments") segments: IonSegment;
   options = {
-    initialSlide: 5,
     speed: 400,
   };
 
   constructor(
     private backButtonService: BackButtonService,
     private route: ActivatedRoute,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private toasterService: ToasterService
   ) {}
 
   ngOnInit() {
@@ -49,7 +50,7 @@ export class CourseViewComponent implements OnInit {
             this.course = course;
           },
           (error) => {
-            console.log("error");
+            this.toasterService.error("Course not found", "Selection failed");
           }
         );
     });

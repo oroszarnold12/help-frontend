@@ -26,6 +26,11 @@
         minlength="8"
         #password
       ></ion-input>
+      <ion-input
+        type="submit"
+        [disabled]="!authForm.valid"
+        [hidden]="true"
+      ></ion-input>
     </ion-item>
 
     <ion-row>

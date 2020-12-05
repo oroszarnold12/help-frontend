@@ -16,6 +16,8 @@ import { CourseViewComponent } from "./course-view/course-view.component";
 import { LogInComponent } from "./log-in/log-in.component";
 import { FormsModule } from "@angular/forms";
 import { TokenInterceptor } from "./interceptor/token.interceptor";
+import { ToastrModule } from "ngx-toastr";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { TokenInterceptor } from "./interceptor/token.interceptor";
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
   ],
   providers: [
     StatusBar,
