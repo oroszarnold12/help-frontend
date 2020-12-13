@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Renderer2 } from "@angular/core";
 import { MenuController } from "@ionic/angular";
 import { Location } from "@angular/common";
 import { BackButtonService } from "../shared/back-button.service";
@@ -22,6 +22,7 @@ export class TopbarComponent implements OnInit {
     private authService: AuthService,
     private toasterService: ToasterService,
     private loginStatusService: LoginStatusService,
+    private renderer: Renderer2,
     public backButtonService: BackButtonService
   ) {
     this.subscription = loginStatusService.loggedIn$.subscribe((log) => {
@@ -47,5 +48,13 @@ export class TopbarComponent implements OnInit {
       this.loginStatusService.changeStatus(false);
       this.toasterService.success("The log out was successful!");
     });
+  }
+
+  onToggleColorTheme(event) {
+    if (event.detail.checked) {
+      this.renderer.setAttribute(document.body, "color-theme", "dark");
+    } else {
+      this.renderer.setAttribute(document.body, "color-theme", "light");
+    }
   }
 }

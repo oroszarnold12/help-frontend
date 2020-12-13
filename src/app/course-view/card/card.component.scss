@@ -1,0 +1,13 @@
+.card {
+  width: 1000px;
+  padding-bottom: 65px;
+}
+
+@media (max-width: 1000px) {
+  .card {
+    width: 100vw;
+    position: relative;
+    margin-left: -50vw;
+    left: 50%;
+  }
+}

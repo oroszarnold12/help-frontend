@@ -18,6 +18,9 @@ import { FormsModule } from "@angular/forms";
 import { TokenInterceptor } from "./interceptor/token.interceptor";
 import { ToastrModule } from "ngx-toastr";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { CardComponent } from "./course-view/card/card.component";
+import { DatePipe } from "@angular/common";
+import { AgGridModule } from "ag-grid-angular";
 
 @NgModule({
   declarations: [
@@ -27,6 +30,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     TopbarComponent,
     CourseViewComponent,
     LogInComponent,
+    CardComponent,
   ],
   entryComponents: [],
   imports: [
@@ -37,6 +41,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     FormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    AgGridModule.withComponents([]),
   ],
   providers: [
     StatusBar,
@@ -47,6 +52,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
       useClass: TokenInterceptor,
       multi: true,
     },
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

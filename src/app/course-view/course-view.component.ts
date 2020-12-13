@@ -1,9 +1,11 @@
+import { DatePipe } from "@angular/common";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { IonSegment, IonSlides } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
+import { GeneralOverview } from "../model/general-overview.model";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
 import { ToasterService } from "../shared/toaster.service";
@@ -22,11 +24,21 @@ export class CourseViewComponent implements OnInit {
     speed: 400,
   };
 
+  assignmentOverviews: GeneralOverview[];
+  announcementOverviews: GeneralOverview[];
+
+  gradesColumnDefs = [
+    { field: "name" },
+    { field: "dueDate" },
+    { field: "points" },
+  ];
+
   constructor(
     private backButtonService: BackButtonService,
     private route: ActivatedRoute,
     private courseService: CourseService,
-    private toasterService: ToasterService
+    private toasterService: ToasterService,
+    private datePite: DatePipe
   ) {}
 
   ngOnInit() {
@@ -48,12 +60,35 @@ export class CourseViewComponent implements OnInit {
         .subscribe(
           (course) => {
             this.course = course;
+            this.createAssignmentOverviews();
+            this.createAnnouncementOverviews();
           },
           (error) => {
             this.toasterService.error("Course not found", "Selection failed");
           }
         );
     });
+  }
+
+  createAssignmentOverviews() {
+    const { assignments } = this.course;
+    this.assignmentOverviews = assignments.map((assignment) => ({
+      name: assignment.name,
+      description: `Due: ${this.datePite.transform(
+        new Date(assignment.dueDate),
+        "medium"
+      )} | 
+        Points: ${assignment.points}`,
+    }));
+  }
+
+  createAnnouncementOverviews() {
+    const { announcements } = this.course;
+    this.announcementOverviews = announcements.map((announcement) => ({
+      name: announcement.name,
+      description: `${announcement.content.slice(0, 100)}... | 
+      Date: ${this.datePite.transform(new Date(announcement.date), "medium")} `,
+    }));
   }
 
   segmentChanged(event) {

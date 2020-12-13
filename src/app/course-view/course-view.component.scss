@@ -2,6 +2,10 @@
   top: 10%;
 }
 
+ion-segment {
+  --background: var(--ion-color-light);
+}
+
 ion-segment-button {
   min-width: 170px;
 }

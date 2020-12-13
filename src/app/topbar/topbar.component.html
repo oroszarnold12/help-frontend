@@ -42,6 +42,10 @@
       <ion-item button>Settings</ion-item>
       <ion-item button (click)="onLogOutClicked()">Log out</ion-item>
       <ion-item button (click)="closeMenu()"> Close </ion-item>
+      <ion-item>
+        <ion-label>Dark Theme</ion-label>
+        <ion-toggle (ionChange)="onToggleColorTheme($event)"></ion-toggle>
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>

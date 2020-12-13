@@ -5,27 +5,39 @@
     (ionSlideDidChange)="ionSlideDidChange()"
   >
     <ion-slide>
-      <div class="slide">
-        <h2>Announcements</h2>
-        <p></p>
+      <div>
+        <app-card
+          [data]="announcementOverviews"
+          [title]="'Announcements'"
+        ></app-card>
       </div>
     </ion-slide>
     <ion-slide>
-      <div class="slide">
-        <h2>Assignments</h2>
-        <p></p>
+      <div>
+        <app-card
+          [data]="assignmentOverviews"
+          [title]="'Assignment'"
+        ></app-card>
       </div>
     </ion-slide>
-    <ion-slide> Grades </ion-slide>
     <ion-slide>
-      <div class="slide">
+      <ag-grid-angular
+        style="width: 500px; height: 500px"
+        class="ag-theme-alpine-dark"
+        [rowData]="course.assignments"
+        [columnDefs]="gradesColumnDefs"
+      >
+      </ag-grid-angular>
+    </ion-slide>
+    <ion-slide>
+      <div>
         <h2>Discussions</h2>
         <p></p>
       </div>
     </ion-slide>
     <ion-slide> Files </ion-slide>
     <ion-slide>
-      <div class="slide">
+      <div>
         <h2>Description</h2>
         <p>
           {{ course.description }}
@@ -35,28 +47,30 @@
   </ion-slides>
 </ion-content>
 
-<ion-segment
-  (ionChange)="segmentChanged($event)"
-  scrollable
-  #segments
-  value="0"
->
-  <ion-segment-button value="0">
-    <ion-label>Announcements</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="1">
-    <ion-label>Assignment</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="2">
-    <ion-label>Grades</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="3">
-    <ion-label>Discussions</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="4">
-    <ion-label>Files</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="5">
-    <ion-label>Description</ion-label>
-  </ion-segment-button>
-</ion-segment>
+<ion-footer class="footer">
+  <ion-segment
+    (ionChange)="segmentChanged($event)"
+    scrollable
+    #segments
+    value="0"
+  >
+    <ion-segment-button value="0">
+      <ion-label>Announcements</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="1">
+      <ion-label>Assignment</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="2">
+      <ion-label>Grades</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="3">
+      <ion-label>Discussions</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="4">
+      <ion-label>Files</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="5">
+      <ion-label>Description</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-footer>
