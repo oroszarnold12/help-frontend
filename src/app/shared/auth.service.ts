@@ -47,6 +47,12 @@ export class AuthService {
       );
   }
 
+  pingBackend(): Observable<void> {
+    return this.httpClient.get<void>("api/server-status/ping", {
+      withCredentials: true,
+    });
+  }
+
   getUsername() {
     return localStorage.getItem("username");
   }

@@ -20,7 +20,7 @@ import { ToastrModule } from "ngx-toastr";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { CardComponent } from "./course-view/card/card.component";
 import { DatePipe } from "@angular/common";
-import { AgGridModule } from "ag-grid-angular";
+import { Ng2SmartTableModule } from "ng2-smart-table";
 
 @NgModule({
   declarations: [
@@ -41,7 +41,7 @@ import { AgGridModule } from "ag-grid-angular";
     FormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    AgGridModule.withComponents([]),
+    Ng2SmartTableModule,
   ],
   providers: [
     StatusBar,

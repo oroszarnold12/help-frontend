@@ -9,3 +9,16 @@ ion-segment {
 ion-segment-button {
   min-width: 170px;
 }
+
+.table {
+  width: 1000px;
+}
+
+@media (max-width: 1000px) {
+  .table {
+    width: 100vw;
+    position: relative;
+    margin-left: -100vw;
+    left: 50%;
+  }
+}

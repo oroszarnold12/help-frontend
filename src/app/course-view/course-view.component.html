@@ -5,35 +5,24 @@
     (ionSlideDidChange)="ionSlideDidChange()"
   >
     <ion-slide>
-      <div>
-        <app-card
-          [data]="announcementOverviews"
-          [title]="'Announcements'"
-        ></app-card>
-      </div>
+      <app-card
+        [data]="announcementOverviews"
+        [title]="'Announcements'"
+      ></app-card>
     </ion-slide>
     <ion-slide>
-      <div>
-        <app-card
-          [data]="assignmentOverviews"
-          [title]="'Assignment'"
-        ></app-card>
-      </div>
+      <app-card [data]="assignmentOverviews" [title]="'Assignments'"></app-card>
     </ion-slide>
     <ion-slide>
-      <ag-grid-angular
-        style="width: 500px; height: 500px"
-        class="ag-theme-alpine-dark"
-        [rowData]="course.assignments"
-        [columnDefs]="gradesColumnDefs"
-      >
-      </ag-grid-angular>
+      <ion-card class="table">
+        <ng2-smart-table
+          [settings]="settings"
+          [source]="gradeOverviews"
+        ></ng2-smart-table>
+      </ion-card>
     </ion-slide>
     <ion-slide>
-      <div>
-        <h2>Discussions</h2>
-        <p></p>
-      </div>
+      <app-card [data]="discussionOverviews" [title]="'Discussions'"></app-card>
     </ion-slide>
     <ion-slide> Files </ion-slide>
     <ion-slide>

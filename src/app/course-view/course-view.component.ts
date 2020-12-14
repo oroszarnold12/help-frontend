@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { IonSegment, IonSlides } from "@ionic/angular";
 import { Subject } from "rxjs";
@@ -14,6 +14,7 @@ import { ToasterService } from "../shared/toaster.service";
   selector: "app-course-view",
   templateUrl: "./course-view.component.html",
   styleUrls: ["./course-view.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CourseViewComponent implements OnInit {
   stop: Subject<void> = new Subject();
@@ -26,12 +27,10 @@ export class CourseViewComponent implements OnInit {
 
   assignmentOverviews: GeneralOverview[];
   announcementOverviews: GeneralOverview[];
+  discussionOverviews: GeneralOverview[];
+  gradeOverviews: any;
 
-  gradesColumnDefs = [
-    { field: "name" },
-    { field: "dueDate" },
-    { field: "points" },
-  ];
+  settings: any;
 
   constructor(
     private backButtonService: BackButtonService,
@@ -39,7 +38,29 @@ export class CourseViewComponent implements OnInit {
     private courseService: CourseService,
     private toasterService: ToasterService,
     private datePite: DatePipe
-  ) {}
+  ) {
+    this.settings = {
+      actions: {
+        add: false,
+        edit: false,
+        delete: false,
+      },
+      columns: {
+        name: {
+          title: "Name",
+          filter: false,
+        },
+        dueDate: {
+          title: "Due",
+          filter: false,
+        },
+        points: {
+          title: "Points",
+          filter: false,
+        },
+      },
+    };
+  }
 
   ngOnInit() {
     this.backButtonService.turnOn();
@@ -62,6 +83,8 @@ export class CourseViewComponent implements OnInit {
             this.course = course;
             this.createAssignmentOverviews();
             this.createAnnouncementOverviews();
+            this.createGradeOverviews();
+            this.createDiscussionOverviews();
           },
           (error) => {
             this.toasterService.error("Course not found", "Selection failed");
@@ -88,6 +111,27 @@ export class CourseViewComponent implements OnInit {
       name: announcement.name,
       description: `${announcement.content.slice(0, 100)}... | 
       Date: ${this.datePite.transform(new Date(announcement.date), "medium")} `,
+    }));
+  }
+
+  createGradeOverviews() {
+    const { assignments } = this.course;
+    this.gradeOverviews = assignments.map((assignment) => ({
+      name: assignment.name,
+      dueDate: this.datePite.transform(new Date(assignment.dueDate), "medium"),
+      points: assignment.points,
+    }));
+  }
+
+  createDiscussionOverviews() {
+    const { discussions } = this.course;
+    this.discussionOverviews = discussions.map((discussion) => ({
+      name: discussion.name,
+      description: `Date: ${this.datePite.transform(
+        new Date(discussion.date),
+        "medium"
+      )} | 
+      Nr. of comments: ${discussion.comments.length}`,
     }));
   }
 

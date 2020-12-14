@@ -49,12 +49,4 @@ export class TopbarComponent implements OnInit {
       this.toasterService.success("The log out was successful!");
     });
   }
-
-  onToggleColorTheme(event) {
-    if (event.detail.checked) {
-      this.renderer.setAttribute(document.body, "color-theme", "dark");
-    } else {
-      this.renderer.setAttribute(document.body, "color-theme", "light");
-    }
-  }
 }
