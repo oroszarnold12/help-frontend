@@ -1,5 +1,11 @@
 import { DatePipe } from "@angular/common";
-import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { IonSegment, IonSlides } from "@ionic/angular";
 import { Subject } from "rxjs";
@@ -8,6 +14,7 @@ import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
+import { DefaultSlideService } from "../shared/default-slide.service";
 import { ToasterService } from "../shared/toaster.service";
 
 @Component({
@@ -23,6 +30,7 @@ export class CourseViewComponent implements OnInit {
   @ViewChild("segments") segments: IonSegment;
   options = {
     speed: 400,
+    initialSlide: this.defaultSlideService.getDefaultSlide(),
   };
 
   assignmentOverviews: GeneralOverview[];
@@ -31,13 +39,15 @@ export class CourseViewComponent implements OnInit {
   gradeOverviews: any;
 
   settings: any;
+  defaultSlide: number;
 
   constructor(
     private backButtonService: BackButtonService,
     private route: ActivatedRoute,
     private courseService: CourseService,
     private toasterService: ToasterService,
-    private datePite: DatePipe
+    private datePite: DatePipe,
+    private defaultSlideService: DefaultSlideService
   ) {
     this.settings = {
       actions: {
@@ -60,6 +70,8 @@ export class CourseViewComponent implements OnInit {
         },
       },
     };
+
+    this.defaultSlide = defaultSlideService.getDefaultSlide();
   }
 
   ngOnInit() {

@@ -41,7 +41,7 @@
     (ionChange)="segmentChanged($event)"
     scrollable
     #segments
-    value="0"
+    [value]="defaultSlide"
   >
     <ion-segment-button value="0">
       <ion-label>Announcements</ion-label>
