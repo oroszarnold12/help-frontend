@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Course } from "../model/course.model";
 
 import { Observable } from "rxjs";
+import { CourseCreation } from "../model/course-creation.model";
 
 @Injectable({
   providedIn: "root",
@@ -17,7 +18,7 @@ export class CourseService {
     return this.http.get<Course>(`api/courses/${id}`);
   }
 
-  saveCourse(course: Course): Observable<Course> {
+  saveCourse(course: CourseCreation): Observable<Course> {
     return this.http.post<Course>("api/courses", course);
   }
 }

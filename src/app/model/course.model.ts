@@ -5,6 +5,7 @@ import { Discussion } from "./discussion.model";
 export interface Course {
   id?: number;
   name?: string;
+  longName?: string;
   description?: string;
   assignments?: Assignment[];
   announcements?: Annoucement[];

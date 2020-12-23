@@ -14,13 +14,14 @@ import { CourseCardComponent } from "./dashboard/course-card/course-card.compone
 import { TopbarComponent } from "./topbar/topbar.component";
 import { CourseViewComponent } from "./course-view/course-view.component";
 import { LogInComponent } from "./log-in/log-in.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TokenInterceptor } from "./interceptor/token.interceptor";
 import { ToastrModule } from "ngx-toastr";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { CardComponent } from "./course-view/card/card.component";
 import { DatePipe } from "@angular/common";
 import { Ng2SmartTableModule } from "ng2-smart-table";
+import { CourseFormComponent } from "./dashboard/course-form/course-form.component";
 
 @NgModule({
   declarations: [
@@ -31,8 +32,9 @@ import { Ng2SmartTableModule } from "ng2-smart-table";
     CourseViewComponent,
     LogInComponent,
     CardComponent,
+    CourseFormComponent,
   ],
-  entryComponents: [],
+  entryComponents: [CourseFormComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -42,6 +44,7 @@ import { Ng2SmartTableModule } from "ng2-smart-table";
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     Ng2SmartTableModule,
+    ReactiveFormsModule,
   ],
   providers: [
     StatusBar,
