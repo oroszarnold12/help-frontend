@@ -5,10 +5,18 @@
     (ionSlideDidChange)="ionSlideDidChange()"
   >
     <ion-slide>
-      <app-card
-        [data]="announcementOverviews"
-        [title]="'Announcements'"
-      ></app-card>
+      <ion-row>
+        <ion-button color="success" (click)="presentModal()">
+          <ion-icon name="add-outline"></ion-icon>
+          Add announcement
+        </ion-button>
+      </ion-row>
+      <ion-row>
+        <app-card
+          [data]="announcementOverviews"
+          [title]="'Announcements'"
+        ></app-card>
+      </ion-row>
     </ion-slide>
     <ion-slide>
       <app-card [data]="assignmentOverviews" [title]="'Assignments'"></app-card>

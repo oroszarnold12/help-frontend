@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.loadCourses();
   }
+
   async presentModal() {
     const modal = await this.modalController.create({
       component: CourseFormComponent,

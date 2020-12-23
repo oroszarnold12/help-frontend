@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Create announcement </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="announcementForm" (ngSubmit)="submitForm()">
+    <ion-item lines="full">
+      <ion-label position="floating" for="name">Name</ion-label>
+      <ion-input
+        type="text"
+        id="name"
+        name="name"
+        formControlName="name"
+      ></ion-input>
+    </ion-item>
+    <span
+      class="error ion-padding"
+      *ngIf="errorControl.name.touched && errorControl.name.errors?.required"
+    >
+      Name is required.
+    </span>
+    <ion-item>
+      <ion-label position="floating" for="content">Content</ion-label>
+      <ion-input
+        type="text"
+        id="content"
+        name="content"
+        formControlName="content"
+      ></ion-input>
+    </ion-item>
+    <span
+      class="error ion-padding"
+      *ngIf="
+        errorControl.content.touched && errorControl.content.errors?.required
+      "
+    >
+      Content is required.
+    </span>
+    <ion-row>
+      <ion-col>
+        <ion-button
+          type="submit"
+          color="success"
+          expand="block"
+          [disabled]="announcementForm.invalid"
+        >
+          Submit
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

@@ -22,6 +22,7 @@ import { CardComponent } from "./course-view/card/card.component";
 import { DatePipe } from "@angular/common";
 import { Ng2SmartTableModule } from "ng2-smart-table";
 import { CourseFormComponent } from "./dashboard/course-form/course-form.component";
+import { AnnouncementFormComponent } from "./course-view/announcement-form/announcement-form.component";
 
 @NgModule({
   declarations: [
@@ -33,8 +34,9 @@ import { CourseFormComponent } from "./dashboard/course-form/course-form.compone
     LogInComponent,
     CardComponent,
     CourseFormComponent,
+    AnnouncementFormComponent,
   ],
-  entryComponents: [CourseFormComponent],
+  entryComponents: [CourseFormComponent, AnnouncementFormComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

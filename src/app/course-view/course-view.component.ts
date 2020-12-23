@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { IonSegment, IonSlides } from "@ionic/angular";
+import { IonSegment, IonSlides, ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
@@ -16,6 +16,7 @@ import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
 import { DefaultSlideService } from "../shared/default-slide.service";
 import { ToasterService } from "../shared/toaster.service";
+import { AnnouncementFormComponent } from "./announcement-form/announcement-form.component";
 
 @Component({
   selector: "app-course-view",
@@ -47,7 +48,8 @@ export class CourseViewComponent implements OnInit {
     private courseService: CourseService,
     private toasterService: ToasterService,
     private datePite: DatePipe,
-    private defaultSlideService: DefaultSlideService
+    private defaultSlideService: DefaultSlideService,
+    private modalController: ModalController
   ) {
     this.settings = {
       actions: {
@@ -155,5 +157,15 @@ export class CourseViewComponent implements OnInit {
     this.slides.getActiveIndex().then((index) => {
       this.segments.value = index.toString();
     });
+  }
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: AnnouncementFormComponent,
+      componentProps: {
+        course: this.course,
+      },
+    });
+    await modal.present();
   }
 }

@@ -14,11 +14,16 @@ export class CourseService {
   getCourses(): Observable<{ courses: Course[] }> {
     return this.http.get<{ courses: Course[] }>(`api/courses`);
   }
+
   getCourse(id: number): Observable<Course> {
     return this.http.get<Course>(`api/courses/${id}`);
   }
 
   saveCourse(course: CourseCreation): Observable<Course> {
     return this.http.post<Course>("api/courses", course);
+  }
+
+  updateCourse(course: Course, id: number): Observable<Course> {
+    return this.http.put<Course>(`api/courses/${id}`, course);
   }
 }
