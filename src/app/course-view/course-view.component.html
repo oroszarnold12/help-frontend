@@ -93,10 +93,25 @@
     <ion-slide> Files </ion-slide>
     <ion-slide>
       <div>
-        <h2>Description</h2>
-        <p>
-          {{ course.description }}
-        </p>
+        <ion-grid>
+          <ion-row fixed class="add-button-row">
+            <ion-col>
+              <ion-button
+                color="primary"
+                (click)="presentDescriptionModal()"
+                class="add-button"
+              >
+                <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+                Edit description
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div [innerHTML]="course.description" class="description"></div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
     </ion-slide>
   </ion-slides>
