@@ -25,6 +25,7 @@ import { CourseFormComponent } from "./dashboard/course-form/course-form.compone
 import { AnnouncementFormComponent } from "./course-view/announcement-form/announcement-form.component";
 import { AssignmentFormComponent } from "./course-view/assignment-form/assignment-form.component";
 import { QuillModule } from "ngx-quill";
+import { DiscussionFormComponent } from "./course-view/discussion-form/discussion-form.component";
 
 @NgModule({
   declarations: [
@@ -38,11 +39,13 @@ import { QuillModule } from "ngx-quill";
     CourseFormComponent,
     AnnouncementFormComponent,
     AssignmentFormComponent,
+    DiscussionFormComponent,
   ],
   entryComponents: [
     CourseFormComponent,
     AnnouncementFormComponent,
     AssignmentFormComponent,
+    DiscussionFormComponent,
   ],
   imports: [
     BrowserModule,

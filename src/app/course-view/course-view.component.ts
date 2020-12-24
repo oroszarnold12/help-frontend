@@ -1,14 +1,7 @@
 import { DatePipe } from "@angular/common";
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { IonSegment, IonSlides, ModalController } from "@ionic/angular";
-import { decode } from "querystring";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
@@ -19,6 +12,7 @@ import { DefaultSlideService } from "../shared/default-slide.service";
 import { ToasterService } from "../shared/toaster.service";
 import { AnnouncementFormComponent } from "./announcement-form/announcement-form.component";
 import { AssignmentFormComponent } from "./assignment-form/assignment-form.component";
+import { DiscussionFormComponent } from "./discussion-form/discussion-form.component";
 
 @Component({
   selector: "app-course-view",
@@ -180,6 +174,16 @@ export class CourseViewComponent implements OnInit {
   async presentAssignmentModal() {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
+      componentProps: {
+        course: this.course,
+      },
+    });
+    await modal.present();
+  }
+
+  async presentDiscussionModal() {
+    const modal = await this.modalController.create({
+      component: DiscussionFormComponent,
       componentProps: {
         course: this.course,
       },
