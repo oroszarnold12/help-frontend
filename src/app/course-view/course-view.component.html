@@ -11,7 +11,7 @@
             <ion-col>
               <ion-button
                 color="success"
-                (click)="presentModal()"
+                (click)="presentAnnouncementModal()"
                 class="add-button"
               >
                 <ion-icon name="add-outline" class="add-icon"></ion-icon>
@@ -31,7 +31,30 @@
       </div>
     </ion-slide>
     <ion-slide>
-      <app-card [data]="assignmentOverviews" [title]="'Assignments'"></app-card>
+      <div>
+        <ion-grid>
+          <ion-row fixed class="add-button-row">
+            <ion-col>
+              <ion-button
+                color="success"
+                (click)="presentAssignmentModal()"
+                class="add-button"
+              >
+                <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                Add assignment
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <app-card
+                [data]="assignmentOverviews"
+                [title]="'Assignments'"
+              ></app-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
     </ion-slide>
     <ion-slide>
       <ion-card class="table">

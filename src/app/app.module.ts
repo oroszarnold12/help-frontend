@@ -23,6 +23,7 @@ import { DatePipe } from "@angular/common";
 import { Ng2SmartTableModule } from "ng2-smart-table";
 import { CourseFormComponent } from "./dashboard/course-form/course-form.component";
 import { AnnouncementFormComponent } from "./course-view/announcement-form/announcement-form.component";
+import { AssignmentFormComponent } from "./course-view/assignment-form/assignment-form.component";
 import { QuillModule } from "ngx-quill";
 
 @NgModule({
@@ -36,8 +37,13 @@ import { QuillModule } from "ngx-quill";
     CardComponent,
     CourseFormComponent,
     AnnouncementFormComponent,
+    AssignmentFormComponent,
   ],
-  entryComponents: [CourseFormComponent, AnnouncementFormComponent],
+  entryComponents: [
+    CourseFormComponent,
+    AnnouncementFormComponent,
+    AssignmentFormComponent,
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

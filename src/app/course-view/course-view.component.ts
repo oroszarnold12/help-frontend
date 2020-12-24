@@ -18,6 +18,7 @@ import { CourseService } from "../shared/course.service";
 import { DefaultSlideService } from "../shared/default-slide.service";
 import { ToasterService } from "../shared/toaster.service";
 import { AnnouncementFormComponent } from "./announcement-form/announcement-form.component";
+import { AssignmentFormComponent } from "./assignment-form/assignment-form.component";
 
 @Component({
   selector: "app-course-view",
@@ -166,9 +167,19 @@ export class CourseViewComponent implements OnInit {
     });
   }
 
-  async presentModal() {
+  async presentAnnouncementModal() {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
+      componentProps: {
+        course: this.course,
+      },
+    });
+    await modal.present();
+  }
+
+  async presentAssignmentModal() {
+    const modal = await this.modalController.create({
+      component: AssignmentFormComponent,
       componentProps: {
         course: this.course,
       },
