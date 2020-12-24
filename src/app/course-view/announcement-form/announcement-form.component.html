@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="announcementForm" (ngSubmit)="submitForm()">
-    <ion-item lines="full">
+    <ion-item lines="full" class="form-group">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input
         type="text"
@@ -21,22 +21,27 @@
       ></ion-input>
     </ion-item>
     <span
-      class="error ion-padding"
+      class="ion-padding text-danger"
       *ngIf="errorControl.name.touched && errorControl.name.errors?.required"
     >
       Name is required.
     </span>
-    <ion-item>
-      <ion-label position="floating" for="content">Content</ion-label>
-      <ion-input
-        type="text"
-        id="content"
-        name="content"
-        formControlName="content"
-      ></ion-input>
+    <ion-item class="ion-padding-top">
+      <ion-label>Content</ion-label>
     </ion-item>
+    <ion-item class="form-group">
+      <quill-editor
+        [styles]="editorStyle"
+        formControlName="content"
+        [modules]="config"
+        (onContentChanged)="contentChanged($event)"
+      ></quill-editor>
+    </ion-item>
+    <span class="ion-padding text-danger" *ngIf="isEditorFull">
+      The length of the content reached the max capacity.
+    </span>
     <span
-      class="error ion-padding"
+      class="text-danger ion-padding"
       *ngIf="
         errorControl.content.touched && errorControl.content.errors?.required
       "

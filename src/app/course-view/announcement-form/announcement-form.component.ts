@@ -18,6 +18,33 @@ export class AnnouncementFormComponent implements OnInit {
   newAnnouncement: Annoucement;
   @Input() course: Course;
   private stop: Subject<void> = new Subject();
+  isEditorFull: boolean = false;
+  editorMaxLength = 512;
+
+  editorStyle = {
+    height: "300px",
+  };
+
+  config = {
+    toolbar: [
+      ["bold", "italic", "underline", "strike"],
+      ["blockquote", "code-block"],
+
+      [{ header: 1 }, { header: 2 }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ script: "sub" }, { script: "super" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+
+      [{ size: ["small", false, "large", "huge"] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+      [{ color: [] }, { background: [] }],
+      [{ font: [] }],
+      [{ align: [] }],
+
+      ["link"],
+    ],
+  };
 
   constructor(
     private modalController: ModalController,
@@ -64,6 +91,15 @@ export class AnnouncementFormComponent implements OnInit {
         "All fields are required!",
         "Announcement creation failed!"
       );
+    }
+  }
+
+  contentChanged(event) {
+    if (event.editor.getLength() > this.editorMaxLength) {
+      this.isEditorFull = true;
+      event.editor.deleteText(this.editorMaxLength, event.editor.getLength());
+    } else {
+      this.isEditorFull = false;
     }
   }
 

@@ -8,6 +8,7 @@ import {
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { IonSegment, IonSlides, ModalController } from "@ionic/angular";
+import { decode } from "querystring";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
@@ -119,11 +120,17 @@ export class CourseViewComponent implements OnInit {
     }));
   }
 
+  private stripHtml(text) {
+    var div = document.createElement("div");
+    div.innerHTML = text;
+    return div.textContent || div.innerText || "";
+  }
+
   createAnnouncementOverviews() {
     const { announcements } = this.course;
     this.announcementOverviews = announcements.map((announcement) => ({
       name: announcement.name,
-      description: `${announcement.content.slice(0, 100)}... | 
+      description: `${this.stripHtml(announcement.content).slice(0, 100)}... | 
       Date: ${this.datePite.transform(new Date(announcement.date), "medium")} `,
     }));
   }

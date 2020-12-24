@@ -14,11 +14,14 @@ ion-segment-button {
   width: 1000px;
 }
 
-@media (max-width: 1000px) {
-  .table {
-    width: 100vw;
-    position: relative;
-    margin-left: -100vw;
-    left: 50%;
-  }
+.add-icon {
+  padding-right: 5px;
+}
+
+.add-button-row {
+  text-align: end;
+}
+
+.add-button {
+  padding-right: 10px;
 }

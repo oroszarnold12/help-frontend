@@ -1,6 +1,6 @@
 <ion-content class="content">
-  <ion-grid fixed="true" class="add-button-grid">
-    <ion-row wrap>
+  <ion-grid fixed="true">
+    <ion-row class="add-button-row">
       <ion-col>
         <ion-button color="success" (click)="presentModal()">
           <ion-icon class="add-icon" name="add-outline"></ion-icon>
@@ -8,8 +8,6 @@
         </ion-button>
       </ion-col>
     </ion-row>
-  </ion-grid>
-  <ion-grid fixed="true">
     <ion-row wrap>
       <ion-col *ngFor="let course of courses">
         <app-course-card [course]="course"></app-course-card>

@@ -23,6 +23,7 @@ import { DatePipe } from "@angular/common";
 import { Ng2SmartTableModule } from "ng2-smart-table";
 import { CourseFormComponent } from "./dashboard/course-form/course-form.component";
 import { AnnouncementFormComponent } from "./course-view/announcement-form/announcement-form.component";
+import { QuillModule } from "ngx-quill";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { AnnouncementFormComponent } from "./course-view/announcement-form/annou
     ToastrModule.forRoot(),
     Ng2SmartTableModule,
     ReactiveFormsModule,
+    QuillModule.forRoot(),
   ],
   providers: [
     StatusBar,

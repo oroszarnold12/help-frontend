@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="courseForm" (ngSubmit)="submitForm()">
-    <ion-item lines="full">
+    <ion-item class="form-group">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input
         type="text"
@@ -21,12 +21,12 @@
       ></ion-input>
     </ion-item>
     <span
-      class="error ion-padding"
+      class="text-danger ion-padding"
       *ngIf="errorControl.name.touched && errorControl.name.errors?.required"
     >
       Name is required.
     </span>
-    <ion-item>
+    <ion-item class="form-group">
       <ion-label position="floating" for="longName">Long name</ion-label>
       <ion-input
         type="text"
@@ -36,7 +36,7 @@
       ></ion-input>
     </ion-item>
     <span
-      class="error ion-padding"
+      class="text-danger ion-padding"
       *ngIf="
         errorControl.longName.touched && errorControl.longName.errors?.required
       "
