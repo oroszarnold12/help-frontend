@@ -89,6 +89,7 @@ export class AssignmentFormComponent implements OnInit {
               "Congratulations!",
               "Assignment created!"
             );
+            this.modalController.dismiss();
           },
           (error) => {
             this.toasterService.error("Something went wrong!", error.error);

@@ -28,6 +28,9 @@ export class DashboardComponent implements OnInit {
     const modal = await this.modalController.create({
       component: CourseFormComponent,
     });
+
+    modal.onDidDismiss().then(() => this.ngOnInit());
+
     await modal.present();
   }
 

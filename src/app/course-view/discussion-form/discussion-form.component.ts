@@ -89,6 +89,7 @@ export class DiscussionFormComponent implements OnInit {
               "Congratulations!",
               "Discussion created!"
             );
+            this.modalController.dismiss();
           },
           (error) => {
             this.toasterService.error("Something went wrong!", error.error);

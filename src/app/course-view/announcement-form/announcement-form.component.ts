@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
@@ -88,6 +88,7 @@ export class AnnouncementFormComponent implements OnInit {
               "Congratulations!",
               "Announcement created!"
             );
+            this.modalController.dismiss();
           },
           (error) => {
             this.toasterService.error("Something went wrong!", error.error);

@@ -44,10 +44,16 @@ export class CourseFormComponent implements OnInit {
       this.courseService
         .saveCourse(this.courseCreation)
         .pipe(takeUntil(this.stop))
-        .subscribe((course) => {
-          this.courseForm.reset();
-          this.toasterService.success("Congratulations!", "Course created!");
-        });
+        .subscribe(
+          (course) => {
+            this.courseForm.reset();
+            this.toasterService.success("Congratulations!", "Course created!");
+          },
+          (error) => {
+            this.toasterService.error(error.error, "Please try again!");
+          }
+        );
+      this.modalController.dismiss();
     } else {
       this.toasterService.error(
         "All fields are required!",

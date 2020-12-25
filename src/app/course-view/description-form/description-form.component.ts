@@ -84,6 +84,7 @@ export class DescriptionFormComponent implements OnInit {
               "Congratulations!",
               "Description updated!"
             );
+            this.modalController.dismiss();
           },
           (error) => {
             this.toasterService.error("Something went wrong!", error.message);

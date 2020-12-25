@@ -274,6 +274,9 @@ export class CourseViewComponent implements OnInit {
         course: this.course,
       },
     });
+
+    modal.onDidDismiss().then(() => this.ngOnInit());
+
     await modal.present();
   }
 
@@ -284,6 +287,9 @@ export class CourseViewComponent implements OnInit {
         course: this.course,
       },
     });
+
+    modal.onDidDismiss().then(() => this.ngOnInit());
+
     await modal.present();
   }
 
@@ -294,6 +300,9 @@ export class CourseViewComponent implements OnInit {
         course: this.course,
       },
     });
+
+    modal.onDidDismiss().then(() => this.ngOnInit());
+
     await modal.present();
   }
 
@@ -304,6 +313,7 @@ export class CourseViewComponent implements OnInit {
         course: this.course,
       },
     });
+
     await modal.present();
   }
 }
