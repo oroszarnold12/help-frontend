@@ -1,13 +1,12 @@
 import { DatePipe } from "@angular/common";
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { IonCol, IonSegment, IonSlides, ModalController } from "@ionic/angular";
+import {
+  AlertController,
+  IonSegment,
+  IonSlides,
+  ModalController,
+} from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
@@ -52,7 +51,8 @@ export class CourseViewComponent implements OnInit {
     private toasterService: ToasterService,
     private datePite: DatePipe,
     private defaultSlideService: DefaultSlideService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private alertController: AlertController
   ) {
     this.settings = {
       actions: {
@@ -110,9 +110,25 @@ export class CourseViewComponent implements OnInit {
     });
   }
 
+  saveCourse(message: string, errorMessage: string): void {
+    this.courseService
+      .updateCourse(this.course, this.course.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (course) => {
+          this.toasterService.success(message, "Congratulations!");
+          this.ngOnInit();
+        },
+        (error) => {
+          this.toasterService.error(errorMessage, "Please try again!");
+        }
+      );
+  }
+
   createAssignmentOverviews() {
     const { assignments } = this.course;
     this.assignmentOverviews = assignments.map((assignment) => ({
+      id: assignment.id,
       name: assignment.name,
       description: `Due: ${this.datePite.transform(
         new Date(assignment.dueDate),
@@ -131,6 +147,7 @@ export class CourseViewComponent implements OnInit {
   createAnnouncementOverviews() {
     const { announcements } = this.course;
     this.announcementOverviews = announcements.map((announcement) => ({
+      id: announcement.id,
       name: announcement.name,
       description: `${this.stripHtml(announcement.content).slice(0, 100)}... | 
       Date: ${this.datePite.transform(new Date(announcement.date), "medium")} `,
@@ -149,6 +166,7 @@ export class CourseViewComponent implements OnInit {
   createDiscussionOverviews() {
     const { discussions } = this.course;
     this.discussionOverviews = discussions.map((discussion) => ({
+      id: discussion.id,
       name: discussion.name,
       description: `Date: ${this.datePite.transform(
         new Date(discussion.date),
@@ -166,6 +184,87 @@ export class CourseViewComponent implements OnInit {
     this.slides.getActiveIndex().then((index) => {
       this.segments.value = index.toString();
     });
+  }
+
+  async deleteAnnouncement(event) {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this announcement?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.course.announcements = this.course.announcements.filter(
+              (annoucement) => annoucement.id !== event
+            );
+            this.saveCourse(
+              "Announcement deletion successful!",
+              "Announcement deletion failed!"
+            );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async deleteAssignment(event) {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this assignment?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.course.assignments = this.course.assignments.filter(
+              (assignment) => assignment.id !== event
+            );
+            this.saveCourse(
+              "Assignment deletion successful!",
+              "Assignemnt deletion failed!"
+            );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async deleteDiscussion(event) {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this discussion?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.course.discussions = this.course.discussions.filter(
+              (discussion) => discussion.id !== event
+            );
+            this.saveCourse(
+              "Discussion deletion successful!",
+              "Discussion deletion failed!"
+            );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   async presentAnnouncementModal() {
