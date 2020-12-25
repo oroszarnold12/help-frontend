@@ -19,10 +19,12 @@
         [styles]="editorStyle"
         formControlName="description"
         [modules]="config"
-        (onContentChanged)="contentChanged($event)"
       ></quill-editor>
     </ion-item>
-    <span class="ion-padding text-danger" *ngIf="isEditorFull">
+    <span
+      class="ion-padding text-danger"
+      *ngIf="errorControl.description.errors?.maxlength"
+    >
       The length of the description reached the max capacity.
     </span>
     <span

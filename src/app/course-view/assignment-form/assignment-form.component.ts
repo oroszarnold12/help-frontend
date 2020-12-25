@@ -18,8 +18,7 @@ export class AssignmentFormComponent implements OnInit {
   newAssignment: Assignment;
   @Input() course: Course;
   private stop: Subject<void> = new Subject();
-  isEditorFull: boolean = false;
-  editorMaxLength = 512;
+  editorMaxLength = 16384;
 
   editorStyle = {
     height: "300px",
@@ -61,7 +60,10 @@ export class AssignmentFormComponent implements OnInit {
       name: new FormControl("", Validators.required),
       dueDate: new FormControl("", Validators.required),
       points: new FormControl("", Validators.required),
-      description: new FormControl("", Validators.required),
+      description: new FormControl("", [
+        Validators.required,
+        Validators.maxLength(this.editorMaxLength),
+      ]),
     });
   }
 
@@ -80,27 +82,23 @@ export class AssignmentFormComponent implements OnInit {
       this.courseService
         .updateCourse(this.course, this.course.id)
         .pipe(takeUntil(this.stop))
-        .subscribe((course) => {
-          this.assignmentFrom.reset();
-          this.toasterService.success(
-            "Congratulations!",
-            "Assignment created!"
-          );
-        });
+        .subscribe(
+          (course) => {
+            this.assignmentFrom.reset();
+            this.toasterService.success(
+              "Congratulations!",
+              "Assignment created!"
+            );
+          },
+          (error) => {
+            this.toasterService.error("Something went wrong!", error.error);
+          }
+        );
     } else {
       this.toasterService.error(
         "All fields are required!",
         "Assignment creation failed!"
       );
-    }
-  }
-
-  contentChanged(event) {
-    if (event.editor.getLength() > this.editorMaxLength) {
-      this.isEditorFull = true;
-      event.editor.deleteText(this.editorMaxLength, event.editor.getLength());
-    } else {
-      this.isEditorFull = false;
     }
   }
 

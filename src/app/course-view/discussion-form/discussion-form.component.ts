@@ -18,8 +18,7 @@ export class DiscussionFormComponent implements OnInit {
   newDiscussion: Discussion;
   @Input() course: Course;
   private stop: Subject<void> = new Subject();
-  isEditorFull: boolean = false;
-  editorMaxLength = 512;
+  editorMaxLength = 16384;
 
   editorStyle = {
     height: "300px",
@@ -59,7 +58,10 @@ export class DiscussionFormComponent implements OnInit {
   createFormGroup() {
     return new FormGroup({
       name: new FormControl("", Validators.required),
-      content: new FormControl("", Validators.required),
+      content: new FormControl("", [
+        Validators.required,
+        Validators.maxLength(this.editorMaxLength),
+      ]),
     });
   }
 
@@ -80,27 +82,23 @@ export class DiscussionFormComponent implements OnInit {
       this.courseService
         .updateCourse(this.course, this.course.id)
         .pipe(takeUntil(this.stop))
-        .subscribe((course) => {
-          this.discussionFrom.reset();
-          this.toasterService.success(
-            "Congratulations!",
-            "Discussion created!"
-          );
-        });
+        .subscribe(
+          (course) => {
+            this.discussionFrom.reset();
+            this.toasterService.success(
+              "Congratulations!",
+              "Discussion created!"
+            );
+          },
+          (error) => {
+            this.toasterService.error("Something went wrong!", error.error);
+          }
+        );
     } else {
       this.toasterService.error(
         "All fields are required!",
         "Discussion creation failed!"
       );
-    }
-  }
-
-  contentChanged(event) {
-    if (event.editor.getLength() > this.editorMaxLength) {
-      this.isEditorFull = true;
-      event.editor.deleteText(this.editorMaxLength, event.editor.getLength());
-    } else {
-      this.isEditorFull = false;
     }
   }
 

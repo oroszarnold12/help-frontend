@@ -18,8 +18,7 @@ export class AnnouncementFormComponent implements OnInit {
   newAnnouncement: Annoucement;
   @Input() course: Course;
   private stop: Subject<void> = new Subject();
-  isEditorFull: boolean = false;
-  editorMaxLength = 512;
+  editorMaxLength = 16384;
 
   editorStyle = {
     height: "300px",
@@ -59,7 +58,10 @@ export class AnnouncementFormComponent implements OnInit {
   createFormGroup() {
     return new FormGroup({
       name: new FormControl("", Validators.required),
-      content: new FormControl("", Validators.required),
+      content: new FormControl("", [
+        Validators.required,
+        Validators.maxLength(this.editorMaxLength),
+      ]),
     });
   }
 
@@ -79,27 +81,23 @@ export class AnnouncementFormComponent implements OnInit {
       this.courseService
         .updateCourse(this.course, this.course.id)
         .pipe(takeUntil(this.stop))
-        .subscribe((course) => {
-          this.announcementForm.reset();
-          this.toasterService.success(
-            "Congratulations!",
-            "Announcement created!"
-          );
-        });
+        .subscribe(
+          (course) => {
+            this.announcementForm.reset();
+            this.toasterService.success(
+              "Congratulations!",
+              "Announcement created!"
+            );
+          },
+          (error) => {
+            this.toasterService.error("Something went wrong!", error.error);
+          }
+        );
     } else {
       this.toasterService.error(
         "All fields are required!",
         "Announcement creation failed!"
       );
-    }
-  }
-
-  contentChanged(event) {
-    if (event.editor.getLength() > this.editorMaxLength) {
-      this.isEditorFull = true;
-      event.editor.deleteText(this.editorMaxLength, event.editor.getLength());
-    } else {
-      this.isEditorFull = false;
     }
   }
 

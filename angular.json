@@ -32,7 +32,6 @@
               }
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               {
                 "input": "src/theme/variables.scss"
               },

@@ -16,7 +16,6 @@ export class DescriptionFormComponent implements OnInit {
   descriptionFrom: FormGroup;
   @Input() course: Course;
   private stop: Subject<void> = new Subject();
-  isEditorFull: boolean = false;
   editorMaxLength = 65536;
 
   editorStyle = {
@@ -58,6 +57,7 @@ export class DescriptionFormComponent implements OnInit {
     return new FormGroup({
       description: new FormControl(this.course.description, [
         Validators.required,
+        Validators.maxLength(this.editorMaxLength),
       ]),
     });
   }
@@ -77,27 +77,23 @@ export class DescriptionFormComponent implements OnInit {
       this.courseService
         .updateCourse(this.course, this.course.id)
         .pipe(takeUntil(this.stop))
-        .subscribe((course) => {
-          this.descriptionFrom.reset();
-          this.toasterService.success(
-            "Congratulations!",
-            "Description updated!"
-          );
-        });
+        .subscribe(
+          (course) => {
+            this.descriptionFrom.reset();
+            this.toasterService.success(
+              "Congratulations!",
+              "Description updated!"
+            );
+          },
+          (error) => {
+            this.toasterService.error("Something went wrong!", error.message);
+          }
+        );
     } else {
       this.toasterService.error(
         "All fields are required!",
         "Description update failed!"
       );
-    }
-  }
-
-  contentChanged(event) {
-    if (event.editor.getLength() > this.editorMaxLength) {
-      this.isEditorFull = true;
-      event.editor.deleteText(this.editorMaxLength, event.editor.getLength());
-    } else {
-      this.isEditorFull = false;
     }
   }
 

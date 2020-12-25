@@ -34,10 +34,12 @@
         [styles]="editorStyle"
         formControlName="content"
         [modules]="config"
-        (onContentChanged)="contentChanged($event)"
       ></quill-editor>
     </ion-item>
-    <span class="ion-padding text-danger" *ngIf="isEditorFull">
+    <span
+      class="ion-padding text-danger"
+      *ngIf="errorControl.content.errors?.maxlength"
+    >
       The length of the content reached the max capacity.
     </span>
     <span
