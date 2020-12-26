@@ -57,7 +57,10 @@ export class DiscussionFormComponent implements OnInit {
 
   createFormGroup() {
     return new FormGroup({
-      name: new FormControl("", Validators.required),
+      name: new FormControl("", [
+        Validators.required,
+        Validators.maxLength(255),
+      ]),
       content: new FormControl("", [
         Validators.required,
         Validators.maxLength(this.editorMaxLength),

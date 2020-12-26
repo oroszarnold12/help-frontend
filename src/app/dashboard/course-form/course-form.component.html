@@ -26,7 +26,13 @@
     >
       Name is required.
     </span>
-    <ion-item class="form-group">
+    <span
+      class="text-danger ion-padding"
+      *ngIf="errorControl.name.errors?.maxlength"
+    >
+      Name is too long.
+    </span>
+    <ion-item class="form-group my-input-padding">
       <ion-label position="floating" for="longName">Long name</ion-label>
       <ion-input
         type="text"
@@ -42,6 +48,12 @@
       "
     >
       Long name is required.
+    </span>
+    <span
+      class="text-danger ion-padding"
+      *ngIf="errorControl.longName.errors?.maxlength"
+    >
+      Long name is too long.
     </span>
     <ion-row>
       <ion-col>

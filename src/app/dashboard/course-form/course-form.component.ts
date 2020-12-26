@@ -29,8 +29,14 @@ export class CourseFormComponent implements OnInit {
 
   createFormGroup() {
     return new FormGroup({
-      name: new FormControl("", Validators.required),
-      longName: new FormControl("", Validators.required),
+      name: new FormControl("", [
+        Validators.required,
+        Validators.maxLength(255),
+      ]),
+      longName: new FormControl("", [
+        Validators.required,
+        Validators.maxLength(255),
+      ]),
     });
   }
 

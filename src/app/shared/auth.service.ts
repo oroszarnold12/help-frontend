@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Observable, Subject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { LoginRequest } from "../model/login-request.model";
+import { LoginStatusService } from "./login-status.service";
 
 @Injectable({
   providedIn: "root",
@@ -11,7 +12,11 @@ import { LoginRequest } from "../model/login-request.model";
 export class AuthService {
   public loginStatus = new Subject<any>();
 
-  constructor(private httpClient: HttpClient, private router: Router) {}
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private loginStatusService: LoginStatusService
+  ) {}
 
   login(loginRequest: LoginRequest): Observable<any> {
     return this.httpClient
@@ -26,6 +31,7 @@ export class AuthService {
             username: this.getUsername(),
             loggedIn: this.isLoggedIn(),
           });
+          this.loginStatusService.changeStatus(true);
         })
       );
   }
@@ -43,6 +49,7 @@ export class AuthService {
             username: this.getUsername(),
             loggedIn: this.isLoggedIn(),
           });
+          this.loginStatusService.changeStatus(false);
         })
       );
   }

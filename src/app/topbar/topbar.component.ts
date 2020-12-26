@@ -22,7 +22,6 @@ export class TopbarComponent implements OnInit {
     private authService: AuthService,
     private toasterService: ToasterService,
     private loginStatusService: LoginStatusService,
-    private renderer: Renderer2,
     public backButtonService: BackButtonService
   ) {
     this.subscription = loginStatusService.loggedIn$.subscribe((log) => {

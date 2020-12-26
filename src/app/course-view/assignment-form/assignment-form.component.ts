@@ -57,9 +57,12 @@ export class AssignmentFormComponent implements OnInit {
 
   createFormGroup() {
     return new FormGroup({
-      name: new FormControl("", Validators.required),
+      name: new FormControl("", [
+        Validators.required,
+        Validators.maxLength(255),
+      ]),
       dueDate: new FormControl("", Validators.required),
-      points: new FormControl("", Validators.required),
+      points: new FormControl("", [Validators.required, Validators.min(0)]),
       description: new FormControl("", [
         Validators.required,
         Validators.maxLength(this.editorMaxLength),

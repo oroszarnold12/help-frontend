@@ -3,14 +3,15 @@
     <ion-item lines="full">
       <ion-label position="floating" for="email">Email</ion-label>
       <ion-input
+        class="ion-padding-bottom"
         type="email"
         id="email"
-        class="form-control"
         ngModel
         name="email"
         required
         email
         #email
+        maxlength="255"
       ></ion-input>
     </ion-item>
 
@@ -19,11 +20,11 @@
       <ion-input
         type="password"
         id="password"
-        class="form-control"
         ngModel
         name="password"
         required
         minlength="8"
+        maxlength="255"
         #password
       ></ion-input>
       <ion-input
@@ -42,7 +43,7 @@
           [disabled]="!authForm.valid"
           >Log In</ion-button
         >
-        <a [routerLink]="['']" class="small-text">Forgot Password?</a>
+        <a [routerLink]="['']" class="small-text">Create an account</a>
       </ion-col>
     </ion-row>
   </form>

@@ -26,7 +26,13 @@
     >
       Name is required.
     </span>
-    <ion-item class="ion-padding-top">
+    <span
+      class="text-danger ion-padding"
+      *ngIf="errorControl.name.errors?.maxlength"
+    >
+      Name is too long.
+    </span>
+    <ion-item class="my-input-padding">
       <ion-label>Content</ion-label>
     </ion-item>
     <ion-item class="form-group">
