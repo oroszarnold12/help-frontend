@@ -5,6 +5,7 @@ import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
 import { ModalController } from "@ionic/angular";
 import { CourseFormComponent } from "./course-form/course-form.component";
+import { AuthService } from "../shared/auth.service";
 
 @Component({
   selector: "app-dashboard",
@@ -14,14 +15,17 @@ import { CourseFormComponent } from "./course-form/course-form.component";
 export class DashboardComponent implements OnInit {
   stop: Subject<void> = new Subject();
   courses: Course[];
+  teacher: boolean;
 
   constructor(
     private courseService: CourseService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.loadCourses();
+    this.teacher = this.authService.isTeacher();
   }
 
   async presentModal() {

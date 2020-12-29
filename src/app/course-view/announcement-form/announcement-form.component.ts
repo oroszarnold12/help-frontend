@@ -94,7 +94,7 @@ export class AnnouncementFormComponent implements OnInit {
             this.modalController.dismiss();
           },
           (error) => {
-            this.toasterService.error("Something went wrong!", error.error);
+            this.toasterService.error(error.error, "Something went wrong!");
           }
         );
     } else {

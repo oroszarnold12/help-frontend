@@ -32,8 +32,7 @@ export class LogInComponent implements OnInit {
         response = res;
       },
       (error) => {
-        console.log(error);
-        this.toasterService.error(JSON.stringify(error.error));
+        this.toasterService.error(error.error, "Login failed!");
       },
       () => {
         if (response.status === 200) {

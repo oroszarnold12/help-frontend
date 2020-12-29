@@ -87,7 +87,7 @@ export class DescriptionFormComponent implements OnInit {
             this.modalController.dismiss();
           },
           (error) => {
-            this.toasterService.error("Something went wrong!", error.message);
+            this.toasterService.error(error.error, "Something went wrong!");
           }
         );
     } else {

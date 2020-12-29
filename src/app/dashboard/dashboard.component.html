@@ -1,6 +1,6 @@
 <ion-content class="content">
   <ion-grid fixed="true" class="course-card-grid">
-    <ion-row class="add-button-row">
+    <ion-row *ngIf="teacher" class="add-button-row">
       <ion-col>
         <ion-button color="success" (click)="presentModal()">
           <ion-icon class="add-icon" name="add-outline"></ion-icon>

@@ -54,12 +54,12 @@ export class CourseFormComponent implements OnInit {
           (course) => {
             this.courseForm.reset();
             this.toasterService.success("Congratulations!", "Course created!");
+            this.modalController.dismiss();
           },
           (error) => {
             this.toasterService.error(error.error, "Please try again!");
           }
         );
-      this.modalController.dismiss();
     } else {
       this.toasterService.error(
         "All fields are required!",

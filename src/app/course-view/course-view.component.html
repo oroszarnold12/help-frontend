@@ -7,7 +7,7 @@
     <ion-slide class="slide">
       <div>
         <ion-grid>
-          <ion-row fixed class="add-button-row">
+          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
             <ion-col>
               <ion-button
                 color="success"
@@ -34,7 +34,7 @@
     <ion-slide class="slide">
       <div>
         <ion-grid>
-          <ion-row fixed class="add-button-row">
+          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
             <ion-col>
               <ion-button
                 color="success"
@@ -69,7 +69,7 @@
     <ion-slide class="slide">
       <div>
         <ion-grid>
-          <ion-row fixed class="add-button-row">
+          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
             <ion-col>
               <ion-button
                 color="success"
@@ -97,7 +97,7 @@
     <ion-slide class="slide">
       <div>
         <ion-grid>
-          <ion-row fixed class="add-button-row">
+          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
             <ion-col>
               <ion-button
                 color="primary"
@@ -121,6 +121,16 @@
 </ion-content>
 
 <ion-footer class="footer">
+  <ion-grid *ngIf="canDelete">
+    <ion-row *ngIf="isTeacher" fixed class="add-button-row">
+      <ion-col>
+        <ion-button color="danger" (click)="deleteCourse()" class="add-button">
+          <ion-icon name="trash-outline" class="add-icon"></ion-icon>
+          Delete course
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <ion-segment
     (ionChange)="segmentChanged($event)"
     scrollable

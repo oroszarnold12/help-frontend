@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Observable, Subject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { LoginRequest } from "../model/login-request.model";
+import { Role } from "../model/role.enum";
 import { LoginStatusService } from "./login-status.service";
 
 @Injectable({
@@ -26,6 +27,7 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
+          this.setRole();
           localStorage.setItem("username", loginRequest.username);
           this.loginStatus.next({
             username: this.getUsername(),
@@ -54,6 +56,14 @@ export class AuthService {
       );
   }
 
+  setRole() {
+    this.httpClient
+      .get<{ role: Role }>("api/role", { withCredentials: true })
+      .subscribe((role) => {
+        localStorage.setItem("role", role.role);
+      });
+  }
+
   pingBackend(): Observable<void> {
     return this.httpClient.get<void>("api/server-status/ping", {
       withCredentials: true,
@@ -62,6 +72,14 @@ export class AuthService {
 
   getUsername() {
     return localStorage.getItem("username");
+  }
+
+  getRole() {
+    return localStorage.getItem("role");
+  }
+
+  isTeacher(): boolean {
+    return localStorage.getItem("role") === Role.TEACHER;
   }
 
   isLoggedIn() {

@@ -1,6 +1,7 @@
 import { DatePipe } from "@angular/common";
+import { ThrowStmt } from "@angular/compiler";
 import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
   AlertController,
   IonSegment,
@@ -11,6 +12,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
+import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
 import { DefaultSlideService } from "../shared/default-slide.service";
@@ -44,6 +46,9 @@ export class CourseViewComponent implements OnInit {
   settings: any;
   defaultSlide: number;
 
+  isTeacher: boolean;
+  canDelete: boolean;
+
   constructor(
     private backButtonService: BackButtonService,
     private route: ActivatedRoute,
@@ -52,7 +57,9 @@ export class CourseViewComponent implements OnInit {
     private datePite: DatePipe,
     private defaultSlideService: DefaultSlideService,
     private modalController: ModalController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private authService: AuthService,
+    private router: Router
   ) {
     this.settings = {
       actions: {
@@ -82,6 +89,7 @@ export class CourseViewComponent implements OnInit {
   ngOnInit() {
     this.backButtonService.turnOn();
     this.loadCourse();
+    this.isTeacher = this.authService.isTeacher();
   }
 
   ngOnDestroy(): void {
@@ -98,13 +106,15 @@ export class CourseViewComponent implements OnInit {
         .subscribe(
           (course) => {
             this.course = course;
+            this.canDelete =
+              this.course.teacher.email === this.authService.getUsername();
             this.createAssignmentOverviews();
             this.createAnnouncementOverviews();
             this.createGradeOverviews();
             this.createDiscussionOverviews();
           },
           (error) => {
-            this.toasterService.error("Course not found", "Selection failed");
+            this.toasterService.error("Course not found!", "Selection failed!");
           }
         );
     });
@@ -259,6 +269,45 @@ export class CourseViewComponent implements OnInit {
               "Discussion deletion successful!",
               "Discussion deletion failed!"
             );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async deleteCourse(event) {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this course?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.courseService
+              .deleteCourse(this.course.id)
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Course deletion successful!",
+                    "Congratulations!"
+                  );
+                  this.router.navigate(["/dashboard"]);
+                },
+
+                (error) => {
+                  this.toasterService.error(
+                    "Course deletion failed!",
+                    "Please try again!"
+                  );
+                }
+              );
           },
         },
       ],

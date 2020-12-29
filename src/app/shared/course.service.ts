@@ -26,4 +26,8 @@ export class CourseService {
   updateCourse(course: Course, id: number): Observable<Course> {
     return this.http.put<Course>(`api/courses/${id}`, course);
   }
+
+  deleteCourse(id: number): Observable<void> {
+    return this.http.delete<void>(`api/courses/${id}`);
+  }
 }
