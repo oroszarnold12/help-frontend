@@ -1,5 +1,15 @@
 <ion-content class="content">
   <ion-grid fixed="true" class="course-card-grid">
+    <ion-row *ngIf="!!invitations && invitations.length">
+      <ion-col>
+        <app-invitation-card
+          [title]="'Invitations'"
+          [data]="invitationOverviews"
+          (onAcceptClicked)="acceptClicked($event)"
+          (onDeclineClicked)="declineClicked($event)"
+        ></app-invitation-card>
+      </ion-col>
+    </ion-row>
     <ion-row *ngIf="teacher" class="add-button-row">
       <ion-col>
         <ion-button color="success" (click)="presentModal()">

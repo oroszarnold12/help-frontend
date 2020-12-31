@@ -117,6 +117,47 @@
         </ion-grid>
       </div>
     </ion-slide>
+    <ion-slide *ngIf="isTeacher" class="slide">
+      <div>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-card class="table">
+                <ion-card-header>
+                  <ion-card-title> Available persons </ion-card-title>
+                </ion-card-header>
+                <ng2-smart-table
+                  [settings]="personSettings"
+                  [source]="thinPersons"
+                  (userRowSelect)="addPersonToList($event)"
+                ></ng2-smart-table>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-card class="table">
+                <ion-card-header>
+                  <ion-card-title> Persons to invite </ion-card-title>
+                </ion-card-header>
+                <ng2-smart-table
+                  [settings]="personSettings"
+                  [source]="personsToInvite"
+                ></ng2-smart-table>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+          <ion-row fixed class="add-button-row">
+            <ion-col>
+              <ion-button color="secondary" (click)="inviteClicked()">
+                <ion-icon name="add-circle-outline" class="add-icon"></ion-icon>
+                Invite
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-slide>
   </ion-slides>
 </ion-content>
 
@@ -154,6 +195,9 @@
     </ion-segment-button>
     <ion-segment-button value="5">
       <ion-label>Description</ion-label>
+    </ion-segment-button>
+    <ion-segment-button *ngIf="isTeacher" value="6">
+      <ion-label>Invitation</ion-label>
     </ion-segment-button>
   </ion-segment>
 </ion-footer>

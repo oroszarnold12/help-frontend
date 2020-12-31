@@ -1,7 +1,7 @@
 <div class="card">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>{{ title }}</ion-card-title>
+      <ion-card-title class="dark-blue">{{ title }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item *ngFor="let item of data">
@@ -15,6 +15,7 @@
           </ion-button>
         </ion-buttons>
       </ion-item>
+      <p *ngIf="!!data && data.length === 0">No data found</p>
     </ion-card-content>
   </ion-card>
 </div>

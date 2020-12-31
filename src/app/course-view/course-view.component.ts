@@ -8,14 +8,19 @@ import {
   IonSlides,
   ModalController,
 } from "@ionic/angular";
+import { LocalDataSource } from "ng2-smart-table";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
+import { InvitationCreation } from "../model/invitation.creation.model";
+import { ThinPerson } from "../model/thin.person,model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
 import { DefaultSlideService } from "../shared/default-slide.service";
+import { InvitationService } from "../shared/invitation.service";
+import { PersonService } from "../shared/person.service";
 import { ToasterService } from "../shared/toaster.service";
 import { AnnouncementFormComponent } from "./announcement-form/announcement-form.component";
 import { AssignmentFormComponent } from "./assignment-form/assignment-form.component";
@@ -42,8 +47,11 @@ export class CourseViewComponent implements OnInit {
   announcementOverviews: GeneralOverview[];
   discussionOverviews: GeneralOverview[];
   gradeOverviews: any;
+  thinPersons: ThinPerson[];
+  personsToInvite: LocalDataSource = new LocalDataSource();
 
   settings: any;
+  personSettings: any;
   defaultSlide: number;
 
   isTeacher: boolean;
@@ -59,7 +67,9 @@ export class CourseViewComponent implements OnInit {
     private modalController: ModalController,
     private alertController: AlertController,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private personService: PersonService,
+    private invitationService: InvitationService
   ) {
     this.settings = {
       actions: {
@@ -83,6 +93,26 @@ export class CourseViewComponent implements OnInit {
       },
     };
 
+    this.personSettings = {
+      actions: {
+        add: false,
+        edit: false,
+        delete: false,
+      },
+      columns: {
+        firstName: {
+          title: "First name",
+        },
+        lastName: {
+          title: "Last name",
+        },
+        email: {
+          title: "Email address",
+          filter: false,
+        },
+      },
+    };
+
     this.defaultSlide = defaultSlideService.getDefaultSlide();
   }
 
@@ -90,12 +120,24 @@ export class CourseViewComponent implements OnInit {
     this.backButtonService.turnOn();
     this.loadCourse();
     this.isTeacher = this.authService.isTeacher();
+    if (this.isTeacher) {
+      this.loadPersons();
+    }
   }
 
   ngOnDestroy(): void {
     this.backButtonService.turnOff();
     this.stop.next();
     this.stop.complete();
+  }
+
+  loadPersons() {
+    this.personService
+      .getPersons()
+      .pipe(takeUntil(this.stop))
+      .subscribe(({ persons }) => {
+        this.thinPersons = persons;
+      });
   }
 
   loadCourse(): void {
@@ -364,5 +406,44 @@ export class CourseViewComponent implements OnInit {
     });
 
     await modal.present();
+  }
+
+  addPersonToList(event) {
+    this.personsToInvite.find(event.data).catch(() => {
+      this.personsToInvite.add(event.data);
+      this.personsToInvite.refresh();
+    });
+  }
+
+  inviteClicked() {
+    this.personsToInvite.getAll().then((persons: ThinPerson[]) => {
+      const invitations: InvitationCreation = {};
+      invitations.courseId = this.course.id;
+      invitations.emails = [];
+      persons.forEach((person) => {
+        invitations.emails.push(person.email);
+      });
+      this.invitationService
+        .saveInvitation(invitations)
+        .pipe(takeUntil(this.stop))
+        .subscribe(
+          () => {
+            this.toasterService.success(
+              "Invitations sent!",
+              "Congratulations!"
+            );
+            this.personsToInvite
+              .load([])
+              .then(() => this.personsToInvite.refresh());
+          },
+          (error) => {
+            console.log(error);
+            this.toasterService.error(
+              error.error,
+              "Sending invitations failed!"
+            );
+          }
+        );
+    });
   }
 }

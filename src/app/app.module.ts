@@ -27,6 +27,7 @@ import { AssignmentFormComponent } from "./course-view/assignment-form/assignmen
 import { QuillModule } from "ngx-quill";
 import { DiscussionFormComponent } from "./course-view/discussion-form/discussion-form.component";
 import { DescriptionFormComponent } from "./course-view/description-form/description-form.component";
+import { InvitationCardComponent } from "./dashboard/invitation-card/invitation-card.component";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { DescriptionFormComponent } from "./course-view/description-form/descrip
     CourseViewComponent,
     LogInComponent,
     CardComponent,
+    InvitationCardComponent,
     CourseFormComponent,
     AnnouncementFormComponent,
     AssignmentFormComponent,
