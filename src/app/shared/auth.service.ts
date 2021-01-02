@@ -33,7 +33,6 @@ export class AuthService {
             username: this.getUsername(),
             loggedIn: this.isLoggedIn(),
           });
-          this.loginStatusService.changeStatus(true);
         })
       );
   }
@@ -61,6 +60,7 @@ export class AuthService {
       .get<{ role: Role }>("api/role", { withCredentials: true })
       .subscribe((role) => {
         localStorage.setItem("role", role.role);
+        this.loginStatusService.changeStatus(true);
       });
   }
 

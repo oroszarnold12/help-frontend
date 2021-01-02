@@ -95,61 +95,52 @@
     </ion-slide>
     <ion-slide class="slide"> Files </ion-slide>
     <ion-slide class="slide">
-      <div>
-        <ion-grid>
-          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
-            <ion-col>
-              <ion-button
-                color="primary"
-                (click)="presentDescriptionModal()"
-                class="add-button"
-              >
-                <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
-                Edit description
-              </ion-button>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <div [innerHTML]="course.description" class="description"></div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+      <ion-grid>
+        <ion-row *ngIf="isTeacher" fixed class="add-button-row">
+          <ion-col>
+            <ion-button
+              color="primary"
+              (click)="presentDescriptionModal()"
+              class="add-button"
+            >
+              <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+              Edit description
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p [innerHTML]="course.description" class="description"></p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-slide>
     <ion-slide *ngIf="isTeacher" class="slide">
       <div>
         <ion-grid>
           <ion-row>
             <ion-col>
-              <ion-card class="table">
+              <ion-card>
                 <ion-card-header>
                   <ion-card-title> Available persons </ion-card-title>
                 </ion-card-header>
-                <ng2-smart-table
-                  [settings]="personSettings"
-                  [source]="thinPersons"
-                  (userRowSelect)="addPersonToList($event)"
-                ></ng2-smart-table>
-              </ion-card>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-card class="table">
-                <ion-card-header>
-                  <ion-card-title> Persons to invite </ion-card-title>
-                </ion-card-header>
-                <ng2-smart-table
-                  [settings]="personSettings"
-                  [source]="personsToInvite"
-                ></ng2-smart-table>
+                <ion-card-content>
+                  <ng2-smart-table
+                    [settings]="availablePersonsSettings"
+                    [source]="thinPersons"
+                    (userRowSelect)="onUserRowSelected($event)"
+                  ></ng2-smart-table>
+                </ion-card-content>
               </ion-card>
             </ion-col>
           </ion-row>
           <ion-row fixed class="add-button-row">
             <ion-col>
-              <ion-button color="secondary" (click)="inviteClicked()">
+              <ion-button
+                color="secondary"
+                (click)="inviteClicked()"
+                [disabled]="!personsToInvite.length"
+              >
                 <ion-icon name="add-circle-outline" class="add-icon"></ion-icon>
                 Invite
               </ion-button>

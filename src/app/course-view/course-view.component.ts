@@ -48,10 +48,11 @@ export class CourseViewComponent implements OnInit {
   discussionOverviews: GeneralOverview[];
   gradeOverviews: any;
   thinPersons: ThinPerson[];
-  personsToInvite: LocalDataSource = new LocalDataSource();
+  personsToInvite: ThinPerson[];
 
   settings: any;
-  personSettings: any;
+  availablePersonsSettings: any;
+  personsToInviteSettings: any;
   defaultSlide: number;
 
   isTeacher: boolean;
@@ -93,7 +94,8 @@ export class CourseViewComponent implements OnInit {
       },
     };
 
-    this.personSettings = {
+    this.availablePersonsSettings = {
+      selectMode: "multi",
       actions: {
         add: false,
         edit: false,
@@ -114,6 +116,7 @@ export class CourseViewComponent implements OnInit {
     };
 
     this.defaultSlide = defaultSlideService.getDefaultSlide();
+    this.personsToInvite = [];
   }
 
   ngOnInit() {
@@ -408,19 +411,16 @@ export class CourseViewComponent implements OnInit {
     await modal.present();
   }
 
-  addPersonToList(event) {
-    this.personsToInvite.find(event.data).catch(() => {
-      this.personsToInvite.add(event.data);
-      this.personsToInvite.refresh();
-    });
+  onUserRowSelected(event) {
+    this.personsToInvite = event.selected;
   }
 
   inviteClicked() {
-    this.personsToInvite.getAll().then((persons: ThinPerson[]) => {
+    if (this.personsToInvite.length) {
       const invitations: InvitationCreation = {};
       invitations.courseId = this.course.id;
       invitations.emails = [];
-      persons.forEach((person) => {
+      this.personsToInvite.forEach((person) => {
         invitations.emails.push(person.email);
       });
       this.invitationService
@@ -432,9 +432,6 @@ export class CourseViewComponent implements OnInit {
               "Invitations sent!",
               "Congratulations!"
             );
-            this.personsToInvite
-              .load([])
-              .then(() => this.personsToInvite.refresh());
           },
           (error) => {
             console.log(error);
@@ -444,6 +441,11 @@ export class CourseViewComponent implements OnInit {
             );
           }
         );
-    });
+    } else {
+      this.toasterService.error(
+        "The invitation list must contain atleast one person!",
+        "Sending invitations failed!"
+      );
+    }
   }
 }

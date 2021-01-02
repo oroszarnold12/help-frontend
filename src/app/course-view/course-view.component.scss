@@ -28,8 +28,13 @@ ion-segment-button {
 
 .description {
   text-align: start;
+  overflow-wrap: anywhere;
 }
 
 .slide {
   padding-bottom: 100px;
+}
+
+tr {
+  word-break: break-all;
 }
