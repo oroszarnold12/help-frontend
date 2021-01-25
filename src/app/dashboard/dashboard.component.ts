@@ -45,7 +45,6 @@ export class DashboardComponent implements OnInit {
     this.loadCourses();
     this.loadInvitations();
     this.teacher = this.authService.isTeacher();
-    console.log(this.teacher);
   }
 
   async presentModal() {

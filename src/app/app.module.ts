@@ -28,6 +28,7 @@ import { QuillModule } from "ngx-quill";
 import { DiscussionFormComponent } from "./course-view/discussion-form/discussion-form.component";
 import { DescriptionFormComponent } from "./course-view/description-form/description-form.component";
 import { InvitationCardComponent } from "./dashboard/invitation-card/invitation-card.component";
+import { LoadingInterceptor } from "./interceptor/loading.interceptor";
 
 @NgModule({
   declarations: [
@@ -71,6 +72,11 @@ import { InvitationCardComponent } from "./dashboard/invitation-card/invitation-
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true,
     },
     DatePipe,

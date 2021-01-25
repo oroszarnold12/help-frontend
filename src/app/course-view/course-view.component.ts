@@ -172,7 +172,7 @@ export class CourseViewComponent implements OnInit {
       .subscribe(
         (course) => {
           this.toasterService.success(message, "Congratulations!");
-          this.ngOnInit();
+          this.loadCourse();
         },
         (error) => {
           this.toasterService.error(errorMessage, "Please try again!");
