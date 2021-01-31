@@ -5,6 +5,7 @@ import { CourseViewComponent } from "./course-view/course-view.component";
 import { LogInComponent } from "./log-in/log-in.component";
 import { GuardService } from "./guards/guard.service";
 import { AuthGuardService } from "./guards/auth-guard.service";
+import { RegistrationComponent } from "./registration/registration.component";
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
     path: "courses/:id",
     component: CourseViewComponent,
     canActivate: [AuthGuardService],
+  },
+  {
+    path: "registration",
+    component: RegistrationComponent,
   },
 ];
 

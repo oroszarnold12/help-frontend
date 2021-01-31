@@ -1,10 +1,14 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
 .form-signing {
-  padding-top: 20%;
+  padding-top: 10%;
   max-width: 360px;
 }
 
 .content {
   text-align: -webkit-center;
+}
+
+.block {
+  display: block;
 }

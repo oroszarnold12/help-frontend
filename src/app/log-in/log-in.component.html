@@ -1,6 +1,6 @@
 <div class="content">
   <form class="form-signing" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
-    <ion-item lines="full">
+    <ion-item lines="full" class="form-group">
       <ion-label position="floating" for="email">Email</ion-label>
       <ion-input
         class="ion-padding-bottom"
@@ -15,7 +15,7 @@
       ></ion-input>
     </ion-item>
 
-    <ion-item lines="full">
+    <ion-item lines="full" class="form-group">
       <ion-label position="floating" for="password">Password</ion-label>
       <ion-input
         type="password"
@@ -43,7 +43,9 @@
           [disabled]="!authForm.valid"
           >Log In</ion-button
         >
-        <a [routerLink]="['']" class="small-text">Create an account</a>
+        <a [routerLink]="['/registration']" class="small-text"
+          >Create an account</a
+        >
       </ion-col>
     </ion-row>
   </form>

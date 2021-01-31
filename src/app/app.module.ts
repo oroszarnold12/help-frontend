@@ -14,6 +14,7 @@ import { CourseCardComponent } from "./dashboard/course-card/course-card.compone
 import { TopbarComponent } from "./topbar/topbar.component";
 import { CourseViewComponent } from "./course-view/course-view.component";
 import { LogInComponent } from "./log-in/log-in.component";
+import { RegistrationComponent } from "./registration/registration.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TokenInterceptor } from "./interceptor/token.interceptor";
 import { ToastrModule } from "ngx-toastr";
@@ -45,6 +46,7 @@ import { LoadingInterceptor } from "./interceptor/loading.interceptor";
     AssignmentFormComponent,
     DiscussionFormComponent,
     DescriptionFormComponent,
+    RegistrationComponent,
   ],
   entryComponents: [
     CourseFormComponent,

@@ -4,6 +4,8 @@ import { Router } from "@angular/router";
 import { Observable, Subject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { LoginRequest } from "../model/login-request.model";
+import { PersonSignup } from "../model/person-signup.model";
+import { Person } from "../model/person.model";
 import { Role } from "../model/role.enum";
 import { LoginStatusService } from "./login-status.service";
 
@@ -53,6 +55,10 @@ export class AuthService {
           this.loginStatusService.changeStatus(false);
         })
       );
+  }
+
+  register(personSignup: PersonSignup): Observable<any> {
+    return this.httpClient.post<Person>("api/auth/sign-up", personSignup);
   }
 
   setRole() {
