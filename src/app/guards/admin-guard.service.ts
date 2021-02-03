@@ -1,24 +1,20 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { Role } from "../model/role.enum";
 import { AuthService } from "../shared/auth.service";
 
 @Injectable({
   providedIn: "root",
 })
-export class AuthGuardService {
+export class AdminGuardService {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate() {
-    return this.canLoad();
-  }
-
-  canLoad() {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(["login"]);
-    } else if (this.authService.isAdmin()) {
-      this.router.navigate(["admin"]);
+    if (this.authService.isLoggedIn()) {
+      if (this.authService.getRole() !== Role.ADMIN) {
+        this.router.navigate(["/dashboard"]);
+      }
     }
-
     return this.authService.isLoggedIn();
   }
 }

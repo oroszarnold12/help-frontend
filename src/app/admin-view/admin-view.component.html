@@ -1,0 +1,21 @@
+<ion-content class="content center">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card class="max-width-1000">
+          <ion-card-header>
+            <ion-card-title> Registered users </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ng2-smart-table
+              [settings]="personsSettings"
+              [source]="persons"
+              (deleteConfirm)="onDeleteConfirm($event)"
+              (editConfirm)="onEditConfirm($event)"
+            ></ng2-smart-table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

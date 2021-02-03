@@ -6,6 +6,8 @@ import { LogInComponent } from "./log-in/log-in.component";
 import { GuardService } from "./guards/guard.service";
 import { AuthGuardService } from "./guards/auth-guard.service";
 import { RegistrationComponent } from "./registration/registration.component";
+import { AdminViewComponent } from "./admin-view/admin-view.component";
+import { AdminGuardService } from "./guards/admin-guard.service";
 
 const routes: Routes = [
   {
@@ -31,6 +33,11 @@ const routes: Routes = [
   {
     path: "registration",
     component: RegistrationComponent,
+  },
+  {
+    path: "admin",
+    component: AdminViewComponent,
+    canActivate: [AdminGuardService],
   },
 ];
 

@@ -28,13 +28,14 @@ export class AuthService {
         observe: "response",
       })
       .pipe(
-        tap(() => {
-          this.setRole();
+        tap((res) => {
+          localStorage.setItem("role", res.body.role);
           localStorage.setItem("username", loginRequest.username);
           this.loginStatus.next({
             username: this.getUsername(),
             loggedIn: this.isLoggedIn(),
           });
+          this.loginStatusService.changeStatus(true);
         })
       );
   }
@@ -47,6 +48,7 @@ export class AuthService {
       .pipe(
         tap(() => {
           localStorage.setItem("username", "");
+          localStorage.setItem("role", "");
           this.router.navigate([""]);
           this.loginStatus.next({
             username: this.getUsername(),
@@ -59,15 +61,6 @@ export class AuthService {
 
   register(personSignup: PersonSignup): Observable<any> {
     return this.httpClient.post<Person>("api/auth/sign-up", personSignup);
-  }
-
-  setRole() {
-    this.httpClient
-      .get<{ role: Role }>("api/role", { withCredentials: true })
-      .subscribe((role) => {
-        localStorage.setItem("role", role.role);
-        this.loginStatusService.changeStatus(true);
-      });
   }
 
   pingBackend(): Observable<void> {
@@ -86,6 +79,10 @@ export class AuthService {
 
   isTeacher(): boolean {
     return localStorage.getItem("role") === Role.TEACHER;
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem("role") === Role.ADMIN;
   }
 
   isLoggedIn() {
