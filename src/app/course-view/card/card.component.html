@@ -10,6 +10,9 @@
           <p>{{ item.description }}</p>
         </ion-label>
         <ion-buttons *ngIf="isTeacher" slot="end">
+          <ion-button color="success" (click)="viewClicked(item.id)">
+            <ion-icon name="eye-outline"></ion-icon>
+          </ion-button>
           <ion-button color="danger" (click)="deleteClicked(item.id)">
             <ion-icon name="trash-outline"></ion-icon>
           </ion-button>

@@ -1,4 +1,4 @@
-import { Annoucement } from "./announcement.model";
+import { Announcement } from "./announcement.model";
 import { Assignment } from "./assignment.model";
 import { Discussion } from "./discussion.model";
 import { Person } from "./person.model";
@@ -9,7 +9,7 @@ export interface Course {
   longName?: string;
   description?: string;
   assignments?: Assignment[];
-  announcements?: Annoucement[];
+  announcements?: Announcement[];
   discussions?: Discussion[];
   teacher: Person;
 }

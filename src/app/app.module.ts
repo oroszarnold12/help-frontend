@@ -31,6 +31,7 @@ import { DescriptionFormComponent } from "./course-view/description-form/descrip
 import { InvitationCardComponent } from "./dashboard/invitation-card/invitation-card.component";
 import { LoadingInterceptor } from "./interceptor/loading.interceptor";
 import { AdminViewComponent } from "./admin-view/admin-view.component";
+import { AnnouncementViewComponent } from "./announcement-view/announcement-view.component";
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { AdminViewComponent } from "./admin-view/admin-view.component";
     DescriptionFormComponent,
     RegistrationComponent,
     AdminViewComponent,
+    AnnouncementViewComponent,
   ],
   entryComponents: [
     CourseFormComponent,

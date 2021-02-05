@@ -8,6 +8,7 @@ import { AuthGuardService } from "./guards/auth-guard.service";
 import { RegistrationComponent } from "./registration/registration.component";
 import { AdminViewComponent } from "./admin-view/admin-view.component";
 import { AdminGuardService } from "./guards/admin-guard.service";
+import { AnnouncementViewComponent } from "./announcement-view/announcement-view.component";
 
 const routes: Routes = [
   {
@@ -38,6 +39,11 @@ const routes: Routes = [
     path: "admin",
     component: AdminViewComponent,
     canActivate: [AdminGuardService],
+  },
+  {
+    path: "courses/:courseId/announcements/:announcementId",
+    component: AnnouncementViewComponent,
+    canActivate: [AuthGuardService],
   },
 ];
 

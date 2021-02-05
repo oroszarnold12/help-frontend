@@ -1,5 +1,4 @@
 import { DatePipe } from "@angular/common";
-import { ThrowStmt } from "@angular/compiler";
 import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
@@ -8,13 +7,12 @@ import {
   IonSlides,
   ModalController,
 } from "@ionic/angular";
-import { LocalDataSource } from "ng2-smart-table";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
 import { InvitationCreation } from "../model/invitation.creation.model";
-import { ThinPerson } from "../model/thin.person,model";
+import { ThinPerson } from "../model/thin.person.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
@@ -241,6 +239,10 @@ export class CourseViewComponent implements OnInit {
     });
   }
 
+  viewAnnouncement(event) {
+    this.router.navigate([`/courses/${this.course.id}/announcements/${event}`]);
+  }
+
   async deleteAnnouncement(event) {
     const alert = await this.alertController.create({
       header: "Confirm!",
@@ -253,13 +255,21 @@ export class CourseViewComponent implements OnInit {
         {
           text: "Yes",
           handler: () => {
-            this.course.announcements = this.course.announcements.filter(
-              (annoucement) => annoucement.id !== event
-            );
-            this.saveCourse(
-              "Announcement deletion successful!",
-              "Announcement deletion failed!"
-            );
+            this.courseService
+              .deleteAnnouncement(this.course.id, event)
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Announcement deletion successful!",
+                    "Congratulations!"
+                  );
+                  this.loadCourse();
+                },
+                (error) => {
+                  this.toasterService.error(error.error, "Please try again!");
+                }
+              );
           },
         },
       ],
@@ -365,7 +375,7 @@ export class CourseViewComponent implements OnInit {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
       componentProps: {
-        course: this.course,
+        courseId: this.course.id,
       },
     });
 

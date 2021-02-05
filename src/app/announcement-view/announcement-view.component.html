@@ -1,0 +1,34 @@
+<ion-content class="top-padding center" *ngIf="!!announcement">
+  <ion-grid>
+    <ion-row *ngIf="isTeacher" fixed class="add-button-row max-width">
+      <ion-col>
+        <ion-button color="primary" (click)="presentAnnouncementModal()">
+          <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+          Edit announcement
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card class="max-width start">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon
+                name="person-circle-outline"
+                class="account-icon"
+              ></ion-icon>
+              <div class="title">{{ announcement.name }}</div>
+              <ion-card-subtitle class="dark-blue"
+                >{{ announcement.creator.firstName }}
+                {{ announcement.creator.lastName }}
+              </ion-card-subtitle>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="mt20">
+            <div [innerHTML]="announcement.content"></div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

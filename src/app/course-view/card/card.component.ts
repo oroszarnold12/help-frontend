@@ -12,6 +12,7 @@ export class CardComponent implements OnInit {
   @Input() data: GeneralOverview[];
   @Input() title: string;
   @Output() onDeleteClicked = new EventEmitter<number>();
+  @Output() onViewClicked = new EventEmitter<number>();
 
   isTeacher: boolean;
 
@@ -19,6 +20,10 @@ export class CardComponent implements OnInit {
 
   deleteClicked(index: number) {
     this.onDeleteClicked.emit(index);
+  }
+
+  viewClicked(index: number) {
+    this.onViewClicked.emit(index);
   }
 
   ngOnInit() {
