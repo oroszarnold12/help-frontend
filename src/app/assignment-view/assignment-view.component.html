@@ -1,0 +1,35 @@
+<ion-content class="top-padding center" *ngIf="!!assignment">
+  <ion-grid>
+    <ion-row *ngIf="isTeacher" fixed class="tae max-width">
+      <ion-col>
+        <ion-button color="primary" (click)="presentAssignmentModal()">
+          <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+          Edit assignment
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card class="max-width start">
+          <ion-card-header>
+            <ion-card-title>
+              <div class="inline-block">
+                {{ assignment.name }}
+              </div>
+              <div class="float-right">
+                <ion-button color="success">Submit</ion-button>
+              </div>
+            </ion-card-title>
+            <ion-card-subtitle class="dark-blue">
+              <b>Due:</b> {{ assignment.dueDate }} | <b>Points:</b>
+              {{ assignment.points }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content class="mt20">
+            <div [innerHTML]="assignment.description"></div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -100,7 +100,6 @@ export class AnnouncementFormComponent implements OnInit {
               this.modalController.dismiss();
             },
             (error) => {
-              console.log(error);
               this.toasterService.error(error.error, "Please try again!");
             }
           );
@@ -119,7 +118,6 @@ export class AnnouncementFormComponent implements OnInit {
               this.modalController.dismiss();
             },
             (error) => {
-              console.log(error);
               this.toasterService.error(error.error, "Please try again!");
             }
           );

@@ -16,7 +16,8 @@ import { ToasterService } from "src/app/shared/toaster.service";
 export class AssignmentFormComponent implements OnInit {
   assignmentFrom: FormGroup;
   newAssignment: Assignment;
-  @Input() course: Course;
+  @Input() courseId: number;
+  @Input() assignment: Assignment;
   private stop: Subject<void> = new Subject();
   editorMaxLength = 16384;
 
@@ -53,6 +54,9 @@ export class AssignmentFormComponent implements OnInit {
 
   ngOnInit() {
     this.assignmentFrom = this.createFormGroup();
+    if (!!this.assignment) {
+      this.assignmentFrom.patchValue(this.assignment);
+    }
   }
 
   createFormGroup() {
@@ -80,24 +84,47 @@ export class AssignmentFormComponent implements OnInit {
 
   submitForm() {
     if (this.assignmentFrom.valid) {
-      this.newAssignment = this.assignmentFrom.value;
-      this.course.assignments.push(this.newAssignment);
-      this.courseService
-        .updateCourse(this.course, this.course.id)
-        .pipe(takeUntil(this.stop))
-        .subscribe(
-          (course) => {
-            this.assignmentFrom.reset();
-            this.toasterService.success(
-              "Congratulations!",
-              "Assignment created!"
-            );
-            this.modalController.dismiss();
-          },
-          (error) => {
-            this.toasterService.error(error.error, "Something went wrong!");
-          }
-        );
+      if (!!this.assignment) {
+        this.newAssignment = this.assignmentFrom.value;
+        this.courseService
+          .updateAssignment(
+            this.newAssignment,
+            this.courseId,
+            this.assignment.id
+          )
+          .pipe(takeUntil(this.stop))
+          .subscribe(
+            (assignment) => {
+              this.assignmentFrom.reset();
+              this.toasterService.success(
+                "Congratulations!",
+                "Assignment updated!"
+              );
+              this.modalController.dismiss();
+            },
+            (error) => {
+              this.toasterService.error(error.error, "Please try again!");
+            }
+          );
+      } else {
+        this.newAssignment = this.assignmentFrom.value;
+        this.courseService
+          .saveAssignment(this.newAssignment, this.courseId)
+          .pipe(takeUntil(this.stop))
+          .subscribe(
+            (assignment) => {
+              this.assignmentFrom.reset();
+              this.toasterService.success(
+                "Congratulations!",
+                "Assignment created!"
+              );
+              this.modalController.dismiss();
+            },
+            (error) => {
+              this.toasterService.error(error.error, "Please try again!");
+            }
+          );
+      }
     } else {
       this.toasterService.error(
         "All fields are required!",

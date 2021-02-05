@@ -5,6 +5,7 @@ import { Course } from "../model/course.model";
 import { Observable } from "rxjs";
 import { CourseCreation } from "../model/course-creation.model";
 import { Announcement } from "../model/announcement.model";
+import { Assignment } from "../model/assignment.model";
 
 @Injectable({
   providedIn: "root",
@@ -29,6 +30,15 @@ export class CourseService {
     );
   }
 
+  getAssignment(
+    courseId: number,
+    assignmentId: number
+  ): Observable<Assignment> {
+    return this.http.get<Assignment>(
+      `api/courses/${courseId}/assignments/${assignmentId}`
+    );
+  }
+
   saveCourse(course: CourseCreation): Observable<Course> {
     return this.http.post<Course>("api/courses", course);
   }
@@ -40,6 +50,16 @@ export class CourseService {
     return this.http.post<Announcement>(
       `api/courses/${courseId}/announcements`,
       announcement
+    );
+  }
+
+  saveAssignment(
+    assignment: Assignment,
+    courseId: number
+  ): Observable<Assignment> {
+    return this.http.post<Assignment>(
+      `api/courses/${courseId}/assignments`,
+      assignment
     );
   }
 
@@ -58,6 +78,17 @@ export class CourseService {
     );
   }
 
+  updateAssignment(
+    assignment: Assignment,
+    courseId: number,
+    assignmentId: number
+  ): Observable<Assignment> {
+    return this.http.put<Assignment>(
+      `api/courses/${courseId}/assignments/${assignmentId}`,
+      assignment
+    );
+  }
+
   deleteCourse(id: number): Observable<void> {
     return this.http.delete<void>(`api/courses/${id}`);
   }
@@ -68,6 +99,12 @@ export class CourseService {
   ): Observable<void> {
     return this.http.delete<void>(
       `api/courses/${courseId}/announcements/${announcementId}`
+    );
+  }
+
+  deleteAssignment(courseId: number, assignmentId: number): Observable<void> {
+    return this.http.delete<void>(
+      `api/courses/${courseId}/assignments/${assignmentId}`
     );
   }
 }

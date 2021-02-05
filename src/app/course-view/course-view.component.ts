@@ -243,6 +243,10 @@ export class CourseViewComponent implements OnInit {
     this.router.navigate([`/courses/${this.course.id}/announcements/${event}`]);
   }
 
+  viewAssignment(event) {
+    this.router.navigate([`/courses/${this.course.id}/assignments/${event}`]);
+  }
+
   async deleteAnnouncement(event) {
     const alert = await this.alertController.create({
       header: "Confirm!",
@@ -290,13 +294,21 @@ export class CourseViewComponent implements OnInit {
         {
           text: "Yes",
           handler: () => {
-            this.course.assignments = this.course.assignments.filter(
-              (assignment) => assignment.id !== event
-            );
-            this.saveCourse(
-              "Assignment deletion successful!",
-              "Assignemnt deletion failed!"
-            );
+            this.courseService
+              .deleteAssignment(this.course.id, event)
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Assignment deletion successful!",
+                    "Congratulations!"
+                  );
+                  this.loadCourse();
+                },
+                (error) => {
+                  this.toasterService.error(error.error, "Please try again!");
+                }
+              );
           },
         },
       ],
@@ -388,7 +400,7 @@ export class CourseViewComponent implements OnInit {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
       componentProps: {
-        course: this.course,
+        courseId: this.course.id,
       },
     });
 

@@ -9,6 +9,7 @@ import { RegistrationComponent } from "./registration/registration.component";
 import { AdminViewComponent } from "./admin-view/admin-view.component";
 import { AdminGuardService } from "./guards/admin-guard.service";
 import { AnnouncementViewComponent } from "./announcement-view/announcement-view.component";
+import { AssignmentViewComponent } from "./assignment-view/assignment-view.component";
 
 const routes: Routes = [
   {
@@ -43,6 +44,11 @@ const routes: Routes = [
   {
     path: "courses/:courseId/announcements/:announcementId",
     component: AnnouncementViewComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: "courses/:courseId/assignments/:assignmentId",
+    component: AssignmentViewComponent,
     canActivate: [AuthGuardService],
   },
 ];
