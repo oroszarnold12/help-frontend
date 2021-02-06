@@ -89,6 +89,7 @@
                 [data]="discussionOverviews"
                 [title]="'Discussions'"
                 (onDeleteClicked)="deleteDiscussion($event)"
+                (onViewClicked)="viewDiscussion($event)"
               ></app-card>
             </ion-col>
           </ion-row>
@@ -102,11 +103,11 @@
           <ion-col>
             <ion-button
               color="primary"
-              (click)="presentDescriptionModal()"
+              (click)="presentCourseModal()"
               class="add-button"
             >
               <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
-              Edit description
+              Edit course
             </ion-button>
           </ion-col>
         </ion-row>

@@ -9,6 +9,7 @@ import {
 } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { CourseFormComponent } from "../dashboard/course-form/course-form.component";
 import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
 import { InvitationCreation } from "../model/invitation.creation.model";
@@ -22,7 +23,6 @@ import { PersonService } from "../shared/person.service";
 import { ToasterService } from "../shared/toaster.service";
 import { AnnouncementFormComponent } from "./announcement-form/announcement-form.component";
 import { AssignmentFormComponent } from "./assignment-form/assignment-form.component";
-import { DescriptionFormComponent } from "./description-form/description-form.component";
 import { DiscussionFormComponent } from "./discussion-form/discussion-form.component";
 
 @Component({
@@ -163,21 +163,6 @@ export class CourseViewComponent implements OnInit {
     });
   }
 
-  saveCourse(message: string, errorMessage: string): void {
-    this.courseService
-      .updateCourse(this.course, this.course.id)
-      .pipe(takeUntil(this.stop))
-      .subscribe(
-        (course) => {
-          this.toasterService.success(message, "Congratulations!");
-          this.loadCourse();
-        },
-        (error) => {
-          this.toasterService.error(errorMessage, "Please try again!");
-        }
-      );
-  }
-
   createAssignmentOverviews() {
     const { assignments } = this.course;
     this.assignmentOverviews = assignments.map((assignment) => ({
@@ -245,6 +230,10 @@ export class CourseViewComponent implements OnInit {
 
   viewAssignment(event) {
     this.router.navigate([`/courses/${this.course.id}/assignments/${event}`]);
+  }
+
+  viewDiscussion(event) {
+    this.router.navigate([`/courses/${this.course.id}/discussions/${event}`]);
   }
 
   async deleteAnnouncement(event) {
@@ -329,13 +318,21 @@ export class CourseViewComponent implements OnInit {
         {
           text: "Yes",
           handler: () => {
-            this.course.discussions = this.course.discussions.filter(
-              (discussion) => discussion.id !== event
-            );
-            this.saveCourse(
-              "Discussion deletion successful!",
-              "Discussion deletion failed!"
-            );
+            this.courseService
+              .deleteDiscussions(this.course.id, event)
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Discussion deletion successful!",
+                    "Congratulations!"
+                  );
+                  this.loadCourse();
+                },
+                (error) => {
+                  this.toasterService.error(error.error, "Please try again!");
+                }
+              );
           },
         },
       ],
@@ -391,7 +388,7 @@ export class CourseViewComponent implements OnInit {
       },
     });
 
-    modal.onDidDismiss().then(() => this.ngOnInit());
+    modal.onDidDismiss().then(() => this.loadCourse());
 
     await modal.present();
   }
@@ -404,7 +401,7 @@ export class CourseViewComponent implements OnInit {
       },
     });
 
-    modal.onDidDismiss().then(() => this.ngOnInit());
+    modal.onDidDismiss().then(() => this.loadCourse());
 
     await modal.present();
   }
@@ -413,22 +410,24 @@ export class CourseViewComponent implements OnInit {
     const modal = await this.modalController.create({
       component: DiscussionFormComponent,
       componentProps: {
-        course: this.course,
+        courseId: this.course.id,
       },
     });
 
-    modal.onDidDismiss().then(() => this.ngOnInit());
+    modal.onDidDismiss().then(() => this.loadCourse());
 
     await modal.present();
   }
 
-  async presentDescriptionModal() {
+  async presentCourseModal() {
     const modal = await this.modalController.create({
-      component: DescriptionFormComponent,
+      component: CourseFormComponent,
       componentProps: {
         course: this.course,
       },
     });
+
+    modal.onDidDismiss().then(() => this.loadCourse());
 
     await modal.present();
   }

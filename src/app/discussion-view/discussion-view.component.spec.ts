@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { DescriptionFormComponent } from './description-form.component';
+import { DiscussionViewComponent } from './discussion-view.component';
 
-describe('DescriptionFormComponent', () => {
-  let component: DescriptionFormComponent;
-  let fixture: ComponentFixture<DescriptionFormComponent>;
+describe('DiscussionViewComponent', () => {
+  let component: DiscussionViewComponent;
+  let fixture: ComponentFixture<DiscussionViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DescriptionFormComponent ],
+      declarations: [ DiscussionViewComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DescriptionFormComponent);
+    fixture = TestBed.createComponent(DiscussionViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

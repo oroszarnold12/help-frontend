@@ -16,7 +16,8 @@ import { ToasterService } from "src/app/shared/toaster.service";
 export class DiscussionFormComponent implements OnInit {
   discussionFrom: FormGroup;
   newDiscussion: Discussion;
-  @Input() course: Course;
+  @Input() courseId: number;
+  @Input() discussion: Discussion;
   private stop: Subject<void> = new Subject();
   editorMaxLength = 16384;
 
@@ -53,6 +54,9 @@ export class DiscussionFormComponent implements OnInit {
 
   ngOnInit() {
     this.discussionFrom = this.createFormGroup();
+    if (!!this.discussion) {
+      this.discussionFrom.patchValue(this.discussion);
+    }
   }
 
   createFormGroup() {
@@ -78,26 +82,47 @@ export class DiscussionFormComponent implements OnInit {
 
   submitForm() {
     if (this.discussionFrom.valid) {
-      this.newDiscussion = this.discussionFrom.value;
-      this.newDiscussion.date = new Date().toISOString();
-      this.newDiscussion.comments = [];
-      this.course.discussions.push(this.newDiscussion);
-      this.courseService
-        .updateCourse(this.course, this.course.id)
-        .pipe(takeUntil(this.stop))
-        .subscribe(
-          (course) => {
-            this.discussionFrom.reset();
-            this.toasterService.success(
-              "Congratulations!",
-              "Discussion created!"
-            );
-            this.modalController.dismiss();
-          },
-          (error) => {
-            this.toasterService.error(error.error, "Something went wrong!");
-          }
-        );
+      if (!!this.discussion) {
+        this.newDiscussion = this.discussionFrom.value;
+        this.courseService
+          .updateDiscussion(
+            this.newDiscussion,
+            this.courseId,
+            this.discussion.id
+          )
+          .pipe(takeUntil(this.stop))
+          .subscribe(
+            (discussion) => {
+              this.discussionFrom.reset();
+              this.toasterService.success(
+                "Congratulations!",
+                "Discussion updated!"
+              );
+              this.modalController.dismiss();
+            },
+            (error) => {
+              this.toasterService.error(error.error, "Please try again!");
+            }
+          );
+      } else {
+        this.newDiscussion = this.discussionFrom.value;
+        this.courseService
+          .saveDiscussion(this.newDiscussion, this.courseId)
+          .pipe(takeUntil(this.stop))
+          .subscribe(
+            (discussion) => {
+              this.discussionFrom.reset();
+              this.toasterService.success(
+                "Congratulations!",
+                "Discussion created!"
+              );
+              this.modalController.dismiss();
+            },
+            (error) => {
+              this.toasterService.error(error.error, "Please try again!");
+            }
+          );
+      }
     } else {
       this.toasterService.error(
         "All fields are required!",

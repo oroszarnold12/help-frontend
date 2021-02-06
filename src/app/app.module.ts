@@ -27,12 +27,12 @@ import { AnnouncementFormComponent } from "./course-view/announcement-form/annou
 import { AssignmentFormComponent } from "./course-view/assignment-form/assignment-form.component";
 import { QuillModule } from "ngx-quill";
 import { DiscussionFormComponent } from "./course-view/discussion-form/discussion-form.component";
-import { DescriptionFormComponent } from "./course-view/description-form/description-form.component";
 import { InvitationCardComponent } from "./dashboard/invitation-card/invitation-card.component";
 import { LoadingInterceptor } from "./interceptor/loading.interceptor";
 import { AdminViewComponent } from "./admin-view/admin-view.component";
 import { AnnouncementViewComponent } from "./announcement-view/announcement-view.component";
 import { AssignmentViewComponent } from "./assignment-view/assignment-view.component";
+import { DiscussionViewComponent } from "./discussion-view/discussion-view.component";
 
 @NgModule({
   declarations: [
@@ -48,18 +48,17 @@ import { AssignmentViewComponent } from "./assignment-view/assignment-view.compo
     AnnouncementFormComponent,
     AssignmentFormComponent,
     DiscussionFormComponent,
-    DescriptionFormComponent,
     RegistrationComponent,
     AdminViewComponent,
     AnnouncementViewComponent,
     AssignmentViewComponent,
+    DiscussionViewComponent,
   ],
   entryComponents: [
     CourseFormComponent,
     AnnouncementFormComponent,
     AssignmentFormComponent,
     DiscussionFormComponent,
-    DescriptionFormComponent,
   ],
   imports: [
     BrowserModule,

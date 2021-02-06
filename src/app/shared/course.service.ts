@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 import { CourseCreation } from "../model/course-creation.model";
 import { Announcement } from "../model/announcement.model";
 import { Assignment } from "../model/assignment.model";
+import { Discussion } from "../model/discussion.model";
 
 @Injectable({
   providedIn: "root",
@@ -39,6 +40,15 @@ export class CourseService {
     );
   }
 
+  getDiscussion(
+    courseId: number,
+    discussionId: number
+  ): Observable<Discussion> {
+    return this.http.get<Discussion>(
+      `api/courses/${courseId}/discussions/${discussionId}`
+    );
+  }
+
   saveCourse(course: CourseCreation): Observable<Course> {
     return this.http.post<Course>("api/courses", course);
   }
@@ -63,7 +73,17 @@ export class CourseService {
     );
   }
 
-  updateCourse(course: Course, id: number): Observable<Course> {
+  saveDiscussion(
+    discussion: Discussion,
+    courseId: number
+  ): Observable<Discussion> {
+    return this.http.post<Discussion>(
+      `api/courses/${courseId}/discussions`,
+      discussion
+    );
+  }
+
+  updateCourse(course: CourseCreation, id: number): Observable<Course> {
     return this.http.put<Course>(`api/courses/${id}`, course);
   }
 
@@ -89,6 +109,17 @@ export class CourseService {
     );
   }
 
+  updateDiscussion(
+    discussion: Discussion,
+    courseId: number,
+    discussionId: number
+  ): Observable<Discussion> {
+    return this.http.put<Discussion>(
+      `api/courses/${courseId}/discussions/${discussionId}`,
+      discussion
+    );
+  }
+
   deleteCourse(id: number): Observable<void> {
     return this.http.delete<void>(`api/courses/${id}`);
   }
@@ -105,6 +136,12 @@ export class CourseService {
   deleteAssignment(courseId: number, assignmentId: number): Observable<void> {
     return this.http.delete<void>(
       `api/courses/${courseId}/assignments/${assignmentId}`
+    );
+  }
+
+  deleteDiscussions(courseId: number, discussionId: number): Observable<void> {
+    return this.http.delete<void>(
+      `api/courses/${courseId}/discussions/${discussionId}`
     );
   }
 }

@@ -1,0 +1,34 @@
+<ion-content class="top-padding center" *ngIf="!!discussion">
+  <ion-grid>
+    <ion-row *ngIf="isTeacher" fixed class="add-button-row max-width">
+      <ion-col>
+        <ion-button color="primary" (click)="presentDiscussionModal()">
+          <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+          Edit discussion
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card class="max-width start">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon
+                name="person-circle-outline"
+                class="account-icon"
+              ></ion-icon>
+              <div class="title">{{ discussion.name }}</div>
+              <ion-card-subtitle class="dark-blue"
+                >{{ discussion.creator.firstName }}
+                {{ discussion.creator.lastName }}
+              </ion-card-subtitle>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="mt20">
+            <div [innerHTML]="discussion.content"></div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
