@@ -209,8 +209,7 @@ export class CourseViewComponent implements OnInit {
       description: `Date: ${this.datePite.transform(
         new Date(discussion.date),
         "medium"
-      )} | 
-      Nr. of comments: ${discussion.comments.length}`,
+      )}`,
     }));
   }
 
@@ -260,7 +259,10 @@ export class CourseViewComponent implements OnInit {
                   this.loadCourse();
                 },
                 (error) => {
-                  this.toasterService.error(error.error, "Please try again!");
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
                 }
               );
           },
@@ -295,7 +297,10 @@ export class CourseViewComponent implements OnInit {
                   this.loadCourse();
                 },
                 (error) => {
-                  this.toasterService.error(error.error, "Please try again!");
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
                 }
               );
           },
@@ -330,7 +335,10 @@ export class CourseViewComponent implements OnInit {
                   this.loadCourse();
                 },
                 (error) => {
-                  this.toasterService.error(error.error, "Please try again!");
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
                 }
               );
           },

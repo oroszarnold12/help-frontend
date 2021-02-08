@@ -3,7 +3,6 @@ import { ActivatedRoute } from "@angular/router";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { AnnouncementFormComponent } from "../course-view/announcement-form/announcement-form.component";
 import { DiscussionFormComponent } from "../course-view/discussion-form/discussion-form.component";
 import { Discussion } from "../model/discussion.model";
 import { AuthService } from "../shared/auth.service";

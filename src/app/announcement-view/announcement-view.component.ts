@@ -1,14 +1,16 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { ModalController } from "@ionic/angular";
+import { AlertController, ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AnnouncementFormComponent } from "../course-view/announcement-form/announcement-form.component";
 import { Announcement } from "../model/announcement.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
+import { CommentService } from "../shared/comment.service";
 import { CourseService } from "../shared/course.service";
 import { ToasterService } from "../shared/toaster.service";
+import { AnnouncementCommentFormComponent } from "./announcement-comment-form/announcement-comment-form.component";
 
 @Component({
   selector: "app-announcement-view",
@@ -20,6 +22,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
   isTeacher: boolean;
   courseId: number;
+  username: string;
 
   constructor(
     private courseService: CourseService,
@@ -27,7 +30,9 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     private toasterService: ToasterService,
     private backButtonService: BackButtonService,
     private authService: AuthService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private commentService: CommentService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -35,6 +40,12 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
 
     this.isTeacher = this.authService.isTeacher();
 
+    this.username = this.authService.getUsername();
+
+    this.loadAnnouncement();
+  }
+
+  loadAnnouncement() {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
       this.courseService
@@ -71,5 +82,67 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     modal.onDidDismiss().then(() => this.ngOnInit());
 
     await modal.present();
+  }
+
+  async presentCommentModal(comment) {
+    const modal = await this.modalController.create({
+      component: AnnouncementCommentFormComponent,
+      componentProps: {
+        courseId: this.courseId,
+        announcementId: this.announcement.id,
+        comment: comment,
+      },
+    });
+
+    modal.onDidDismiss().then(() => this.ngOnInit());
+
+    await modal.present();
+  }
+
+  onEditClicked(comment) {
+    this.presentCommentModal(comment);
+  }
+
+  async onDeleteClicked(id) {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this comment?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.commentService
+              .deleteAnnouncementComment(
+                this.courseId,
+                this.announcement.id,
+                id
+              )
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Comment deletion successful!",
+                    "Congratulations!"
+                  );
+                  this.loadAnnouncement();
+                },
+                (error) => {
+                  console.log(error);
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
+                }
+              );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

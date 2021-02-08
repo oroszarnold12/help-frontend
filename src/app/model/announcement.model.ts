@@ -1,3 +1,4 @@
+import { AnnouncementComment } from "./announcement-comment.model";
 import { Person } from "./person.model";
 
 export interface Announcement {
@@ -6,4 +7,5 @@ export interface Announcement {
   date?: string;
   content?: string;
   creator?: Person;
+  comments?: AnnouncementComment[];
 }

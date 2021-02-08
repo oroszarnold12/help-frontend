@@ -33,6 +33,7 @@ import { AdminViewComponent } from "./admin-view/admin-view.component";
 import { AnnouncementViewComponent } from "./announcement-view/announcement-view.component";
 import { AssignmentViewComponent } from "./assignment-view/assignment-view.component";
 import { DiscussionViewComponent } from "./discussion-view/discussion-view.component";
+import { AnnouncementCommentFormComponent } from "./announcement-view/announcement-comment-form/announcement-comment-form.component";
 
 @NgModule({
   declarations: [
@@ -53,12 +54,14 @@ import { DiscussionViewComponent } from "./discussion-view/discussion-view.compo
     AnnouncementViewComponent,
     AssignmentViewComponent,
     DiscussionViewComponent,
+    AnnouncementCommentFormComponent,
   ],
   entryComponents: [
     CourseFormComponent,
     AnnouncementFormComponent,
     AssignmentFormComponent,
     DiscussionFormComponent,
+    AnnouncementCommentFormComponent,
   ],
   imports: [
     BrowserModule,

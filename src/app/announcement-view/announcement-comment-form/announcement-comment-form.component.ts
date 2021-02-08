@@ -1,25 +1,26 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { Announcement } from "src/app/model/announcement.model";
-import { CourseService } from "src/app/shared/course.service";
+import { AnnouncementComment } from "src/app/model/announcement-comment.model";
+import { CommentService } from "src/app/shared/comment.service";
 import { ToasterService } from "src/app/shared/toaster.service";
 
 @Component({
-  selector: "app-announcement-form",
-  templateUrl: "./announcement-form.component.html",
-  styleUrls: ["./announcement-form.component.scss"],
+  selector: "app-announcement-comment-form",
+  templateUrl: "./announcement-comment-form.component.html",
+  styleUrls: ["./announcement-comment-form.component.scss"],
 })
-export class AnnouncementFormComponent implements OnInit {
-  announcementForm: FormGroup;
-  newAnnouncement: Announcement;
+export class AnnouncementCommentFormComponent implements OnInit {
+  commentForm: FormGroup;
+  commentCreation: AnnouncementComment;
+  @Input() comment: AnnouncementComment;
   @Input() courseId: number;
-  @Input() announcement: Announcement;
+  @Input() announcementId: number;
   private stop: Subject<void> = new Subject();
-  editorMaxLength = 16384;
 
+  editorMaxLength = 2048;
   editorStyle = {
     height: "300px",
   };
@@ -48,22 +49,18 @@ export class AnnouncementFormComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private toasterService: ToasterService,
-    private courseService: CourseService
+    private commentService: CommentService
   ) {}
 
   ngOnInit() {
-    this.announcementForm = this.createFormGroup();
-    if (!!this.announcement) {
-      this.announcementForm.patchValue(this.announcement);
+    this.commentForm = this.createFormGroup();
+    if (!!this.comment) {
+      this.commentForm.patchValue(this.comment);
     }
   }
 
   createFormGroup() {
     return new FormGroup({
-      name: new FormControl("", [
-        Validators.required,
-        Validators.maxLength(255),
-      ]),
       content: new FormControl("", [
         Validators.required,
         Validators.maxLength(this.editorMaxLength),
@@ -71,31 +68,24 @@ export class AnnouncementFormComponent implements OnInit {
     });
   }
 
-  dismissModal() {
-    this.modalController.dismiss();
-  }
-
-  get errorControl() {
-    return this.announcementForm.controls;
-  }
-
   submitForm() {
-    if (this.announcementForm.valid) {
-      if (!!this.announcement) {
-        this.newAnnouncement = this.announcementForm.value;
-        this.courseService
-          .updateAnnouncement(
-            this.newAnnouncement,
+    if (this.commentForm.valid) {
+      if (!!this.comment) {
+        this.commentCreation = this.commentForm.value;
+        this.commentService
+          .updateAnnouncementComment(
             this.courseId,
-            this.announcement.id
+            this.announcementId,
+            this.comment.id,
+            this.commentCreation
           )
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (announcement) => {
-              this.announcementForm.reset();
+            (comment) => {
+              this.commentForm.reset();
               this.toasterService.success(
                 "Congratulations!",
-                "Announcement updated!"
+                "Comment updated!"
               );
               this.modalController.dismiss();
             },
@@ -107,16 +97,20 @@ export class AnnouncementFormComponent implements OnInit {
             }
           );
       } else {
-        this.newAnnouncement = this.announcementForm.value;
-        this.courseService
-          .saveAnnouncement(this.newAnnouncement, this.courseId)
+        this.commentCreation = this.commentForm.value;
+        this.commentService
+          .saveAnnouncementComment(
+            this.courseId,
+            this.announcementId,
+            this.commentCreation
+          )
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (announcement) => {
-              this.announcementForm.reset();
+            (comment) => {
+              this.commentForm.reset();
               this.toasterService.success(
                 "Congratulations!",
-                "Announcement created!"
+                "Comment created!"
               );
               this.modalController.dismiss();
             },
@@ -131,9 +125,17 @@ export class AnnouncementFormComponent implements OnInit {
     } else {
       this.toasterService.error(
         "All fields are required!",
-        "Announcement creation failed!"
+        "Comment creation failed!"
       );
     }
+  }
+
+  dismissModal() {
+    this.modalController.dismiss();
+  }
+
+  get errorControl() {
+    return this.commentForm.controls;
   }
 
   ngOnDestroy() {

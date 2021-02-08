@@ -108,7 +108,10 @@ export class DashboardComponent implements OnInit {
                   this.ngOnInit();
                 },
                 (error) => {
-                  this.toasterService.error(error.error, "Accepting failed!");
+                  this.toasterService.error(
+                    error.error.message,
+                    "Accepting failed!"
+                  );
                 }
               );
           },
@@ -143,7 +146,10 @@ export class DashboardComponent implements OnInit {
                   this.ngOnInit();
                 },
                 (error) => {
-                  this.toasterService.error(error.error, "Declining failed!");
+                  this.toasterService.error(
+                    error.error.message,
+                    "Declining failed!"
+                  );
                 }
               );
           },

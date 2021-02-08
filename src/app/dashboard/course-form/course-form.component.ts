@@ -96,7 +96,10 @@ export class CourseFormComponent implements OnInit {
               this.modalController.dismiss();
             },
             (error) => {
-              this.toasterService.error(error.error, "Please try again!");
+              this.toasterService.error(
+                error.error.message,
+                "Please try again!"
+              );
             }
           );
       } else {
@@ -114,7 +117,10 @@ export class CourseFormComponent implements OnInit {
               this.modalController.dismiss();
             },
             (error) => {
-              this.toasterService.error(error.error, "Please try again!");
+              this.toasterService.error(
+                error.error.message,
+                "Please try again!"
+              );
             }
           );
       }

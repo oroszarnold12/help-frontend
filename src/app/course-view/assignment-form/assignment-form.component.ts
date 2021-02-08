@@ -4,7 +4,6 @@ import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Assignment } from "src/app/model/assignment.model";
-import { Course } from "src/app/model/course.model";
 import { CourseService } from "src/app/shared/course.service";
 import { ToasterService } from "src/app/shared/toaster.service";
 
@@ -103,7 +102,10 @@ export class AssignmentFormComponent implements OnInit {
               this.modalController.dismiss();
             },
             (error) => {
-              this.toasterService.error(error.error, "Please try again!");
+              this.toasterService.error(
+                error.error.message,
+                "Please try again!"
+              );
             }
           );
       } else {
@@ -121,7 +123,10 @@ export class AssignmentFormComponent implements OnInit {
               this.modalController.dismiss();
             },
             (error) => {
-              this.toasterService.error(error.error, "Please try again!");
+              this.toasterService.error(
+                error.error.message,
+                "Please try again!"
+              );
             }
           );
       }

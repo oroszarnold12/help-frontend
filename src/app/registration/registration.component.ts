@@ -79,7 +79,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
           );
         },
         (error) => {
-          this.toasterService.error(error.error, "Please try again!");
+          this.toasterService.error(error.error.message, "Please try again!");
         }
       );
     } else {

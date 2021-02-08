@@ -101,7 +101,10 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                   event.confirm.resolve();
                 },
                 (error) => {
-                  this.toasterService.error(error.error, "Please try again!");
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
                 }
               );
           },
@@ -125,7 +128,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           event.confirm.resolve();
         },
         (error) => {
-          this.toasterService.error(error.error, "Please try again!");
+          this.toasterService.error(error.error.message, "Please try again!");
         }
       );
   }

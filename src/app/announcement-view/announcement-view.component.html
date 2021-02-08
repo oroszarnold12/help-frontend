@@ -1,5 +1,5 @@
 <ion-content class="top-padding center" *ngIf="!!announcement">
-  <ion-grid>
+  <ion-grid class="pb-100">
     <ion-row *ngIf="isTeacher" fixed class="add-button-row max-width">
       <ion-col>
         <ion-button color="primary" (click)="presentAnnouncementModal()">
@@ -26,6 +26,54 @@
           </ion-card-header>
           <ion-card-content class="mt20">
             <div [innerHTML]="announcement.content"></div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row fixed class="add-button-row max-width">
+      <ion-col class="start">
+        <p class="mb-0 mt-30">Comments</p>
+      </ion-col>
+      <ion-col>
+        <ion-button color="success" (click)="presentCommentModal()">
+          <ion-icon name="arrow-undo-outline"></ion-icon>
+          Reply
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let comment of announcement.comments.slice().reverse()">
+      <ion-col>
+        <ion-card class="max-width start">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-item>
+                <ion-icon
+                  name="person-circle-outline"
+                  class="account-icon"
+                ></ion-icon>
+                <ion-buttons
+                  slot="end"
+                  *ngIf="comment.commenter.email === username"
+                >
+                  <ion-button color="primary" (click)="onEditClicked(comment)">
+                    <ion-icon name="create-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button
+                    color="danger"
+                    (click)="onDeleteClicked(comment.id)"
+                  >
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+                <ion-card-subtitle class="dark-blue"
+                  >{{ comment.commenter.firstName }}
+                  {{ comment.commenter.lastName }}
+                </ion-card-subtitle>
+              </ion-item>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div [innerHTML]="comment.content"></div>
           </ion-card-content>
         </ion-card>
       </ion-col>
