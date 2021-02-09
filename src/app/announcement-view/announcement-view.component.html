@@ -22,6 +22,9 @@
                 >{{ announcement.creator.firstName }}
                 {{ announcement.creator.lastName }}
               </ion-card-subtitle>
+              <ion-card-subtitle>
+                {{ announcement.date | date: "medium" }}
+              </ion-card-subtitle>
             </ion-card-title>
           </ion-card-header>
           <ion-card-content class="mt20">
@@ -44,7 +47,7 @@
     <ion-row *ngFor="let comment of announcement.comments.slice().reverse()">
       <ion-col>
         <ion-card class="max-width start">
-          <ion-card-header>
+          <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-item>
                 <ion-icon
@@ -54,6 +57,7 @@
                 <ion-buttons
                   slot="end"
                   *ngIf="comment.commenter.email === username"
+                  class="ion-no-margin"
                 >
                   <ion-button color="primary" (click)="onEditClicked(comment)">
                     <ion-icon name="create-outline"></ion-icon>
@@ -68,6 +72,9 @@
                 <ion-card-subtitle class="dark-blue"
                   >{{ comment.commenter.firstName }}
                   {{ comment.commenter.lastName }}
+                </ion-card-subtitle>
+                <ion-card-subtitle>
+                  &nbsp;- {{ comment.date | date: "medium" }}
                 </ion-card-subtitle>
               </ion-item>
             </ion-card-title>

@@ -16,6 +16,8 @@ export class CardComponent implements OnInit {
 
   isTeacher: boolean;
 
+  username: string;
+
   constructor(private authService: AuthService) {}
 
   deleteClicked(index: number) {
@@ -28,5 +30,7 @@ export class CardComponent implements OnInit {
 
   ngOnInit() {
     this.isTeacher = this.authService.isTeacher();
+
+    this.username = this.authService.getUsername();
   }
 }

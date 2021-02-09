@@ -1,3 +1,4 @@
+import { DiscussionComment } from "./discussion-comment.model";
 import { Person } from "./person.model";
 
 export interface Discussion {
@@ -5,6 +6,6 @@ export interface Discussion {
   name?: string;
   content?: string;
   date?: string;
-  comments?: string[];
   creator?: Person;
+  comments?: DiscussionComment[];
 }

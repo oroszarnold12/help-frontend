@@ -100,11 +100,12 @@ export class CourseViewComponent implements OnInit {
         delete: false,
       },
       columns: {
-        firstName: {
-          title: "First name",
-        },
-        lastName: {
-          title: "Last name",
+        name: {
+          title: "Name",
+          editable: false,
+          valuePrepareFunction: (cell, row) => {
+            return row.firstName + " " + row.lastName;
+          },
         },
         email: {
           title: "Email address",
@@ -210,6 +211,7 @@ export class CourseViewComponent implements OnInit {
         new Date(discussion.date),
         "medium"
       )}`,
+      creatorUsername: discussion.creator.email,
     }));
   }
 

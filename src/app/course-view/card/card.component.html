@@ -14,7 +14,7 @@
             <ion-icon name="eye-outline"></ion-icon>
           </ion-button>
           <ion-button
-            *ngIf="isTeacher"
+            *ngIf="isTeacher || item.creatorUsername === username"
             color="danger"
             (click)="deleteClicked(item.id)"
           >
