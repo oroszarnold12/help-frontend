@@ -1,0 +1,68 @@
+<ion-content class="top-padding tac" *ngIf="!!assignment">
+  <ion-card class="mw tas">
+    <ion-card-header>
+      <ion-card-title> Submissions </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row *ngFor="let submitter of submitters">
+          <ion-col class="dark-blue"
+            >{{ submitter.firstName }} {{ submitter.lastName }}</ion-col
+          >
+          <ion-col class="minw-150">
+            <ion-row
+              class="owrap"
+              *ngFor="
+                let submission of getSubmissionsBySubmitterId(submitter.id)
+              "
+            >
+              <ion-buttons
+                [ngClass]="submission.date > assignment.dueDate ? 'late' : ''"
+              >
+                {{ submission.fileName }} -
+                {{ submission.date | date: "MMM d, h:mm a" }}
+                <div *ngIf="submission.date > assignment.dueDate" class="dc">
+                  &nbsp;(late)
+                </div>
+                <ion-button
+                  (click)="
+                    onSubmissionClicked(submission.id, submission.fileName)
+                  "
+                >
+                  <ion-icon
+                    class="dark-blue"
+                    name="download-outline"
+                  ></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-row>
+          </ion-col>
+          <ion-col>
+            <form #gradeFrom="ngForm">
+              <ion-item lines="full" class="form-group">
+                <ion-label position="floating" for="grade">
+                  Enter grade
+                </ion-label>
+                <ion-input
+                  type="number"
+                  id="points"
+                  name="grade"
+                  [(ngModel)]="grades[submitter.id]"
+                  required
+                ></ion-input>
+              </ion-item>
+            </form>
+          </ion-col>
+          <ion-col>
+            <ion-button
+              [disabled]="!gradeFrom.form.valid"
+              (click)="grade(submitter.id)"
+            >
+              Grade
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

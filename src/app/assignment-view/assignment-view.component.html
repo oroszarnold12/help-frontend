@@ -17,13 +17,57 @@
                 {{ assignment.name }}
               </div>
               <div class="float-right">
-                <ion-button color="success">Submit</ion-button>
+                <ion-button
+                  [color]="isSubmitting ? 'danger' : 'success'"
+                  (click)="onSubmitClicked()"
+                >
+                  {{ isSubmitting ? "Exit" : "Submit" }}
+                </ion-button>
               </div>
             </ion-card-title>
             <ion-card-subtitle class="dark-blue">
-              <b>Due:</b> {{ assignment.dueDate }} | <b>Points:</b>
+              <b>Due:</b> {{ assignment.dueDate | date: "medium" }} |
+              <b>Points:</b>
               {{ assignment.points }}
             </ion-card-subtitle>
+            <div *ngIf="isSubmitting">
+              <input type="file" (change)="onFileChange($event)" />
+              <ion-button color="primary" (click)="uploadFile()">
+                Upload
+              </ion-button>
+            </div>
+            <div *ngIf="isTeacher">
+              <p class="link" (click)="goToSubmissions()">View submissions</p>
+            </div>
+            <div *ngIf="!!submissions && submissions.length > 0 && !isTeacher">
+              <p>Submissions:</p>
+              <div *ngFor="let submission of submissions" class="owrap">
+                <ion-buttons
+                  slot="end"
+                  [ngClass]="submission.date > assignment.dueDate ? 'late' : ''"
+                >
+                  {{ submission.fileName }} -
+                  {{ submission.date | date: "medium" }}
+                  <div *ngIf="submission.date > assignment.dueDate" class="dc">
+                    &nbsp;(late)
+                  </div>
+                  <ion-button
+                    (click)="
+                      onSubmissionClicked(submission.id, submission.fileName)
+                    "
+                  >
+                    <ion-icon
+                      class="dark-blue"
+                      name="download-outline"
+                    ></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </div>
+              <ng-container *ngIf="isGraded; else elseTemplate">
+                Grade: {{ submissions[0].grade }} out of {{ assignment.points }}
+              </ng-container>
+              <ng-template #elseTemplate> Not yet graded. </ng-template>
+            </div>
           </ion-card-header>
           <ion-card-content class="mt20">
             <div [innerHTML]="assignment.description"></div>

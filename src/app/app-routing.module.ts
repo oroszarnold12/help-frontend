@@ -11,6 +11,7 @@ import { AdminGuardService } from "./guards/admin-guard.service";
 import { AnnouncementViewComponent } from "./announcement-view/announcement-view.component";
 import { AssignmentViewComponent } from "./assignment-view/assignment-view.component";
 import { DiscussionViewComponent } from "./discussion-view/discussion-view.component";
+import { SubmissionViewComponent } from "./submission-view/submission-view.component";
 
 const routes: Routes = [
   {
@@ -55,6 +56,11 @@ const routes: Routes = [
   {
     path: "courses/:courseId/discussions/:discussionId",
     component: DiscussionViewComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: "courses/:courseId/assignments/:assignmentId/submissions",
+    component: SubmissionViewComponent,
     canActivate: [AuthGuardService],
   },
 ];

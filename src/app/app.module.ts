@@ -35,6 +35,7 @@ import { AssignmentViewComponent } from "./assignment-view/assignment-view.compo
 import { DiscussionViewComponent } from "./discussion-view/discussion-view.component";
 import { AnnouncementCommentFormComponent } from "./announcement-view/announcement-comment-form/announcement-comment-form.component";
 import { DiscussionCommentFormComponent } from "./discussion-view/discussion-comment-form/discussion-comment-form.component";
+import { SubmissionViewComponent } from "./submission-view/submission-view.component";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { DiscussionCommentFormComponent } from "./discussion-view/discussion-com
     DiscussionViewComponent,
     AnnouncementCommentFormComponent,
     DiscussionCommentFormComponent,
+    SubmissionViewComponent,
   ],
   entryComponents: [
     CourseFormComponent,

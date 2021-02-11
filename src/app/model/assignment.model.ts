@@ -1,7 +1,7 @@
 export interface Assignment {
   id?: number;
   name?: string;
-  dueDate?: string;
+  dueDate?: Date;
   points?: number;
   description?: string;
 }

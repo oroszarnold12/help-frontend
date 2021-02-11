@@ -1,13 +1,17 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 import { ModalController } from "@ionic/angular";
+import { FileSaverService } from "ngx-filesaver";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AssignmentFormComponent } from "../course-view/assignment-form/assignment-form.component";
 import { Assignment } from "../model/assignment.model";
+import { Submission } from "../model/submission.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
+import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
 
 @Component({
@@ -20,6 +24,11 @@ export class AssignmentViewComponent implements OnInit {
   stop: Subject<void> = new Subject();
   isTeacher: boolean;
   courseId: number;
+  isSubmitting: boolean;
+  submissions: Submission[];
+  isGraded: boolean;
+
+  private file;
 
   constructor(
     private courseService: CourseService,
@@ -27,11 +36,16 @@ export class AssignmentViewComponent implements OnInit {
     private toasterService: ToasterService,
     private backButtonService: BackButtonService,
     private authService: AuthService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private submissionService: SubmissionService,
+    private fileSaverService: FileSaverService,
+    private rotuer: Router
   ) {}
 
   ngOnInit() {
     this.backButtonService.turnOn();
+
+    this.isSubmitting = false;
 
     this.isTeacher = this.authService.isTeacher();
 
@@ -43,6 +57,7 @@ export class AssignmentViewComponent implements OnInit {
         .subscribe(
           (assignemnt) => {
             this.assignment = assignemnt;
+            this.loadSubmissions();
           },
           (error) => {
             this.toasterService.error(
@@ -52,6 +67,24 @@ export class AssignmentViewComponent implements OnInit {
           }
         );
     });
+  }
+
+  loadSubmissions() {
+    this.submissionService
+      .getSubmissions(this.courseId, this.assignment.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (submissions) => {
+          this.submissions = submissions;
+          this.isGraded = this.checkIfGraded();
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
   }
 
   ngOnDestroy(): void {
@@ -71,5 +104,64 @@ export class AssignmentViewComponent implements OnInit {
     modal.onDidDismiss().then(() => this.ngOnInit());
 
     await modal.present();
+  }
+
+  onSubmitClicked() {
+    this.isSubmitting = !this.isSubmitting;
+  }
+
+  onFileChange(fileChangeEvent) {
+    this.file = fileChangeEvent.target.files[0];
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    formData.append("file", this.file);
+    if (!!this.file) {
+      this.submissionService
+        .saveSubmission(this.courseId, this.assignment.id, formData)
+        .pipe(takeUntil(this.stop))
+        .subscribe(
+          (submission) => {
+            this.toasterService.success(
+              "File uploaded successfully!",
+              "Congratulations!"
+            );
+            this.isSubmitting = false;
+            this.file = null;
+            this.loadSubmissions();
+          },
+          (error) => {
+            this.toasterService.error(error.error.message, "Please try again!");
+          }
+        );
+    } else {
+      this.toasterService.error("File is required!", "Please try again!");
+    }
+  }
+
+  onSubmissionClicked(id, fileName: string) {
+    this.submissionService
+      .getSubmission(this.courseId, this.assignment.id, id)
+      .pipe(takeUntil(this.stop))
+      .subscribe((blob) => {
+        this.fileSaverService.save(blob, fileName);
+      });
+  }
+
+  goToSubmissions() {
+    this.rotuer.navigate([
+      `/courses/${this.courseId}/assignments/${this.assignment.id}/submissions`,
+    ]);
+  }
+
+  checkIfGraded(): boolean {
+    let value = true;
+    this.submissions.forEach((submission) => {
+      if (!!!submission.grade) {
+        value = false;
+      }
+    });
+    return value;
   }
 }
