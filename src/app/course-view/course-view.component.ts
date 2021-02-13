@@ -8,16 +8,18 @@ import {
   ModalController,
 } from "@ionic/angular";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { take, takeUntil } from "rxjs/operators";
 import { CourseFormComponent } from "../dashboard/course-form/course-form.component";
 import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
+import { Grade } from "../model/grade.model";
 import { InvitationCreation } from "../model/invitation.creation.model";
 import { ThinPerson } from "../model/thin.person.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
 import { DefaultSlideService } from "../shared/default-slide.service";
+import { GradeService } from "../shared/grade.service";
 import { InvitationService } from "../shared/invitation.service";
 import { PersonService } from "../shared/person.service";
 import { ToasterService } from "../shared/toaster.service";
@@ -56,6 +58,12 @@ export class CourseViewComponent implements OnInit {
   isTeacher: boolean;
   canDelete: boolean;
 
+  grades: Grade[];
+
+  sumOfGrades: number;
+  sumOfPoints: number;
+  precentage: number;
+
   constructor(
     private backButtonService: BackButtonService,
     private route: ActivatedRoute,
@@ -68,7 +76,8 @@ export class CourseViewComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private personService: PersonService,
-    private invitationService: InvitationService
+    private invitationService: InvitationService,
+    private gradeService: GradeService
   ) {
     this.settings = {
       actions: {
@@ -84,6 +93,11 @@ export class CourseViewComponent implements OnInit {
         dueDate: {
           title: "Due",
           filter: false,
+        },
+        grade: {
+          title: "Grade",
+          filter: false,
+          editable: true,
         },
         points: {
           title: "Points",
@@ -152,16 +166,26 @@ export class CourseViewComponent implements OnInit {
             this.course = course;
             this.canDelete =
               this.course.teacher.email === this.authService.getUsername();
-            this.createAssignmentOverviews();
             this.createAnnouncementOverviews();
-            this.createGradeOverviews();
             this.createDiscussionOverviews();
+            this.loadGrades();
           },
           (error) => {
             this.toasterService.error("Course not found!", "Selection failed!");
           }
         );
     });
+  }
+
+  loadGrades() {
+    this.gradeService
+      .getGradesOfAllAssignments(this.course.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe((grades) => {
+        this.grades = grades;
+        this.createAssignmentOverviews();
+        this.createGradeOverviews();
+      });
   }
 
   createAssignmentOverviews() {
@@ -173,8 +197,13 @@ export class CourseViewComponent implements OnInit {
         new Date(assignment.dueDate),
         "medium"
       )} | 
-        Points: ${assignment.points}`,
+        ${this.createAssingmentDescription(assignment.id, assignment.points)}`,
     }));
+  }
+
+  createAssingmentDescription(id: number, points: number) {
+    const grade = this.grades.find((grade) => grade.assignment.id === id);
+    return !!grade ? `Grade: ${grade.grade}/${points}` : "Not yet graded!";
   }
 
   private stripHtml(text) {
@@ -198,8 +227,10 @@ export class CourseViewComponent implements OnInit {
     this.gradeOverviews = assignments.map((assignment) => ({
       name: assignment.name,
       dueDate: this.datePite.transform(new Date(assignment.dueDate), "medium"),
+      grade: this.getGrade(assignment.id),
       points: assignment.points,
     }));
+    this.calculateTotal(this.gradeOverviews);
   }
 
   createDiscussionOverviews() {
@@ -213,6 +244,27 @@ export class CourseViewComponent implements OnInit {
       )}`,
       creatorUsername: discussion.creator.email,
     }));
+  }
+
+  calculateTotal(gradeOverviews: any[]) {
+    this.sumOfPoints = 0;
+    this.sumOfGrades = 0;
+    gradeOverviews.forEach((gradeOverview) => {
+      this.sumOfPoints += gradeOverview.points;
+      const grade = gradeOverview.grade;
+      if (grade !== "-") {
+        this.sumOfGrades += grade;
+      }
+    });
+
+    this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
+  }
+
+  getGrade(assignmentId) {
+    const grade = this.grades.find(
+      (grade) => grade.assignment.id === assignmentId
+    );
+    return !!grade ? grade.grade : "-";
   }
 
   segmentChanged(event) {

@@ -8,6 +8,7 @@ import { Submission } from "../model/submission.model";
 import { ThinPerson } from "../model/thin.person.model";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
+import { GradeService } from "../shared/grade.service";
 import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
 
@@ -32,10 +33,12 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     private toasterService: ToasterService,
     private route: ActivatedRoute,
     private courseService: CourseService,
-    private fileSaverService: FileSaverService
+    private fileSaverService: FileSaverService,
+    private gradeService: GradeService
   ) {}
 
   ngOnInit() {
+    this.backButtonService.turnOn();
     this.loadSubmissions();
   }
 
@@ -45,8 +48,6 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   }
 
   loadSubmissions() {
-    this.backButtonService.turnOn();
-
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.assingmentId = params.assignmentId;
       this.courseId = params.courseId;
@@ -89,9 +90,22 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   }
 
   loadGrades() {
-    this.submissions.forEach((submission) => {
-      this.grades[submission.submitter.id] = submission.grade;
-    });
+    this.gradeService
+      .getGrades(this.courseId, this.assingmentId)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (grades) => {
+          grades.forEach((grade) => {
+            this.grades[grade.submitter.id] = grade.grade;
+          });
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
   }
 
   getSubmissionsBySubmitterId(submitterId: number) {
@@ -113,19 +127,18 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   }
 
   grade(submitterId: number) {
-    const submissions = this.getSubmissionsBySubmitterId(submitterId);
-    this.submissionService
-      .putSubmission(
+    this.gradeService
+      .saveGrade(
         this.courseId,
         this.assingmentId,
-        submissions[0].id,
-        this.grades[submitterId]
+        this.grades[submitterId],
+        submitterId
       )
       .pipe(takeUntil(this.stop))
       .subscribe(
-        (submission) => {
+        (grade) => {
           this.toasterService.success(
-            "Submission graded successfully!",
+            "Grade saved successfully!",
             "Congratulations!"
           );
         },
@@ -137,7 +150,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
 
   onSubmissionClicked(id, fileName: string) {
     this.submissionService
-      .getSubmission(this.courseId, this.assignment.id, id)
+      .getSubmission(this.courseId, this.assingmentId, id)
       .pipe(takeUntil(this.stop))
       .subscribe((blob) => {
         this.fileSaverService.save(blob, fileName);

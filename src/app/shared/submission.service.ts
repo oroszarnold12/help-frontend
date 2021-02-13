@@ -35,16 +35,4 @@ export class SubmissionService {
       data
     );
   }
-
-  putSubmission(
-    courseId: number,
-    assignmentId: number,
-    submissionId: number,
-    grade: number
-  ): Observable<Submission> {
-    return this.httpClient.put<Submission>(
-      `api/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}`,
-      { grade: grade }
-    );
-  }
 }

@@ -66,6 +66,19 @@
           [settings]="settings"
           [source]="gradeOverviews"
         ></ng2-smart-table>
+        <ion-card-content>
+          <ion-item class="pl-25">
+            <ion-grid>
+              <ion-row>
+                <ion-col> Total: </ion-col>
+                <ion-col> {{ precentage | number }}% </ion-col>
+                <ion-col class="pl-120">
+                  {{ sumOfGrades }} / {{ sumOfPoints }}
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-card-content>
       </ion-card>
     </ion-slide>
     <ion-slide class="slide">

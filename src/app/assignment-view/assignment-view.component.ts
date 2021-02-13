@@ -1,16 +1,17 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 import { ModalController } from "@ionic/angular";
 import { FileSaverService } from "ngx-filesaver";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AssignmentFormComponent } from "../course-view/assignment-form/assignment-form.component";
 import { Assignment } from "../model/assignment.model";
+import { Grade } from "../model/grade.model";
 import { Submission } from "../model/submission.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CourseService } from "../shared/course.service";
+import { GradeService } from "../shared/grade.service";
 import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
 
@@ -26,7 +27,7 @@ export class AssignmentViewComponent implements OnInit {
   courseId: number;
   isSubmitting: boolean;
   submissions: Submission[];
-  isGraded: boolean;
+  grade: Grade;
 
   private file;
 
@@ -39,7 +40,8 @@ export class AssignmentViewComponent implements OnInit {
     private modalController: ModalController,
     private submissionService: SubmissionService,
     private fileSaverService: FileSaverService,
-    private rotuer: Router
+    private rotuer: Router,
+    private gradeService: GradeService
   ) {}
 
   ngOnInit() {
@@ -58,6 +60,9 @@ export class AssignmentViewComponent implements OnInit {
           (assignemnt) => {
             this.assignment = assignemnt;
             this.loadSubmissions();
+            if (!this.isTeacher) {
+              this.loadGrades();
+            }
           },
           (error) => {
             this.toasterService.error(
@@ -76,7 +81,27 @@ export class AssignmentViewComponent implements OnInit {
       .subscribe(
         (submissions) => {
           this.submissions = submissions;
-          this.isGraded = this.checkIfGraded();
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
+  }
+
+  loadGrades() {
+    this.gradeService
+      .getGrades(this.courseId, this.assignment.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (grades) => {
+          if (grades.length > 0) {
+            this.grade = grades[0];
+          } else {
+            this.grade = undefined;
+          }
         },
         (error) => {
           this.toasterService.error(
@@ -130,6 +155,9 @@ export class AssignmentViewComponent implements OnInit {
             this.isSubmitting = false;
             this.file = null;
             this.loadSubmissions();
+            if (!this.isTeacher) {
+              this.loadGrades();
+            }
           },
           (error) => {
             this.toasterService.error(error.error.message, "Please try again!");
@@ -153,15 +181,5 @@ export class AssignmentViewComponent implements OnInit {
     this.rotuer.navigate([
       `/courses/${this.courseId}/assignments/${this.assignment.id}/submissions`,
     ]);
-  }
-
-  checkIfGraded(): boolean {
-    let value = true;
-    this.submissions.forEach((submission) => {
-      if (!!!submission.grade) {
-        value = false;
-      }
-    });
-    return value;
   }
 }
