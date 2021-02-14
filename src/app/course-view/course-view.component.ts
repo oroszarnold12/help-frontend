@@ -46,7 +46,7 @@ export class CourseViewComponent implements OnInit {
   assignmentOverviews: GeneralOverview[];
   announcementOverviews: GeneralOverview[];
   discussionOverviews: GeneralOverview[];
-  gradeOverviews: any;
+  gradeOverviews: any[];
   thinPersons: ThinPerson[];
   personsToInvite: ThinPerson[];
 
@@ -82,17 +82,21 @@ export class CourseViewComponent implements OnInit {
     this.settings = {
       actions: {
         add: false,
-        edit: false,
+        edit: true,
         delete: false,
+        columnTitle: "",
+      },
+      edit: {
+        confirmSave: true,
+        saveButtonContent: '<i class="bi bi-check2"></i>',
+        cancelButtonContent: '<i class="bi bi-x"></i>',
+        editButtonContent: '<i class="bi bi-pencil-square"></i>',
       },
       columns: {
         name: {
           title: "Name",
           filter: false,
-        },
-        dueDate: {
-          title: "Due",
-          filter: false,
+          editable: false,
         },
         grade: {
           title: "Grade",
@@ -102,6 +106,7 @@ export class CourseViewComponent implements OnInit {
         points: {
           title: "Points",
           filter: false,
+          editable: false,
         },
       },
     };
@@ -226,11 +231,10 @@ export class CourseViewComponent implements OnInit {
     const { assignments } = this.course;
     this.gradeOverviews = assignments.map((assignment) => ({
       name: assignment.name,
-      dueDate: this.datePite.transform(new Date(assignment.dueDate), "medium"),
       grade: this.getGrade(assignment.id),
       points: assignment.points,
     }));
-    this.calculateTotal(this.gradeOverviews);
+    this.calculateTotal();
   }
 
   createDiscussionOverviews() {
@@ -246,10 +250,10 @@ export class CourseViewComponent implements OnInit {
     }));
   }
 
-  calculateTotal(gradeOverviews: any[]) {
+  calculateTotal() {
     this.sumOfPoints = 0;
     this.sumOfGrades = 0;
-    gradeOverviews.forEach((gradeOverview) => {
+    this.gradeOverviews.forEach((gradeOverview) => {
       this.sumOfPoints += gradeOverview.points;
       const grade = gradeOverview.grade;
       if (grade !== "-") {
@@ -530,5 +534,14 @@ export class CourseViewComponent implements OnInit {
         "Sending invitations failed!"
       );
     }
+  }
+
+  onEditConfirmed(event) {
+    event.newData.grade = Number.parseFloat(event.newData.grade);
+    event.confirm.resolve(event.newData);
+
+    this.sumOfGrades =
+      this.sumOfGrades - (event.data.grade - event.newData.grade);
+    this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
   }
 }

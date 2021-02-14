@@ -12,6 +12,7 @@ import { AnnouncementViewComponent } from "./announcement-view/announcement-view
 import { AssignmentViewComponent } from "./assignment-view/assignment-view.component";
 import { DiscussionViewComponent } from "./discussion-view/discussion-view.component";
 import { SubmissionViewComponent } from "./submission-view/submission-view.component";
+import { TeacherGuardService } from "./guards/teacher-guard.service";
 
 const routes: Routes = [
   {
@@ -61,7 +62,7 @@ const routes: Routes = [
   {
     path: "courses/:courseId/assignments/:assignmentId/submissions",
     component: SubmissionViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [TeacherGuardService],
   },
 ];
 

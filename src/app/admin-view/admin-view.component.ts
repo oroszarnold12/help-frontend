@@ -27,12 +27,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         add: false,
         edit: true,
         delete: true,
+        columnTitle: "",
       },
       delete: {
         confirmDelete: true,
+        deleteButtonContent: '<i class="bi bi-trash"></i>',
       },
       edit: {
         confirmSave: true,
+        saveButtonContent: '<i class="bi bi-check2"></i>',
+        cancelButtonContent: '<i class="bi bi-x"></i>',
+        editButtonContent: '<i class="bi bi-pencil-square"></i>',
       },
       columns: {
         name: {

@@ -62,9 +62,13 @@
     </ion-slide>
     <ion-slide class="slide">
       <ion-card class="table">
+        <ion-card-header>
+          <ion-card-title class="dark-blue"> Grades </ion-card-title>
+        </ion-card-header>
         <ng2-smart-table
           [settings]="settings"
           [source]="gradeOverviews"
+          (editConfirm)="onEditConfirmed($event)"
         ></ng2-smart-table>
         <ion-card-content>
           <ion-item class="pl-25">
@@ -125,8 +129,29 @@
           </ion-col>
         </ion-row>
         <ion-row>
+          <ion-col class="ta-center">
+            <ion-card class="mw-1000">
+              <ion-card-header>
+                <ion-card-title>Description</ion-card-title>
+              </ion-card-header>
+              <ion-card-content
+                [innerHTML]="course.description"
+                class="description"
+              >
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="isTeacher && canDelete" fixed class="add-button-row">
           <ion-col>
-            <p [innerHTML]="course.description" class="description"></p>
+            <ion-button
+              color="danger"
+              (click)="deleteCourse()"
+              class="add-button"
+            >
+              <ion-icon name="trash-outline" class="add-icon"></ion-icon>
+              Delete course
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -169,16 +194,6 @@
 </ion-content>
 
 <ion-footer class="footer">
-  <ion-grid *ngIf="canDelete">
-    <ion-row *ngIf="isTeacher" fixed class="add-button-row">
-      <ion-col>
-        <ion-button color="danger" (click)="deleteCourse()" class="add-button">
-          <ion-icon name="trash-outline" class="add-icon"></ion-icon>
-          Delete course
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
   <ion-segment
     (ionChange)="segmentChanged($event)"
     scrollable
