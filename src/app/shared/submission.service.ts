@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Submission } from "../model/submission.model";
+import { url } from "./api-config";
 
 @Injectable({
   providedIn: "root",
@@ -11,7 +12,7 @@ export class SubmissionService {
 
   getSubmission(courseId: number, assignmentId: number, submissionId: number) {
     return this.httpClient.get(
-      `api/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}`,
+      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}`,
       { responseType: "blob" }
     );
   }
@@ -21,7 +22,7 @@ export class SubmissionService {
     assignmentId: number
   ): Observable<Submission[]> {
     return this.httpClient.get<Submission[]>(
-      `api/courses/${courseId}/assignments/${assignmentId}/submissions`
+      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions`
     );
   }
 
@@ -31,7 +32,7 @@ export class SubmissionService {
     data: FormData
   ): Observable<Submission> {
     return this.httpClient.post<Submission>(
-      `api/courses/${courseId}/assignments/${assignmentId}/submissions`,
+      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions`,
       data
     );
   }

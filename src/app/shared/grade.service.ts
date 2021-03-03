@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Grade } from "../model/grade.model";
+import { url } from "./api-config";
 
 @Injectable({
   providedIn: "root",
@@ -11,12 +12,12 @@ export class GradeService {
 
   getGrades(courseId: number, assignmentId: number): Observable<Grade[]> {
     return this.httpClient.get<Grade[]>(
-      `api/courses/${courseId}/assignments/${assignmentId}/grades`
+      `${url}/courses/${courseId}/assignments/${assignmentId}/grades`
     );
   }
 
   getGradesOfAllAssignments(courseId: number): Observable<Grade[]> {
-    return this.httpClient.get<Grade[]>(`api/courses/${courseId}/grades/`);
+    return this.httpClient.get<Grade[]>(`${url}/courses/${courseId}/grades/`);
   }
 
   saveGrade(
@@ -26,7 +27,7 @@ export class GradeService {
     personId: number
   ): Observable<Grade> {
     return this.httpClient.post<Grade>(
-      `api/courses/${courseId}/assignments/${assignmentId}/grades`,
+      `${url}/courses/${courseId}/assignments/${assignmentId}/grades`,
       { grade: grade, personId: personId }
     );
   }

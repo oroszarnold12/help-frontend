@@ -7,6 +7,7 @@ import { LoginRequest } from "../model/login-request.model";
 import { PersonSignup } from "../model/person-signup.model";
 import { Person } from "../model/person.model";
 import { Role } from "../model/role.enum";
+import { url } from "./api-config";
 import { LoginStatusService } from "./login-status.service";
 
 @Injectable({
@@ -23,12 +24,13 @@ export class AuthService {
 
   login(loginRequest: LoginRequest): Observable<any> {
     return this.httpClient
-      .post<LoginRequest>("api/auth/login", loginRequest, {
+      .post<LoginRequest>(`${url}/auth/login`, loginRequest, {
         withCredentials: true,
         observe: "response",
       })
       .pipe(
         tap((res) => {
+          console.log(res.headers.keys());
           localStorage.setItem("role", res.body.role);
           localStorage.setItem("username", loginRequest.username);
           this.loginStatus.next({
@@ -42,7 +44,7 @@ export class AuthService {
 
   logout(): Observable<any> {
     return this.httpClient
-      .get("api/auth/logout", {
+      .get(`${url}/auth/logout`, {
         withCredentials: true,
       })
       .pipe(
@@ -60,11 +62,11 @@ export class AuthService {
   }
 
   register(personSignup: PersonSignup): Observable<any> {
-    return this.httpClient.post<Person>("api/auth/sign-up", personSignup);
+    return this.httpClient.post<Person>(`${url}/auth/sign-up`, personSignup);
   }
 
   pingBackend(): Observable<void> {
-    return this.httpClient.get<void>("api/server-status/ping", {
+    return this.httpClient.get<void>(`${url}/server-status/ping`, {
       withCredentials: true,
     });
   }

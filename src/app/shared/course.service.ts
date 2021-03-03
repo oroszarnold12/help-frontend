@@ -7,6 +7,7 @@ import { CourseCreation } from "../model/course-creation.model";
 import { Announcement } from "../model/announcement.model";
 import { Assignment } from "../model/assignment.model";
 import { Discussion } from "../model/discussion.model";
+import { url } from "./api-config";
 
 @Injectable({
   providedIn: "root",
@@ -15,11 +16,11 @@ export class CourseService {
   constructor(private http: HttpClient) {}
 
   getCourses(): Observable<{ courses: Course[] }> {
-    return this.http.get<{ courses: Course[] }>(`api/courses`);
+    return this.http.get<{ courses: Course[] }>(`${url}/courses`);
   }
 
   getCourse(id: number): Observable<Course> {
-    return this.http.get<Course>(`api/courses/${id}`);
+    return this.http.get<Course>(`${url}/courses/${id}`);
   }
 
   getAnnouncement(
@@ -27,7 +28,7 @@ export class CourseService {
     announcementId: number
   ): Observable<Announcement> {
     return this.http.get<Announcement>(
-      `api/courses/${courseId}/announcements/${announcementId}`
+      `${url}/courses/${courseId}/announcements/${announcementId}`
     );
   }
 
@@ -36,7 +37,7 @@ export class CourseService {
     assignmentId: number
   ): Observable<Assignment> {
     return this.http.get<Assignment>(
-      `api/courses/${courseId}/assignments/${assignmentId}`
+      `${url}/courses/${courseId}/assignments/${assignmentId}`
     );
   }
 
@@ -45,12 +46,12 @@ export class CourseService {
     discussionId: number
   ): Observable<Discussion> {
     return this.http.get<Discussion>(
-      `api/courses/${courseId}/discussions/${discussionId}`
+      `${url}/courses/${courseId}/discussions/${discussionId}`
     );
   }
 
   saveCourse(course: CourseCreation): Observable<Course> {
-    return this.http.post<Course>("api/courses", course);
+    return this.http.post<Course>(`${url}/courses`, course);
   }
 
   saveAnnouncement(
@@ -58,7 +59,7 @@ export class CourseService {
     courseId: number
   ): Observable<Announcement> {
     return this.http.post<Announcement>(
-      `api/courses/${courseId}/announcements`,
+      `${url}/courses/${courseId}/announcements`,
       announcement
     );
   }
@@ -68,7 +69,7 @@ export class CourseService {
     courseId: number
   ): Observable<Assignment> {
     return this.http.post<Assignment>(
-      `api/courses/${courseId}/assignments`,
+      `${url}/courses/${courseId}/assignments`,
       assignment
     );
   }
@@ -78,13 +79,13 @@ export class CourseService {
     courseId: number
   ): Observable<Discussion> {
     return this.http.post<Discussion>(
-      `api/courses/${courseId}/discussions`,
+      `${url}/courses/${courseId}/discussions`,
       discussion
     );
   }
 
   updateCourse(course: CourseCreation, id: number): Observable<Course> {
-    return this.http.put<Course>(`api/courses/${id}`, course);
+    return this.http.put<Course>(`${url}/courses/${id}`, course);
   }
 
   updateAnnouncement(
@@ -93,7 +94,7 @@ export class CourseService {
     announcementId: number
   ): Observable<Announcement> {
     return this.http.put<Announcement>(
-      `api/courses/${courseId}/announcements/${announcementId}`,
+      `${url}/courses/${courseId}/announcements/${announcementId}`,
       announcement
     );
   }
@@ -104,7 +105,7 @@ export class CourseService {
     assignmentId: number
   ): Observable<Assignment> {
     return this.http.put<Assignment>(
-      `api/courses/${courseId}/assignments/${assignmentId}`,
+      `${url}/courses/${courseId}/assignments/${assignmentId}`,
       assignment
     );
   }
@@ -115,13 +116,13 @@ export class CourseService {
     discussionId: number
   ): Observable<Discussion> {
     return this.http.put<Discussion>(
-      `api/courses/${courseId}/discussions/${discussionId}`,
+      `${url}/courses/${courseId}/discussions/${discussionId}`,
       discussion
     );
   }
 
   deleteCourse(id: number): Observable<void> {
-    return this.http.delete<void>(`api/courses/${id}`);
+    return this.http.delete<void>(`${url}/courses/${id}`);
   }
 
   deleteAnnouncement(
@@ -129,19 +130,19 @@ export class CourseService {
     announcementId: number
   ): Observable<void> {
     return this.http.delete<void>(
-      `api/courses/${courseId}/announcements/${announcementId}`
+      `${url}/courses/${courseId}/announcements/${announcementId}`
     );
   }
 
   deleteAssignment(courseId: number, assignmentId: number): Observable<void> {
     return this.http.delete<void>(
-      `api/courses/${courseId}/assignments/${assignmentId}`
+      `${url}/courses/${courseId}/assignments/${assignmentId}`
     );
   }
 
   deleteDiscussions(courseId: number, discussionId: number): Observable<void> {
     return this.http.delete<void>(
-      `api/courses/${courseId}/discussions/${discussionId}`
+      `${url}/courses/${courseId}/discussions/${discussionId}`
     );
   }
 }
