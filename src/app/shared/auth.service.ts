@@ -30,7 +30,6 @@ export class AuthService {
       })
       .pipe(
         tap((res) => {
-          console.log(res.headers.keys());
           localStorage.setItem("role", res.body.role);
           localStorage.setItem("username", loginRequest.username);
           this.loginStatus.next({

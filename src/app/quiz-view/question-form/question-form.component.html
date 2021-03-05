@@ -1,0 +1,116 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Create question </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="questionForm" (ngSubmit)="submitForm()">
+    <ion-item lines="full" class="form-group">
+      <ion-label position="floating" for="points">Points</ion-label>
+      <ion-input
+        type="number"
+        id="points"
+        name="points"
+        formControlName="points"
+      ></ion-input>
+    </ion-item>
+    <span
+      class="ion-padding text-danger"
+      *ngIf="
+        errorControl.points.touched && errorControl.points.errors?.required
+      "
+    >
+      Points is required.
+    </span>
+    <span
+      class="ion-padding text-danger"
+      *ngIf="errorControl.points.errors?.min"
+    >
+      Points should be positive number.
+    </span>
+    <ion-item lines="full" class="form-group my-input-padding">
+      <ion-label position="floating" for="content">Question</ion-label>
+      <ion-textarea
+        type="text"
+        id="content"
+        name="content"
+        formControlName="content"
+        rows="4"
+      ></ion-textarea>
+    </ion-item>
+    <span
+      class="ion-padding text-danger"
+      *ngIf="
+        errorControl.content.touched && errorControl.content.errors?.required
+      "
+    >
+      Question is required.
+    </span>
+    <span
+      class="ion-padding text-danger"
+      *ngIf="errorControl.content.errors?.maxlength"
+    >
+      Question is too long.
+    </span>
+    <p>Answers (Check the correct ones!):</p>
+    <div
+      formArrayName="answers"
+      *ngFor="let answer of answers.controls; let i = index"
+    >
+      <div [formGroupName]="i">
+        <ion-item lines="full" class="form-group my-input-padding">
+          <ion-checkbox formControlName="correct"></ion-checkbox>
+          <ion-textarea
+            type="text"
+            formControlName="content"
+            class="answer-padding"
+            rows="4"
+            placeholder="Type answer here..."
+          ></ion-textarea>
+          <ion-buttons>
+            <ion-button color="danger" (click)="removeAnswer(i)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+        <span
+          class="ion-padding text-danger"
+          *ngIf="
+            answer.controls.content.touched &&
+            answer.controls.content.errors?.required
+          "
+        >
+          Answer is required.
+        </span>
+        <span
+          class="ion-padding text-danger"
+          *ngIf="answer.controls.content.errors?.maxlength"
+        >
+          Answer is too long.
+        </span>
+      </div>
+    </div>
+    <ion-button fill="clear" color="medium" (click)="addAnswer()">
+      <ion-icon name="add-outline"></ion-icon>
+      Add answer
+    </ion-button>
+    <ion-row>
+      <ion-col>
+        <ion-button
+          type="submit"
+          color="success"
+          expand="block"
+          [disabled]="questionForm.invalid"
+        >
+          Submit
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

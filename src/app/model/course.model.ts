@@ -2,6 +2,7 @@ import { Announcement } from "./announcement.model";
 import { Assignment } from "./assignment.model";
 import { Discussion } from "./discussion.model";
 import { Person } from "./person.model";
+import { Quiz } from "./quiz.model";
 
 export interface Course {
   id?: number;
@@ -11,5 +12,6 @@ export interface Course {
   assignments?: Assignment[];
   announcements?: Announcement[];
   discussions?: Discussion[];
-  teacher: Person;
+  teacher?: Person;
+  quizzes?: Quiz[];
 }

@@ -36,6 +36,9 @@ import { DiscussionViewComponent } from "./discussion-view/discussion-view.compo
 import { AnnouncementCommentFormComponent } from "./announcement-view/announcement-comment-form/announcement-comment-form.component";
 import { DiscussionCommentFormComponent } from "./discussion-view/discussion-comment-form/discussion-comment-form.component";
 import { SubmissionViewComponent } from "./submission-view/submission-view.component";
+import { QuizFormComponent } from "./course-view/quiz-form/quiz-form.component";
+import { QuizViewComponent } from "./quiz-view/quiz-view.component";
+import { QuestionFormComponent } from "./quiz-view/question-form/question-form.component";
 
 @NgModule({
   declarations: [
@@ -59,6 +62,9 @@ import { SubmissionViewComponent } from "./submission-view/submission-view.compo
     AnnouncementCommentFormComponent,
     DiscussionCommentFormComponent,
     SubmissionViewComponent,
+    QuizFormComponent,
+    QuizViewComponent,
+    QuestionFormComponent,
   ],
   entryComponents: [
     CourseFormComponent,
@@ -67,6 +73,8 @@ import { SubmissionViewComponent } from "./submission-view/submission-view.compo
     DiscussionFormComponent,
     AnnouncementCommentFormComponent,
     DiscussionCommentFormComponent,
+    QuizFormComponent,
+    QuestionFormComponent,
   ],
   imports: [
     BrowserModule,

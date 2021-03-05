@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, Optional } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
@@ -84,7 +84,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     await modal.present();
   }
 
-  async presentCommentModal(comment) {
+  async presentCommentModal(comment?) {
     const modal = await this.modalController.create({
       component: AnnouncementCommentFormComponent,
       componentProps: {

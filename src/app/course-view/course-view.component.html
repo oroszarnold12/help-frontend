@@ -61,6 +61,34 @@
       </div>
     </ion-slide>
     <ion-slide class="slide">
+      <div>
+        <ion-grid>
+          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
+            <ion-col>
+              <ion-button
+                color="success"
+                (click)="presentQuizModal()"
+                class="add-button"
+              >
+                <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                Add quiz
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <app-card
+                [data]="quizOverviews"
+                [title]="'Quizzes'"
+                (onDeleteClicked)="deleteQuiz($event)"
+                (onViewClicked)="viewQuiz($event)"
+              ></app-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-slide>
+    <ion-slide class="slide">
       <ion-card class="table">
         <ion-card-header>
           <ion-card-title class="dark-blue"> Grades </ion-card-title>
@@ -204,21 +232,24 @@
       <ion-label>Announcements</ion-label>
     </ion-segment-button>
     <ion-segment-button value="1">
-      <ion-label>Assignment</ion-label>
+      <ion-label>Assignments</ion-label>
     </ion-segment-button>
     <ion-segment-button value="2">
-      <ion-label>Grades</ion-label>
+      <ion-label>Quizzes</ion-label>
     </ion-segment-button>
     <ion-segment-button value="3">
-      <ion-label>Discussions</ion-label>
+      <ion-label>Grades</ion-label>
     </ion-segment-button>
     <ion-segment-button value="4">
-      <ion-label>Files</ion-label>
+      <ion-label>Discussions</ion-label>
     </ion-segment-button>
     <ion-segment-button value="5">
+      <ion-label>Files</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="6">
       <ion-label>Description</ion-label>
     </ion-segment-button>
-    <ion-segment-button *ngIf="isTeacher" value="6">
+    <ion-segment-button *ngIf="isTeacher" value="7">
       <ion-label>Invitation</ion-label>
     </ion-segment-button>
   </ion-segment>

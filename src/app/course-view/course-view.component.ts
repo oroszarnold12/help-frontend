@@ -22,10 +22,12 @@ import { DefaultSlideService } from "../shared/default-slide.service";
 import { GradeService } from "../shared/grade.service";
 import { InvitationService } from "../shared/invitation.service";
 import { PersonService } from "../shared/person.service";
+import { QuizService } from "../shared/quiz.service";
 import { ToasterService } from "../shared/toaster.service";
 import { AnnouncementFormComponent } from "./announcement-form/announcement-form.component";
 import { AssignmentFormComponent } from "./assignment-form/assignment-form.component";
 import { DiscussionFormComponent } from "./discussion-form/discussion-form.component";
+import { QuizFormComponent } from "./quiz-form/quiz-form.component";
 
 @Component({
   selector: "app-course-view",
@@ -46,6 +48,7 @@ export class CourseViewComponent implements OnInit {
   assignmentOverviews: GeneralOverview[];
   announcementOverviews: GeneralOverview[];
   discussionOverviews: GeneralOverview[];
+  quizOverviews: GeneralOverview[];
   gradeOverviews: any[];
   thinPersons: ThinPerson[];
   personsToInvite: ThinPerson[];
@@ -77,7 +80,8 @@ export class CourseViewComponent implements OnInit {
     private router: Router,
     private personService: PersonService,
     private invitationService: InvitationService,
-    private gradeService: GradeService
+    private gradeService: GradeService,
+    private quizService: QuizService, 
   ) {
     this.settings = {
       actions: {
@@ -173,6 +177,7 @@ export class CourseViewComponent implements OnInit {
               this.course.teacher.email === this.authService.getUsername();
             this.createAnnouncementOverviews();
             this.createDiscussionOverviews();
+            this.createQuizOverviews();
             this.loadGrades();
           },
           (error) => {
@@ -203,6 +208,18 @@ export class CourseViewComponent implements OnInit {
         "medium"
       )} | 
         ${this.createAssingmentDescription(assignment.id, assignment.points)}`,
+    }));
+  }
+
+  createQuizOverviews() {
+    const { quizzes } = this.course;
+    this.quizOverviews = quizzes.map((quiz) => ({
+      id: quiz.id,
+      name: quiz.name,
+      description: `Due: ${this.datePite.transform(
+        new Date(quiz.dueDate),
+        "medium"
+      )} | Points: ${quiz.points}`,
     }));
   }
 
@@ -289,6 +306,10 @@ export class CourseViewComponent implements OnInit {
     this.router.navigate([`/courses/${this.course.id}/assignments/${event}`]);
   }
 
+  viewQuiz(event) {
+    this.router.navigate([`/courses/${this.course.id}/quizzes/${event}`]);
+  }
+
   viewDiscussion(event) {
     this.router.navigate([`/courses/${this.course.id}/discussions/${event}`]);
   }
@@ -369,6 +390,44 @@ export class CourseViewComponent implements OnInit {
     await alert.present();
   }
 
+  async deleteQuiz(event) {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this quiz?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.quizService
+              .deleteQuiz(this.course.id, event)
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Quiz deletion successful!",
+                    "Congratulations!"
+                  );
+                  this.loadCourse();
+                },
+                (error) => {
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
+                }
+              );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
   async deleteDiscussion(event) {
     const alert = await this.alertController.create({
       header: "Confirm!",
@@ -407,7 +466,7 @@ export class CourseViewComponent implements OnInit {
     await alert.present();
   }
 
-  async deleteCourse(event) {
+  async deleteCourse() {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this course?",
@@ -462,6 +521,19 @@ export class CourseViewComponent implements OnInit {
   async presentAssignmentModal() {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
+      componentProps: {
+        courseId: this.course.id,
+      },
+    });
+
+    modal.onDidDismiss().then(() => this.loadCourse());
+
+    await modal.present();
+  }
+
+  async presentQuizModal() {
+    const modal = await this.modalController.create({
+      component: QuizFormComponent,
       componentProps: {
         courseId: this.course.id,
       },

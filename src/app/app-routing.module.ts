@@ -13,6 +13,7 @@ import { AssignmentViewComponent } from "./assignment-view/assignment-view.compo
 import { DiscussionViewComponent } from "./discussion-view/discussion-view.component";
 import { SubmissionViewComponent } from "./submission-view/submission-view.component";
 import { TeacherGuardService } from "./guards/teacher-guard.service";
+import { QuizViewComponent } from "./quiz-view/quiz-view.component";
 
 const routes: Routes = [
   {
@@ -52,6 +53,11 @@ const routes: Routes = [
   {
     path: "courses/:courseId/assignments/:assignmentId",
     component: AssignmentViewComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: "courses/:courseId/quizzes/:quizId",
+    component: QuizViewComponent,
     canActivate: [AuthGuardService],
   },
   {
