@@ -81,6 +81,7 @@
         id="timeLimit"
         name="timeLimit"
         formControlName="timeLimit"
+        step="1"
       ></ion-input>
     </ion-item>
     <span
@@ -92,6 +93,24 @@
     >
       Time limit is required.
     </span>
+    <ion-item lines="full" class="form-group my-input-padding">
+      <ion-checkbox
+        slot="start"
+        id="showCorrectAnswers"
+        name="showCorrectAnswers"
+        formControlName="showCorrectAnswers"
+      ></ion-checkbox>
+      <ion-label for="showCorrectAnswers"> Show correct answers </ion-label>
+    </ion-item>
+    <ion-item lines="full" class="form-group my-input-padding">
+      <ion-checkbox
+        slot="start"
+        id="multipleAttempts"
+        name="multipleAttempts"
+        formControlName="multipleAttempts"
+      ></ion-checkbox>
+      <ion-label for="multipleAttempts"> Allow multiple attempts </ion-label>
+    </ion-item>
     <ion-row>
       <ion-col>
         <ion-button

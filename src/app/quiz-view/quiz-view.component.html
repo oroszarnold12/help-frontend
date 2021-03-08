@@ -30,8 +30,16 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="!isTeacher" class="inline-block">
-      <ion-button color="secondary">
+    <ion-row
+      *ngIf="
+        !isTeacher &&
+        !!quizSubmissions &&
+        ((quizSubmissions.length === 0 && !quiz.multipleAttempts) ||
+          quiz.multipleAttempts)
+      "
+      class="inline-block ion-padding-bottom"
+    >
+      <ion-button color="secondary" (click)="onTakeClicked()">
         <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
         Take the quiz
       </ion-button>
@@ -42,19 +50,22 @@
         Add question
       </ion-button>
     </ion-row>
-    <ion-row fixed class="max-width">
+    <ion-row fixed class="max-width" *ngIf="isTeacher && questions.length > 0">
       <ion-col class="start">
         <p class="mb-0 mt-30">Questions:</p>
       </ion-col>
     </ion-row>
     <ng-container *ngIf="isTeacher">
-      <ion-row *ngFor="let question of questions">
+      <ion-row *ngFor="let question of questions; let i = index">
         <ion-col>
           <ion-card class="max-width start">
             <ion-card-header>
               <ion-card-title>
                 <ion-item>
-                  {{ question.content }}
+                  <ion-label>
+                    <h2>{{ i + 1 }}. {{ question.content }}</h2>
+                    <p class="dark-blue">Points: {{ question.points }}</p>
+                  </ion-label>
                   <ion-buttons slot="end">
                     <ion-button
                       color="primary"
@@ -82,6 +93,85 @@
               </div>
             </ion-card-content>
           </ion-card>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+    <ng-container *ngIf="!isTeacher && quiz.showCorrectAnswers">
+      <ion-row *ngFor="let attempt of quizSubmissions; let j = index">
+        <ion-col>
+          <ion-text class="dark-blue"> Attempt {{ j + 1 }}: </ion-text>
+          <ion-row *ngFor="let question of questions; let i = index">
+            <ion-col>
+              <ion-card class="max-width start">
+                <ion-card-header>
+                  <ion-card-title>
+                    <ion-item>
+                      <ion-label>
+                        <h2>{{ i + 1 }}. {{ question.content }}</h2>
+                        <p class="dark-blue">Points: {{ question.points }}</p>
+                      </ion-label>
+                    </ion-item>
+                  </ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <div *ngFor="let answer of question.answers">
+                    <ion-checkbox
+                      [checked]="checkIfPicked(answer, j)"
+                      disabled="true"
+                    >
+                    </ion-checkbox>
+                    <ion-label
+                      *ngIf="!answer.correct && checkIfPicked(answer, j)"
+                      class="incorrect-answer"
+                    >
+                      {{ answer.content }}
+                      {{ answer.correct ? "(correct)" : "(incorrect)" }}
+                    </ion-label>
+                    <ion-label
+                      *ngIf="answer.correct && checkIfPicked(answer, j)"
+                      class="correct-answer"
+                    >
+                      {{ answer.content }}
+                      {{ answer.correct ? "(correct)" : "(incorrect)" }}
+                    </ion-label>
+                    <ion-label
+                      *ngIf="answer.correct && !checkIfPicked(answer, j)"
+                      class="correct-not-picked"
+                    >
+                      {{ answer.content }}
+                      {{ answer.correct ? "(correct)" : "(incorrect)" }}
+                    </ion-label>
+                    <ion-label
+                      *ngIf="!answer.correct && !checkIfPicked(answer, j)"
+                    >
+                      {{ answer.content }}
+                      {{ answer.correct ? "(correct)" : "(incorrect)" }}
+                    </ion-label>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        !quiz.showCorrectAnswers &&
+        !isTeacher &&
+        !!quizSubmissions &&
+        quizSubmissions.length > 0
+      "
+    >
+      <ion-row>
+        <ion-col class="answers-hidden-column">
+          <ion-icon
+            class="answer-hidden-icon"
+            name="alert-circle-outline"
+          ></ion-icon>
+          <span class="answer-hidden-text">
+            Correct answers are currently hidden
+          </span>
         </ion-col>
       </ion-row>
     </ng-container>

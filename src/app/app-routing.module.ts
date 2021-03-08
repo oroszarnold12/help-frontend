@@ -14,6 +14,7 @@ import { DiscussionViewComponent } from "./discussion-view/discussion-view.compo
 import { SubmissionViewComponent } from "./submission-view/submission-view.component";
 import { TeacherGuardService } from "./guards/teacher-guard.service";
 import { QuizViewComponent } from "./quiz-view/quiz-view.component";
+import { QuizTakingViewComponent } from "./quiz-taking-view/quiz-taking-view.component";
 
 const routes: Routes = [
   {
@@ -69,6 +70,11 @@ const routes: Routes = [
     path: "courses/:courseId/assignments/:assignmentId/submissions",
     component: SubmissionViewComponent,
     canActivate: [TeacherGuardService],
+  },
+  {
+    path: "courses/:courseId/quizzes/:quizId/questions",
+    component: QuizTakingViewComponent,
+    canActivate: [AuthGuardService],
   },
 ];
 

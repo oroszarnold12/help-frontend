@@ -5,10 +5,12 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { QuizFormComponent } from "../course-view/quiz-form/quiz-form.component";
 import { Question } from "../model/question.model";
+import { QuizSubmission } from "../model/quiz-submission.model";
 import { Quiz } from "../model/quiz.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { QuestionService } from "../shared/question.service";
+import { QuizSubmissionService } from "../shared/quiz-submission.service";
 import { QuizService } from "../shared/quiz.service";
 import { ToasterService } from "../shared/toaster.service";
 import { QuestionFormComponent } from "./question-form/question-form.component";
@@ -24,6 +26,7 @@ export class QuizViewComponent implements OnInit {
   isTeacher: boolean;
   courseId: number;
   questions: Question[];
+  quizSubmissions: QuizSubmission[];
 
   constructor(
     private route: ActivatedRoute,
@@ -33,7 +36,9 @@ export class QuizViewComponent implements OnInit {
     private modalController: ModalController,
     private quizService: QuizService,
     private questionService: QuestionService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router: Router,
+    private quizSubmissionService: QuizSubmissionService
   ) {}
 
   ngOnInit() {
@@ -60,6 +65,8 @@ export class QuizViewComponent implements OnInit {
             this.quiz = quiz;
             if (this.isTeacher) {
               this.loadQuestions();
+            } else {
+              this.loadQuizSubmissions();
             }
           },
           (error) => {
@@ -87,6 +94,29 @@ export class QuizViewComponent implements OnInit {
           );
         }
       );
+  }
+
+  loadQuizSubmissions() {
+    this.quizSubmissionService
+      .getSubmissions(this.courseId, this.quiz.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe((quizSubmissions) => {
+        this.quizSubmissions = quizSubmissions;
+        if (this.quizSubmissions.length !== 0) {
+          this.loadQuestions();
+        }
+      });
+  }
+
+  checkIfPicked(answer, index) {
+    let picked = false;
+    this.quizSubmissions[index].answers.forEach((answer1) => {
+      if (answer1.answer.id === answer.id) {
+        picked = answer1.picked;
+      }
+    });
+
+    return picked;
   }
 
   editQuestion(questionId) {
@@ -162,5 +192,11 @@ export class QuizViewComponent implements OnInit {
     modal.onDidDismiss().then(() => this.ngOnInit());
 
     await modal.present();
+  }
+
+  onTakeClicked() {
+    this.router.navigate([
+      `courses/${this.courseId}/quizzes/${this.quiz.id}/questions`,
+    ]);
   }
 }

@@ -1,0 +1,72 @@
+<ion-content *ngIf="!!questions">
+  <ion-slides #slides class="slides" [formGroup]="questionsForm">
+    <ion-slide
+      *ngFor="let question of questions; let i = index"
+      class="slide"
+      [formArrayName]="i"
+    >
+      <ion-grid>
+        <ion-row class="timer-row">
+          <ion-col class="questions-number">
+            Total questions: {{ questions.length }}
+          </ion-col>
+          <ion-col
+            class="timer"
+            [ngClass]="timeLeft > oneThird ? 'dark-blue' : 'danger'"
+          >
+            Time left: {{ timeLeft * 1000 | date: "H:mm:ss":"UTC" }}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card class="max-width start">
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-item>
+                    <ion-label>
+                      <h2>{{ i + 1 }}. {{ question.content }}</h2>
+                      <p class="dark-blue">Points: {{ question.points }}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div *ngFor="let answer of question.answers; let j = index">
+                  <ion-checkbox [formControlName]="j"> </ion-checkbox>
+                  <ion-label>
+                    {{ answer.content }}
+                  </ion-label>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row class="buttons-row">
+          <ion-col class="previous-column">
+            <ion-button *ngIf="i > 0" (click)="changeSlideTo(i - 1)">
+              <ion-icon name="caret-back-outline"></ion-icon>
+              Previous
+            </ion-button>
+          </ion-col>
+          <ion-col class="next-column">
+            <ion-button
+              *ngIf="i < questions.length - 1"
+              (click)="changeSlideTo(i + 1)"
+            >
+              Next
+              <ion-icon name="caret-forward-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="i === questions.length - 1"
+              (click)="changeSlideTo(i + 1)"
+              color="success"
+              (click)="onSubmitClicked()"
+            >
+              Submit
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

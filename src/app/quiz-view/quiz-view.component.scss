@@ -75,3 +75,28 @@
 .padding-bottom {
   padding-bottom: 100px;
 }
+
+.incorrect-answer {
+  color: var(--ion-color-danger);
+}
+
+.correct-answer {
+  color: var(--ion-color-success);
+}
+
+.correct-not-picked {
+  color: var(--ion-color-warning);
+}
+
+.answers-hidden-column {
+  @extend .incorrect-answer;
+}
+
+.answer-hidden-icon {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.answer-hidden-text {
+  vertical-align: middle;
+}
