@@ -91,7 +91,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
 
   loadGrades() {
     this.gradeService
-      .getGrades(this.courseId, this.assingmentId)
+      .getGradesOfAssignment(this.courseId, this.assingmentId)
       .pipe(takeUntil(this.stop))
       .subscribe(
         (grades) => {
@@ -128,7 +128,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
 
   grade(submitterId: number) {
     this.gradeService
-      .saveGrade(
+      .saveGradeOfAssignment(
         this.courseId,
         this.assingmentId,
         this.grades[submitterId],

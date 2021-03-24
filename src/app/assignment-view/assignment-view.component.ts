@@ -6,7 +6,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AssignmentFormComponent } from "../course-view/assignment-form/assignment-form.component";
 import { Assignment } from "../model/assignment.model";
-import { Grade } from "../model/grade.model";
+import { AssignmentGrade } from "../model/assignment-grade.model";
 import { Submission } from "../model/submission.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
@@ -27,7 +27,7 @@ export class AssignmentViewComponent implements OnInit {
   courseId: number;
   isSubmitting: boolean;
   submissions: Submission[];
-  grade: Grade;
+  grade: AssignmentGrade;
 
   private file;
 
@@ -93,7 +93,7 @@ export class AssignmentViewComponent implements OnInit {
 
   loadGrades() {
     this.gradeService
-      .getGrades(this.courseId, this.assignment.id)
+      .getGradesOfAssignment(this.courseId, this.assignment.id)
       .pipe(takeUntil(this.stop))
       .subscribe(
         (grades) => {

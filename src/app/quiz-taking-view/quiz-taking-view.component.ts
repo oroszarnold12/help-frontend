@@ -1,15 +1,14 @@
-import { Time } from "@angular/common";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IonSlides } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil, takeWhile } from "rxjs/operators";
-import { Answer } from "../model/answer.model";
+import { Subject, Subscription } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { Question } from "../model/question.model";
 import { BackButtonService } from "../shared/back-button.service";
 import { QuestionService } from "../shared/question.service";
 import { QuizSubmissionService } from "../shared/quiz-submission.service";
+import { QuizTimerService } from "../shared/quiz-timer.service";
 import { QuizService } from "../shared/quiz.service";
 import { ToasterService } from "../shared/toaster.service";
 
@@ -23,11 +22,13 @@ export class QuizTakingViewComponent implements OnInit {
   questions: Question[];
   @ViewChild("slides") slides: IonSlides;
   timeLeft: number;
-  oneThird: number;
-  interval;
+  oneThirdReached: boolean = false;
   questionsForm: FormArray;
   courseId: number;
   quizId: number;
+  secondPassedSubscription: Subscription;
+  timeOutSubscription: Subscription;
+  oneThirdReachedSubscription: Subscription;
 
   constructor(
     private backButtonService: BackButtonService,
@@ -36,7 +37,8 @@ export class QuizTakingViewComponent implements OnInit {
     private toasterService: ToasterService,
     private quizService: QuizService,
     private quizSubmissionService: QuizSubmissionService,
-    private router: Router
+    private router: Router,
+    private quizTimerService: QuizTimerService
   ) {}
 
   ngOnInit() {
@@ -47,12 +49,12 @@ export class QuizTakingViewComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.quizTimerService.questionsForm = this.questionsForm;
+
+    this.unsubscribeFromTimer();
+
     this.stop.next();
     this.stop.complete();
-  }
-
-  ngAfterViewInit(): void {
-    this.startTimer();
   }
 
   loadQuestions() {
@@ -66,6 +68,12 @@ export class QuizTakingViewComponent implements OnInit {
           (questions) => {
             this.questions = questions;
             this.createFormGroup();
+
+            if (!this.quizTimerService.isTimerSet()) {
+              this.quizTimerService.start();
+            } else {
+              this.questionsForm = this.quizTimerService.questionsForm;
+            }
           },
           (error) => {
             this.toasterService.error(
@@ -85,11 +93,15 @@ export class QuizTakingViewComponent implements OnInit {
         .subscribe(
           (quiz) => {
             const timeArray = quiz.timeLimit.split(":");
-            this.timeLeft =
-              Number(timeArray[0]) * 3600 +
-              Number(timeArray[1]) * 60 +
-              Number(timeArray[2]);
-            this.oneThird = Math.floor(this.timeLeft / 3);
+            if (!this.quizTimerService.isTimerSet()) {
+              this.timeLeft =
+                Number(timeArray[0]) * 3600 +
+                Number(timeArray[1]) * 60 +
+                Number(timeArray[2]);
+
+              this.quizTimerService.setTimeLeft(this.timeLeft);
+            }
+            this.subscribeToTimer();
           },
           (error) => {
             this.toasterService.error(
@@ -117,18 +129,32 @@ export class QuizTakingViewComponent implements OnInit {
     this.slides.slideTo(index);
   }
 
-  startTimer() {
-    this.interval = setInterval(() => {
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-        if (this.timeLeft === this.oneThird) {
-          this.playAudio();
-        }
-      } else {
-        clearInterval(this.interval);
-        this.onSubmitClicked();
+  subscribeToTimer() {
+    this.timeOutSubscription = this.quizTimerService.timeOut$.subscribe(() => {
+      this.onSubmitClicked();
+      this.oneThirdReached = false;
+    });
+
+    this.oneThirdReachedSubscription = this.quizTimerService.oneThirdReached$.subscribe(
+      () => {
+        this.playAudio();
+        this.oneThirdReached = true;
       }
-    }, 1000);
+    );
+
+    this.secondPassedSubscription = this.quizTimerService.secondPassed$.subscribe(
+      (timeLeft) => {
+        this.timeLeft = timeLeft;
+      }
+    );
+  }
+
+  unsubscribeFromTimer() {
+    this.timeOutSubscription.unsubscribe();
+
+    this.oneThirdReachedSubscription.unsubscribe();
+
+    this.secondPassedSubscription.unsubscribe();
   }
 
   playAudio() {
@@ -139,7 +165,8 @@ export class QuizTakingViewComponent implements OnInit {
   }
 
   onSubmitClicked() {
-    clearInterval(this.interval);
+    this.quizTimerService.stop();
+
     const quizSubmission = [];
     this.questions.forEach((question, i) => {
       question.answers.forEach((answer, j) => {

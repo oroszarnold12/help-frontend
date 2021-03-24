@@ -5,10 +5,12 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { QuizFormComponent } from "../course-view/quiz-form/quiz-form.component";
 import { Question } from "../model/question.model";
+import { QuizGrade } from "../model/quiz-grade.model";
 import { QuizSubmission } from "../model/quiz-submission.model";
 import { Quiz } from "../model/quiz.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
+import { GradeService } from "../shared/grade.service";
 import { QuestionService } from "../shared/question.service";
 import { QuizSubmissionService } from "../shared/quiz-submission.service";
 import { QuizService } from "../shared/quiz.service";
@@ -27,6 +29,7 @@ export class QuizViewComponent implements OnInit {
   courseId: number;
   questions: Question[];
   quizSubmissions: QuizSubmission[];
+  grade: QuizGrade;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +41,8 @@ export class QuizViewComponent implements OnInit {
     private questionService: QuestionService,
     private alertController: AlertController,
     private router: Router,
-    private quizSubmissionService: QuizSubmissionService
+    private quizSubmissionService: QuizSubmissionService,
+    private gradeService: GradeService
   ) {}
 
   ngOnInit() {
@@ -67,6 +71,7 @@ export class QuizViewComponent implements OnInit {
               this.loadQuestions();
             } else {
               this.loadQuizSubmissions();
+              this.loadGrades();
             }
           },
           (error) => {
@@ -108,9 +113,30 @@ export class QuizViewComponent implements OnInit {
       });
   }
 
+  loadGrades() {
+    this.gradeService
+      .getGradesOfQuiz(this.courseId, this.quiz.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (grades) => {
+          if (grades.length > 0) {
+            this.grade = grades[0];
+          } else {
+            this.grade = undefined;
+          }
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
+  }
+
   checkIfPicked(answer, index) {
     let picked = false;
-    this.quizSubmissions[index].answers.forEach((answer1) => {
+    this.quizSubmissions[index].answerSubmissions.forEach((answer1) => {
       if (answer1.answer.id === answer.id) {
         picked = answer1.picked;
       }

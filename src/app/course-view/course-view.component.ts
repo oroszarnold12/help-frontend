@@ -12,7 +12,7 @@ import { take, takeUntil } from "rxjs/operators";
 import { CourseFormComponent } from "../dashboard/course-form/course-form.component";
 import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
-import { Grade } from "../model/grade.model";
+import { AssignmentGrade } from "../model/assignment-grade.model";
 import { InvitationCreation } from "../model/invitation.creation.model";
 import { ThinPerson } from "../model/thin.person.model";
 import { AuthService } from "../shared/auth.service";
@@ -28,6 +28,7 @@ import { AnnouncementFormComponent } from "./announcement-form/announcement-form
 import { AssignmentFormComponent } from "./assignment-form/assignment-form.component";
 import { DiscussionFormComponent } from "./discussion-form/discussion-form.component";
 import { QuizFormComponent } from "./quiz-form/quiz-form.component";
+import { Grades } from "../model/grades.model";
 
 @Component({
   selector: "app-course-view",
@@ -61,7 +62,7 @@ export class CourseViewComponent implements OnInit {
   isTeacher: boolean;
   canDelete: boolean;
 
-  grades: Grade[];
+  grades: Grades;
 
   sumOfGrades: number;
   sumOfPoints: number;
@@ -81,7 +82,7 @@ export class CourseViewComponent implements OnInit {
     private personService: PersonService,
     private invitationService: InvitationService,
     private gradeService: GradeService,
-    private quizService: QuizService, 
+    private quizService: QuizService
   ) {
     this.settings = {
       actions: {
@@ -224,7 +225,9 @@ export class CourseViewComponent implements OnInit {
   }
 
   createAssingmentDescription(id: number, points: number) {
-    const grade = this.grades.find((grade) => grade.assignment.id === id);
+    const grade = this.grades.assignmentGrades.find(
+      (grade) => grade.assignment.id === id
+    );
     return !!grade ? `Grade: ${grade.grade}/${points}` : "Not yet graded!";
   }
 
@@ -251,6 +254,16 @@ export class CourseViewComponent implements OnInit {
       grade: this.getGrade(assignment.id),
       points: assignment.points,
     }));
+
+    const { quizzes } = this.course;
+    quizzes.forEach((quiz) => {
+      this.gradeOverviews.push({
+        name: quiz.name,
+        grade: this.getQuizGrade(quiz.id),
+        points: quiz.points,
+      });
+    });
+
     this.calculateTotal();
   }
 
@@ -282,8 +295,15 @@ export class CourseViewComponent implements OnInit {
   }
 
   getGrade(assignmentId) {
-    const grade = this.grades.find(
+    const grade = this.grades.assignmentGrades.find(
       (grade) => grade.assignment.id === assignmentId
+    );
+    return !!grade ? grade.grade : "-";
+  }
+
+  getQuizGrade(quizId) {
+    const grade = this.grades.quizGrades.find(
+      (grade) => grade.quiz.id === quizId
     );
     return !!grade ? grade.grade : "-";
   }
@@ -612,8 +632,10 @@ export class CourseViewComponent implements OnInit {
     event.newData.grade = Number.parseFloat(event.newData.grade);
     event.confirm.resolve(event.newData);
 
+    const oldGrade = event.data.grade === "-" ? 0 : event.data.grade;
+
     this.sumOfGrades =
-      this.sumOfGrades - (event.data.grade - event.newData.grade);
+      this.sumOfGrades - (oldGrade - event.newData.grade);
     this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
   }
 }

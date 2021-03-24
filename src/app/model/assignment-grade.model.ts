@@ -1,7 +1,7 @@
 import { Assignment } from "./assignment.model";
 import { ThinPerson } from "./thin.person.model";
 
-export class Grade {
+export class AssignmentGrade {
   grade?: number;
   submitter?: ThinPerson;
   assignment?: Assignment;

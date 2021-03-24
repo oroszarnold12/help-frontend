@@ -12,7 +12,7 @@
           </ion-col>
           <ion-col
             class="timer"
-            [ngClass]="timeLeft > oneThird ? 'dark-blue' : 'danger'"
+            [ngClass]="!oneThirdReached ? 'dark-blue' : 'warning'"
           >
             Time left: {{ timeLeft * 1000 | date: "H:mm:ss":"UTC" }}
           </ion-col>

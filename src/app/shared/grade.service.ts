@@ -1,7 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Grade } from "../model/grade.model";
+import { AssignmentGrade } from "../model/assignment-grade.model";
+import { Grades } from "../model/grades.model";
+import { QuizGrade } from "../model/quiz-grade.model";
 import { url } from "./api-config";
 
 @Injectable({
@@ -10,25 +12,34 @@ import { url } from "./api-config";
 export class GradeService {
   constructor(private httpClient: HttpClient) {}
 
-  getGrades(courseId: number, assignmentId: number): Observable<Grade[]> {
-    return this.httpClient.get<Grade[]>(
+  getGradesOfAssignment(
+    courseId: number,
+    assignmentId: number
+  ): Observable<AssignmentGrade[]> {
+    return this.httpClient.get<AssignmentGrade[]>(
       `${url}/courses/${courseId}/assignments/${assignmentId}/grades`
     );
   }
 
-  getGradesOfAllAssignments(courseId: number): Observable<Grade[]> {
-    return this.httpClient.get<Grade[]>(`${url}/courses/${courseId}/grades/`);
+  getGradesOfAllAssignments(courseId: number): Observable<Grades> {
+    return this.httpClient.get<Grades>(`${url}/courses/${courseId}/grades/`);
   }
 
-  saveGrade(
+  saveGradeOfAssignment(
     courseId: number,
     assignmentId: number,
     grade: number,
     personId: number
-  ): Observable<Grade> {
-    return this.httpClient.post<Grade>(
+  ): Observable<AssignmentGrade> {
+    return this.httpClient.post<AssignmentGrade>(
       `${url}/courses/${courseId}/assignments/${assignmentId}/grades`,
       { grade: grade, personId: personId }
+    );
+  }
+
+  getGradesOfQuiz(courseId: number, quizId: number): Observable<QuizGrade[]> {
+    return this.httpClient.get<QuizGrade[]>(
+      `${url}/courses/${courseId}/quizzes/${quizId}/grades`
     );
   }
 }

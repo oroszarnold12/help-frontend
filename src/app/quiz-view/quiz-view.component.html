@@ -23,6 +23,12 @@
               <b>Points:</b>
               {{ quiz.points }}
             </ion-card-subtitle>
+            <ion-card-subtitle>
+              <ng-container *ngIf="!!grade; else elseTemplate">
+                Grade: {{ grade.grade }} out of {{ quiz.points }}
+              </ng-container>
+              <ng-template #elseTemplate> Not yet graded. </ng-template>
+            </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content class="mt20">
             <div [innerHTML]="quiz.description"></div>
