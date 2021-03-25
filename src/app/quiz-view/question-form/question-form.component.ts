@@ -160,7 +160,6 @@ export class QuestionFormComponent implements OnInit {
           );
       } else {
         this.newQuestion = this.questionForm.value;
-        console.log(this.newQuestion);
         this.questionService
           .saveQuestion(this.courseId, this.quizId, this.newQuestion)
           .pipe(takeUntil(this.stop))

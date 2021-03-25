@@ -4,4 +4,5 @@ export interface Assignment {
   dueDate?: Date;
   points?: number;
   description?: string;
+  published?: boolean;
 }

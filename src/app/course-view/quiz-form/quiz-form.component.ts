@@ -72,6 +72,7 @@ export class QuizFormComponent implements OnInit, OnDestroy {
       timeLimit: new FormControl("", Validators.required),
       showCorrectAnswers: new FormControl(false),
       multipleAttempts: new FormControl(false),
+      published: new FormControl(false),
     });
   }
 

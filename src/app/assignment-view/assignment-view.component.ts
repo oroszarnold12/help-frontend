@@ -177,6 +177,25 @@ export class AssignmentViewComponent implements OnInit {
       });
   }
 
+  modifyPublished(published: boolean) {
+    this.assignment.published = published;
+
+    this.courseService
+      .updateAssignment(this.assignment, this.courseId, this.assignment.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (assignment) => {
+          this.toasterService.success(
+            "Congratulations!",
+            published ? "Assignment published!" : "Assignemnt is hidden!"
+          );
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
+  }
+
   goToSubmissions() {
     this.rotuer.navigate([
       `/courses/${this.courseId}/assignments/${this.assignment.id}/submissions`,

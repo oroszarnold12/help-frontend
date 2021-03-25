@@ -2,6 +2,22 @@
   <ion-grid class="padding-bottom">
     <ion-row *ngIf="isTeacher" fixed class="tae max-width">
       <ion-col>
+        <ion-button
+          *ngIf="quiz.published"
+          color="medium"
+          (click)="modifyPublished(false)"
+        >
+          <ion-icon name="eye-off-outline" class="add-icon"></ion-icon>
+          Hide
+        </ion-button>
+        <ion-button
+          *ngIf="!quiz.published"
+          color="success"
+          (click)="modifyPublished(true)"
+        >
+          <ion-icon name="eye-outline" class="add-icon"></ion-icon>
+          Publish
+        </ion-button>
         <ion-button color="primary" (click)="presentQuizModal()">
           <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
           Edit quiz
@@ -56,7 +72,11 @@
         Add question
       </ion-button>
     </ion-row>
-    <ion-row fixed class="max-width" *ngIf="isTeacher && questions.length > 0">
+    <ion-row
+      fixed
+      class="max-width"
+      *ngIf="!!questions && isTeacher && questions.length > 0"
+    >
       <ion-col class="start">
         <p class="mb-0 mt-30">Questions:</p>
       </ion-col>

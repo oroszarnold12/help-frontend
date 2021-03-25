@@ -203,7 +203,7 @@ export class CourseViewComponent implements OnInit {
     const { assignments } = this.course;
     this.assignmentOverviews = assignments.map((assignment) => ({
       id: assignment.id,
-      name: assignment.name,
+      name: assignment.name + (assignment.published ? "" : " - Unpublished"),
       description: `Due: ${this.datePite.transform(
         new Date(assignment.dueDate),
         "medium"
@@ -216,7 +216,7 @@ export class CourseViewComponent implements OnInit {
     const { quizzes } = this.course;
     this.quizOverviews = quizzes.map((quiz) => ({
       id: quiz.id,
-      name: quiz.name,
+      name: quiz.name + (quiz.published ? "" : " - Unpublished"),
       description: `Due: ${this.datePite.transform(
         new Date(quiz.dueDate),
         "medium"
@@ -634,8 +634,7 @@ export class CourseViewComponent implements OnInit {
 
     const oldGrade = event.data.grade === "-" ? 0 : event.data.grade;
 
-    this.sumOfGrades =
-      this.sumOfGrades - (oldGrade - event.newData.grade);
+    this.sumOfGrades = this.sumOfGrades - (oldGrade - event.newData.grade);
     this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
   }
 }

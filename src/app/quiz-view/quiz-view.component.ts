@@ -225,4 +225,22 @@ export class QuizViewComponent implements OnInit {
       `courses/${this.courseId}/quizzes/${this.quiz.id}/questions`,
     ]);
   }
+
+  modifyPublished(published: boolean) {
+    this.quiz.published = published;
+    this.quizService
+      .updateQuiz(this.quiz, this.courseId, this.quiz.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (quiz) => {
+          this.toasterService.success(
+            "Congratulations!",
+            published ? "Quiz published!" : "Quiz is hidden"
+          );
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
+  }
 }

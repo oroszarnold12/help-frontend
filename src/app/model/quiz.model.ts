@@ -5,6 +5,7 @@ export interface Quiz {
   dueDate?: Date;
   timeLimit?: string;
   points?: number;
-  showCorrectAnswers: boolean;
-  multipleAttempts: boolean;
+  showCorrectAnswers?: boolean;
+  multipleAttempts?: boolean;
+  published?: boolean;
 }

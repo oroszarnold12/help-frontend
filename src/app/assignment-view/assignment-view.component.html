@@ -2,9 +2,25 @@
   <ion-grid>
     <ion-row *ngIf="isTeacher" fixed class="tae max-width">
       <ion-col>
+        <ion-button
+          *ngIf="assignment.published"
+          color="medium"
+          (click)="modifyPublished(false)"
+        >
+          <ion-icon name="eye-off-outline" class="add-icon"></ion-icon>
+          Hide
+        </ion-button>
+        <ion-button
+          *ngIf="!assignment.published"
+          color="success"
+          (click)="modifyPublished(true)"
+        >
+          <ion-icon name="eye-outline" class="add-icon"></ion-icon>
+          Publish
+        </ion-button>
         <ion-button color="primary" (click)="presentAssignmentModal()">
           <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
-          Edit assignment
+          Edit
         </ion-button>
       </ion-col>
     </ion-row>

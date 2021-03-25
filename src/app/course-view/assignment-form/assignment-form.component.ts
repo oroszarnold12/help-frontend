@@ -70,6 +70,7 @@ export class AssignmentFormComponent implements OnInit {
         Validators.required,
         Validators.maxLength(this.editorMaxLength),
       ]),
+      published: new FormControl(false),
     });
   }
 
