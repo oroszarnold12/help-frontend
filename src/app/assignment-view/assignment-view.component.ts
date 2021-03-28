@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { ModalController } from "@ionic/angular";
+import { AlertController, ModalController } from "@ionic/angular";
 import { FileSaverService } from "ngx-filesaver";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -14,6 +14,8 @@ import { CourseService } from "../shared/course.service";
 import { GradeService } from "../shared/grade.service";
 import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
+import { CommentService } from "../shared/comment.service";
+import { AssignmentGradeComment } from "../model/assignment-grade-comment.model";
 
 @Component({
   selector: "app-assignment-view",
@@ -25,9 +27,14 @@ export class AssignmentViewComponent implements OnInit {
   stop: Subject<void> = new Subject();
   isTeacher: boolean;
   courseId: number;
+  content2: string;
+  content3: string;
   isSubmitting: boolean;
   submissions: Submission[];
   grade: AssignmentGrade;
+  username: string;
+  commentCreation: AssignmentGradeComment;
+  editingComment: boolean[] = [];
 
   private file;
 
@@ -41,7 +48,9 @@ export class AssignmentViewComponent implements OnInit {
     private submissionService: SubmissionService,
     private fileSaverService: FileSaverService,
     private rotuer: Router,
-    private gradeService: GradeService
+    private gradeService: GradeService,
+    private alertController: AlertController,
+    private commentService: CommentService
   ) {}
 
   ngOnInit() {
@@ -50,6 +59,8 @@ export class AssignmentViewComponent implements OnInit {
     this.isSubmitting = false;
 
     this.isTeacher = this.authService.isTeacher();
+
+    this.username = this.authService.getUsername();
 
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
@@ -99,6 +110,9 @@ export class AssignmentViewComponent implements OnInit {
         (grades) => {
           if (grades.length > 0) {
             this.grade = grades[0];
+            this.grade.comments.forEach((comment) => {
+              this.editingComment[comment.id] = false;
+            });
           } else {
             this.grade = undefined;
           }
@@ -200,5 +214,115 @@ export class AssignmentViewComponent implements OnInit {
     this.rotuer.navigate([
       `/courses/${this.courseId}/assignments/${this.assignment.id}/submissions`,
     ]);
+  }
+
+  async onDeleteClicked(id: number) {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this comment?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.commentService
+              .deleteAssingmentGradeComment(
+                this.courseId,
+                this.assignment.id,
+                this.grade.id,
+                id
+              )
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Comment deletion successful!",
+                    "Congratulations!"
+                  );
+                  this.loadGrades();
+                },
+                (error) => {
+                  console.log(error);
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
+                }
+              );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  onLeaveCommentClicked() {
+    this.commentCreation = {};
+    this.commentCreation.content = this.content2;
+    this.commentService
+      .saveAssingmentGradeComment(
+        this.courseId,
+        this.assignment.id,
+        this.grade.id,
+        this.commentCreation
+      )
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (comment) => {
+          this.toasterService.success(
+            "Comment saved successfully!",
+            "Congratulations!"
+          );
+
+          this.loadGrades();
+          this.content2 = undefined;
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
+  }
+
+  onEditClicked(comment) {
+    this.editingComment[comment.id] = true;
+    this.content3 = comment.content;
+  }
+
+  onCancelClicked(commentId) {
+    this.editingComment[commentId] = false;
+    this.content3 = undefined;
+  }
+
+  onUpdateClicked(commentId: number) {
+    this.commentCreation = {};
+    this.commentCreation.content = this.content3;
+    this.commentService
+      .updateAssingmentGradeComment(
+        this.courseId,
+        this.assignment.id,
+        this.grade.id,
+        commentId,
+        this.commentCreation
+      )
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (comment) => {
+          this.toasterService.success(
+            "Comment updated successfully!",
+            "Congratulations!"
+          );
+
+          this.loadGrades();
+          this.content3 = undefined;
+          this.editingComment[commentId] = false;
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
   }
 }

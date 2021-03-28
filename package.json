@@ -35,6 +35,7 @@
     "cordova-plugin-dialogs": "^2.0.2",
     "file-saver": "^2.0.5",
     "jquery": "^3.5.1",
+    "jszip": "^3.6.0",
     "ng2-completer": "^9.0.1",
     "ng2-smart-table": "^1.7.2",
     "ngx-filesaver": "^11.0.0",

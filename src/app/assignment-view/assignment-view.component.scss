@@ -1,17 +1,15 @@
-.top-padding {
-  top: 10%;
+.buttons-row {
+  max-width: 1000px;
+  text-align: end;
 }
 
-.max-width {
+.card {
   max-width: 1000px;
+  text-align: start;
 }
 
 .center {
   text-align: -webkit-center;
-}
-
-.start {
-  text-align: start;
 }
 
 .mt20 {
@@ -26,20 +24,12 @@
   padding-right: 5px;
 }
 
-.tae {
-  text-align: end;
-}
-
 .inline-block {
   display: inline-block;
 }
 
 .float-right {
   float: right;
-}
-
-.icon-font-size {
-  font-size: 20px;
 }
 
 .late {
@@ -58,4 +48,24 @@
 
 .dc {
   display: contents;
+}
+
+.comment-row {
+  max-width: 1000px;
+}
+
+.comment-card {
+  max-width: 1000px;
+  text-align: start;
+}
+
+.account-icon {
+  font-size: 40px;
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.grid {
+  padding-top: 150px;
 }

@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { AnnouncementComment } from "../model/announcement-comment.model";
+import { AssignmentGradeComment } from "../model/assignment-grade-comment.model";
 import { DiscussionComment } from "../model/discussion-comment.model";
 import { url } from "./api-config";
 
@@ -33,6 +34,18 @@ export class CommentService {
     );
   }
 
+  saveAssingmentGradeComment(
+    courseId: number,
+    assignmentId: number,
+    gradeId: number,
+    comment: AssignmentGradeComment
+  ): Observable<AssignmentGradeComment> {
+    return this.httpClient.post<AssignmentGradeComment>(
+      `${url}/courses/${courseId}/assignments/${assignmentId}/grades/${gradeId}/comments`,
+      comment
+    );
+  }
+
   updateAnnouncementComment(
     courseId: number,
     announcementId: number,
@@ -57,6 +70,19 @@ export class CommentService {
     );
   }
 
+  updateAssingmentGradeComment(
+    courseId: number,
+    assignmentId: number,
+    gradeId: number,
+    commentId: number,
+    comment: AssignmentGradeComment
+  ): Observable<AssignmentGradeComment> {
+    return this.httpClient.put<AssignmentGradeComment>(
+      `${url}/courses/${courseId}/assignments/${assignmentId}/grades/${gradeId}/comments/${commentId}`,
+      comment
+    );
+  }
+
   deleteAnnouncementComment(
     courseId: number,
     announcementId: number,
@@ -74,6 +100,17 @@ export class CommentService {
   ): Observable<void> {
     return this.httpClient.delete<void>(
       `${url}/courses/${courseId}/discussions/${discussionId}/comments/${commentId}`
+    );
+  }
+
+  deleteAssingmentGradeComment(
+    courseId: number,
+    assignmentId: number,
+    gradeId: number,
+    commentId: number
+  ): Observable<void> {
+    return this.httpClient.delete<void>(
+      `${url}/courses/${courseId}/assignments/${assignmentId}/grades/${gradeId}/comments/${commentId}`
     );
   }
 }

@@ -8,6 +8,7 @@ import { Announcement } from "../model/announcement.model";
 import { Assignment } from "../model/assignment.model";
 import { Discussion } from "../model/discussion.model";
 import { url } from "./api-config";
+import { ThinPerson } from "../model/thin.person.model";
 
 @Injectable({
   providedIn: "root",
@@ -38,6 +39,14 @@ export class CourseService {
   ): Observable<Assignment> {
     return this.http.get<Assignment>(
       `${url}/courses/${courseId}/assignments/${assignmentId}`
+    );
+  }
+
+  getParticipants(
+    courseId: number,
+  ): Observable<ThinPerson[]> {
+    return this.http.get<ThinPerson[]>(
+      `${url}/courses/${courseId}/participants`
     );
   }
 

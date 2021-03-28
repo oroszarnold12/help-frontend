@@ -1,7 +1,3 @@
-.top-padding {
-  top: 10%;
-}
-
 .dark-blue {
   color: #1e6bb8;
 }
@@ -14,8 +10,9 @@
   display: contents;
 }
 
-.mw {
+.card {
   max-width: 1000px;
+  text-align: start;
 }
 
 .minw-150 {
@@ -26,10 +23,38 @@
   text-align: -webkit-center;
 }
 
-.tas {
+.owrap {
+  overflow-wrap: anywhere;
+}
+
+.student-selector {
+  max-width: 400px;
+}
+
+ion-select::part(text) {
+  color: #1e6bb8;
+}
+
+.grid {
+  padding-top: 150px;
+}
+
+.comment-card {
+  max-width: 1000px;
   text-align: start;
 }
 
-.owrap {
-  overflow-wrap: anywhere;
+.account-icon {
+  font-size: 40px;
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.comment-row {
+  max-width: 1000px;
+}
+
+.button-icon {
+  padding-right: 5px;
 }
