@@ -36,7 +36,7 @@ ion-select::part(text) {
 }
 
 .grid {
-  padding-top: 150px;
+  padding-top: 100px;
 }
 
 .comment-card {
@@ -57,4 +57,14 @@ ion-select::part(text) {
 
 .button-icon {
   padding-right: 5px;
+}
+
+.max-points {
+  padding-left: 15px;
+}
+
+.title {
+  max-width: 1000px;
+  font-weight: bold;
+  font-style: italic;
 }

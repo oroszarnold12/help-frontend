@@ -1,7 +1,3 @@
-.content {
-  top: 10%;
-}
-
 .add-icon {
   padding-right: 5px;
 }
@@ -10,6 +6,17 @@
   text-align: end;
 }
 
-.course-card-grid {
+.grid {
+  padding-top: 100px;
   padding-bottom: 100px;
+  max-width: 1000px;
+}
+
+.course-card-col {
+  text-align: -webkit-center;
+}
+
+.title {
+  font-weight: bold;
+  font-style: italic;
 }

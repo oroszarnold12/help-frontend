@@ -1,21 +1,26 @@
-<ion-header>
+<ion-header *ngIf="!!username">
   <ion-toolbar color="light">
-    <a
+    <ion-buttons
+      slot="start"
       [style]="
         backButtonService.isActive() ? 'display:visible' : 'visibility:hidden'
       "
-      class="account-icon"
-      (click)="backClicked()"
     >
-      <ion-icon name="chevron-back-outline"></ion-icon
-    ></a>
+      <ion-button (click)="backClicked()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ng-container *ngFor="let subpath of getPath(); let i = index">
+      <span class="path">{{ subpath }} </span>
+      <ion-icon
+        *ngIf="i < getPath().length - 1"
+        name="caret-forward-outline"
+      ></ion-icon>
+    </ng-container>
     <ion-buttons slot="end">
-      <div *ngIf="username">
-        <ion-icon name="person-circle-outline" class="account-icon"></ion-icon>
-        <div class="account-name">
-          {{ username }}
-        </div>
-      </div>
+      <ion-button (click)="onDashboardButtonClicked()">
+        <ion-icon name="speedometer-outline"></ion-icon>
+      </ion-button>
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>

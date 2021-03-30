@@ -29,6 +29,7 @@ import { AssignmentFormComponent } from "./assignment-form/assignment-form.compo
 import { DiscussionFormComponent } from "./discussion-form/discussion-form.component";
 import { QuizFormComponent } from "./quiz-form/quiz-form.component";
 import { Grades } from "../model/grades.model";
+import { PathService } from "../shared/path.service";
 
 @Component({
   selector: "app-course-view",
@@ -82,7 +83,8 @@ export class CourseViewComponent implements OnInit {
     private personService: PersonService,
     private invitationService: InvitationService,
     private gradeService: GradeService,
-    private quizService: QuizService
+    private quizService: QuizService,
+    private pathService: PathService
   ) {
     this.settings = {
       actions: {
@@ -174,6 +176,7 @@ export class CourseViewComponent implements OnInit {
         .subscribe(
           (course) => {
             this.course = course;
+            this.pathService.setPath(this.course.name);
             this.canDelete =
               this.course.teacher.email === this.authService.getUsername();
             this.createAnnouncementOverviews();
@@ -242,7 +245,7 @@ export class CourseViewComponent implements OnInit {
     this.announcementOverviews = announcements.map((announcement) => ({
       id: announcement.id,
       name: announcement.name,
-      description: `${this.stripHtml(announcement.content).slice(0, 100)}... | 
+      description: `${this.stripHtml(announcement.content).slice(0, 30)}... | 
       Date: ${this.datePite.transform(new Date(announcement.date), "medium")} `,
     }));
   }
@@ -315,23 +318,32 @@ export class CourseViewComponent implements OnInit {
   ionSlideDidChange(): void {
     this.slides.getActiveIndex().then((index) => {
       this.segments.value = index.toString();
+      document.getElementById("segment-" + index).scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "center",
+      });
     });
   }
 
   viewAnnouncement(event) {
     this.router.navigate([`/courses/${this.course.id}/announcements/${event}`]);
+    this.pathService.setPath(`${this.course.name}/Announcements`);
   }
 
   viewAssignment(event) {
     this.router.navigate([`/courses/${this.course.id}/assignments/${event}`]);
+    this.pathService.setPath(`${this.course.name}/Assignments`);
   }
 
   viewQuiz(event) {
     this.router.navigate([`/courses/${this.course.id}/quizzes/${event}`]);
+    this.pathService.setPath(`${this.course.name}/Quizzes`);
   }
 
   viewDiscussion(event) {
     this.router.navigate([`/courses/${this.course.id}/discussions/${event}`]);
+    this.pathService.setPath(`${this.course.name}/Discussions`);
   }
 
   async deleteAnnouncement(event) {

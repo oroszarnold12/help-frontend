@@ -5,6 +5,7 @@ import { IonSlides } from "@ionic/angular";
 import { Subject, Subscription } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Question } from "../model/question.model";
+import { Quiz } from "../model/quiz.model";
 import { BackButtonService } from "../shared/back-button.service";
 import { QuestionService } from "../shared/question.service";
 import { QuizSubmissionService } from "../shared/quiz-submission.service";
@@ -26,6 +27,7 @@ export class QuizTakingViewComponent implements OnInit {
   questionsForm: FormArray;
   courseId: number;
   quizId: number;
+  quiz: Quiz;
   secondPassedSubscription: Subscription;
   timeOutSubscription: Subscription;
   oneThirdReachedSubscription: Subscription;
@@ -92,6 +94,7 @@ export class QuizTakingViewComponent implements OnInit {
         .pipe(takeUntil(this.stop))
         .subscribe(
           (quiz) => {
+            this.quiz = quiz;
             const timeArray = quiz.timeLimit.split(":");
             if (!this.quizTimerService.isTimerSet()) {
               this.timeLeft =
@@ -187,9 +190,10 @@ export class QuizTakingViewComponent implements OnInit {
             "Congratulations!"
           );
 
-          this.router.navigate([
-            `/courses/${this.courseId}/quizzes/${this.quizId}`,
-          ]);
+          this.router.navigate(
+            [`/courses/${this.courseId}/quizzes/${this.quizId}`],
+            { replaceUrl: true }
+          );
         },
         (error) => {
           this.toasterService.error(error.error.message, "Please try again!");

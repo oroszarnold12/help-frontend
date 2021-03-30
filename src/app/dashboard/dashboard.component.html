@@ -1,5 +1,10 @@
-<ion-content class="content">
-  <ion-grid fixed="true" class="course-card-grid">
+<ion-content *ngIf="!!courses">
+  <ion-grid fixed="true" class="grid">
+    <ion-row>
+      <ion-col>
+        <ion-item class="dark-blue title"> Courses </ion-item>
+      </ion-col>
+    </ion-row>
     <ion-row *ngIf="!!invitations && invitations.length">
       <ion-col>
         <app-invitation-card
@@ -18,8 +23,13 @@
         </ion-button>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="courses.length === 0">
+      <ion-col>
+        <ion-text color="warning"> Didn't found courses to display. </ion-text>
+      </ion-col>
+    </ion-row>
     <ion-row wrap>
-      <ion-col *ngFor="let course of courses">
+      <ion-col *ngFor="let course of courses" class="course-card-col">
         <app-course-card [course]="course"></app-course-card>
       </ion-col>
     </ion-row>

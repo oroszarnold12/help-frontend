@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { CourseService } from "../shared/course.service";
 import { takeUntil } from "rxjs/operators";
@@ -11,6 +11,7 @@ import { InvitationService } from "../shared/invitation.service";
 import { GeneralOverview } from "../model/general-overview.model";
 import { ToasterService } from "../shared/toaster.service";
 import { LoginStatusService } from "../shared/login-status.service";
+import { PathService } from "../shared/path.service";
 
 @Component({
   selector: "app-dashboard",
@@ -32,6 +33,7 @@ export class DashboardComponent implements OnInit {
     private invitationService: InvitationService,
     private alertController: AlertController,
     private toasterService: ToasterService,
+    private pathService: PathService,
     loginStatusService: LoginStatusService
   ) {
     this.subscription = loginStatusService.loggedIn$.subscribe((log) => {
@@ -45,6 +47,8 @@ export class DashboardComponent implements OnInit {
     this.loadCourses();
     this.loadInvitations();
     this.teacher = this.authService.isTeacher();
+
+    this.pathService.setPath("Dashboard");
   }
 
   async presentModal() {

@@ -2,11 +2,15 @@
   <ion-grid class="grid">
     <ion-row>
       <ion-col>
-        <ion-title> Submissions </ion-title>
-        <ion-button (click)="onDownloadAllClicked()" color="tertiary">
-          <ion-icon name="download-outline" class="button-icon"></ion-icon>
-          Download all
-        </ion-button>
+        <ion-item class="dark-blue title">
+          Submissions for {{ assignment.name }}
+          <ion-buttons slot="end">
+            <ion-button (click)="onDownloadAllClicked()" color="tertiary">
+              <ion-icon name="download-outline" class="button-icon"></ion-icon>
+              Download all
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -116,6 +120,9 @@
                             required
                           ></ion-input>
                         </ion-item>
+                        <ion-text class="max-points">
+                          out of {{ assignment.points }}
+                        </ion-text>
                       </form>
                     </ion-col>
                   </ion-row>

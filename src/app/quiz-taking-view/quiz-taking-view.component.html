@@ -10,6 +10,9 @@
           <ion-col class="questions-number">
             Total questions: {{ questions.length }}
           </ion-col>
+          <ion-col class="quiz-name">
+            {{ quiz.name }}
+          </ion-col>
           <ion-col
             class="timer"
             [ngClass]="!oneThirdReached ? 'dark-blue' : 'warning'"
