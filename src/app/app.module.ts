@@ -40,6 +40,7 @@ import { QuizFormComponent } from "./course-view/quiz-form/quiz-form.component";
 import { QuizViewComponent } from "./quiz-view/quiz-view.component";
 import { QuestionFormComponent } from "./quiz-view/question-form/question-form.component";
 import { QuizTakingViewComponent } from "./quiz-taking-view/quiz-taking-view.component";
+import { ParticipationsViewComponent } from "./participations-view/participations-view.component";
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { QuizTakingViewComponent } from "./quiz-taking-view/quiz-taking-view.com
     QuizViewComponent,
     QuestionFormComponent,
     QuizTakingViewComponent,
+    ParticipationsViewComponent,
   ],
   entryComponents: [
     CourseFormComponent,

@@ -12,6 +12,8 @@ import { GeneralOverview } from "../model/general-overview.model";
 import { ToasterService } from "../shared/toaster.service";
 import { LoginStatusService } from "../shared/login-status.service";
 import { PathService } from "../shared/path.service";
+import { ParticipationService } from "../shared/participation.service";
+import { NavigationEnd, Router } from "@angular/router";
 
 @Component({
   selector: "app-dashboard",
@@ -34,11 +36,21 @@ export class DashboardComponent implements OnInit {
     private alertController: AlertController,
     private toasterService: ToasterService,
     private pathService: PathService,
+    private participationService: ParticipationService,
+    private router: Router,
     loginStatusService: LoginStatusService
   ) {
     this.subscription = loginStatusService.loggedIn$.subscribe((log) => {
       if (log === true) {
         this.ngOnInit();
+      }
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (event.url === "/dashboard") {
+          this.ngOnInit();
+        }
       }
     });
   }
@@ -66,7 +78,16 @@ export class DashboardComponent implements OnInit {
       .getCourses()
       .pipe(takeUntil(this.stop))
       .subscribe(({ courses }) => {
-        this.courses = courses;
+        this.participationService
+          .getParticipations()
+          .pipe(takeUntil(this.stop))
+          .subscribe((participations) => {
+            this.courses = courses.filter((course) => {
+              return participations.find(
+                (participation) => participation.course.id === course.id
+              ).showOnDashboard;
+            });
+          });
       });
   }
 

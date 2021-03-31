@@ -39,7 +39,6 @@ export class TopbarComponent implements OnInit {
 
     this.pathService.path$.subscribe((path) => {
       this.path = path;
-      console.log(this.path);
     });
   }
 
@@ -61,6 +60,10 @@ export class TopbarComponent implements OnInit {
 
   onDashboardButtonClicked() {
     this.router.navigate(["/dashboard"]);
+  }
+
+  onCoursesButtonClicked() {
+    this.router.navigate(["/participations"]);
   }
 
   getPath(): string[] {

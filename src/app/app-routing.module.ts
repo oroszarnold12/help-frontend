@@ -15,6 +15,7 @@ import { SubmissionViewComponent } from "./submission-view/submission-view.compo
 import { TeacherGuardService } from "./guards/teacher-guard.service";
 import { QuizViewComponent } from "./quiz-view/quiz-view.component";
 import { QuizTakingViewComponent } from "./quiz-taking-view/quiz-taking-view.component";
+import { ParticipationsViewComponent } from "./participations-view/participations-view.component";
 
 const routes: Routes = [
   {
@@ -30,6 +31,11 @@ const routes: Routes = [
   {
     path: "dashboard",
     component: DashboardComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: "participations",
+    component: ParticipationsViewComponent,
     canActivate: [AuthGuardService],
   },
   {

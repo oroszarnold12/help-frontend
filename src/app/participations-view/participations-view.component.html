@@ -1,0 +1,39 @@
+<ion-content>
+  <ion-grid class="grid">
+    <ion-row>
+      <ion-col>
+        <ion-card class="courses-card">
+          <ion-card-header>
+            <ion-card-title class="dark-blue"> Courses </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row class="table-header">
+                <ion-col> Course </ion-col>
+                <ion-col> Show on dashboard </ion-col>
+              </ion-row>
+              <ion-row *ngFor="let participation of participaions">
+                <ion-col>
+                  {{ participation.course.name }}
+                </ion-col>
+                <ion-col>
+                  <ion-checkbox
+                    [(ngModel)]="participation.showOnDashboard"
+                  ></ion-checkbox>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row class="save-button-row">
+      <ion-col>
+        <ion-button color="success" (click)="onSaveClicked()">
+          <ion-icon name="save-outline" class="button-icon"></ion-icon>
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
