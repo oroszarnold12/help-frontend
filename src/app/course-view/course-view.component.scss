@@ -1,5 +1,5 @@
-.content {
-  top: 10%;
+.slides {
+  padding-top: 100px;
 }
 
 ion-segment {
@@ -10,20 +10,21 @@ ion-segment-button {
   min-width: 170px;
 }
 
-.table {
-  width: 1000px;
+.card {
+  max-width: 1000px;
 }
 
-.add-icon {
+.smart-table-card {
+  text-align: center;
+}
+
+.button-icon {
   padding-right: 5px;
 }
 
-.add-button-row {
+.button-row {
   text-align: end;
-}
-
-.add-button {
-  padding-right: 10px;
+  max-width: 1000px;
 }
 
 .description {
@@ -47,14 +48,16 @@ tr {
   padding-left: 120px;
 }
 
-.ta-center {
+.grid {
   text-align: -webkit-center;
 }
 
-.mw-1000 {
-  max-width: 1000px;
+@media screen and (max-width: 1000px) {
+  .grid {
+    text-align: unset;
+  }
 }
 
-.dark-blue {
-  color: #1e6bb8;
+.edited {
+  color: var(--ion-color-warning);
 }

@@ -1,166 +1,153 @@
-<ion-content class="content" *ngIf="!!course">
+<ion-content *ngIf="!!course">
   <ion-slides
     #slides
     [options]="options"
     (ionSlideDidChange)="ionSlideDidChange()"
+    class="slides"
   >
     <ion-slide class="slide">
-      <div>
-        <ion-grid>
-          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
-            <ion-col>
-              <ion-button
-                color="success"
-                (click)="presentAnnouncementModal()"
-                class="add-button"
-              >
-                <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                Add announcement
-              </ion-button>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <app-card
-                [data]="announcementOverviews"
-                [title]="'Announcements'"
-                (onDeleteClicked)="deleteAnnouncement($event)"
-                (onViewClicked)="viewAnnouncement($event)"
-              ></app-card>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+      <ion-grid class="grid">
+        <ion-row *ngIf="isTeacher" fixed class="button-row">
+          <ion-col>
+            <ion-button color="success" (click)="presentAnnouncementModal()">
+              <ion-icon name="add-outline" class="button-icon"></ion-icon>
+              Add announcement
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-card
+              [data]="announcementOverviews"
+              [title]="'Announcements'"
+              (onDeleteClicked)="deleteAnnouncement($event)"
+              (onViewClicked)="viewAnnouncement($event)"
+            ></app-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-slide>
     <ion-slide class="slide">
-      <div>
-        <ion-grid>
-          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
-            <ion-col>
-              <ion-button
-                color="success"
-                (click)="presentAssignmentModal()"
-                class="add-button"
-              >
-                <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                Add assignment
-              </ion-button>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <app-card
-                [data]="assignmentOverviews"
-                [title]="'Assignments'"
-                (onDeleteClicked)="deleteAssignment($event)"
-                (onViewClicked)="viewAssignment($event)"
-              ></app-card>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+      <ion-grid class="grid">
+        <ion-row *ngIf="isTeacher" fixed class="button-row">
+          <ion-col>
+            <ion-button color="success" (click)="presentAssignmentModal()">
+              <ion-icon name="add-outline" class="button-icon"></ion-icon>
+              Add assignment
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-card
+              [data]="assignmentOverviews"
+              [title]="'Assignments'"
+              (onDeleteClicked)="deleteAssignment($event)"
+              (onViewClicked)="viewAssignment($event)"
+            ></app-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-slide>
     <ion-slide class="slide">
-      <div>
-        <ion-grid>
-          <ion-row *ngIf="isTeacher" fixed class="add-button-row">
-            <ion-col>
-              <ion-button
-                color="success"
-                (click)="presentQuizModal()"
-                class="add-button"
-              >
-                <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                Add quiz
-              </ion-button>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <app-card
-                [data]="quizOverviews"
-                [title]="'Quizzes'"
-                (onDeleteClicked)="deleteQuiz($event)"
-                (onViewClicked)="viewQuiz($event)"
-              ></app-card>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+      <ion-grid class="grid">
+        <ion-row *ngIf="isTeacher" fixed class="button-row">
+          <ion-col>
+            <ion-button color="success" (click)="presentQuizModal()">
+              <ion-icon name="add-outline" class="button-icon"></ion-icon>
+              Add quiz
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-card
+              [data]="quizOverviews"
+              [title]="'Quizzes'"
+              (onDeleteClicked)="deleteQuiz($event)"
+              (onViewClicked)="viewQuiz($event)"
+            ></app-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-slide>
     <ion-slide class="slide">
-      <ion-card class="table">
-        <ion-card-header>
-          <ion-card-title class="dark-blue"> Grades </ion-card-title>
-        </ion-card-header>
-        <ng2-smart-table
-          [settings]="settings"
-          [source]="gradeOverviews"
-          (editConfirm)="onEditConfirmed($event)"
-        ></ng2-smart-table>
-        <ion-card-content>
-          <ion-item class="pl-25">
-            <ion-grid>
-              <ion-row>
-                <ion-col> Total: </ion-col>
-                <ion-col> {{ precentage | number }}% </ion-col>
-                <ion-col class="pl-120">
-                  {{ sumOfGrades }} / {{ sumOfPoints }}
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-        </ion-card-content>
-      </ion-card>
+      <ion-grid class="grid">
+        <ion-row *ngIf="edited" class="button-row">
+          <ion-col>
+            <ion-button color="warning" (click)="onResetClicked()">
+              <ion-icon name="reload-outline" class="button-icon"></ion-icon>
+              Reset
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card class="card smart-table-card">
+              <ion-card-header>
+                <ion-card-title class="dark-blue"> Grades </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ng2-smart-table
+                  [settings]="settings"
+                  [source]="gradeOverviews"
+                  (editConfirm)="onEditConfirmed($event)"
+                ></ng2-smart-table>
+                <ion-item class="pl-25">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col> Total: </ion-col>
+                      <ion-col> {{ precentage | number }}% </ion-col>
+                      <ion-col class="pl-120">
+                        {{ sumOfGrades }} / {{ sumOfPoints }}
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-slide>
     <ion-slide class="slide">
-      <div>
-        <ion-grid>
-          <ion-row fixed class="add-button-row">
-            <ion-col>
-              <ion-button
-                color="success"
-                (click)="presentDiscussionModal()"
-                class="add-button"
-              >
-                <ion-icon name="add-outline" class="add-icon"></ion-icon>
-                Add discussion
-              </ion-button>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <app-card
-                [data]="discussionOverviews"
-                [title]="'Discussions'"
-                (onDeleteClicked)="deleteDiscussion($event)"
-                (onViewClicked)="viewDiscussion($event)"
-              ></app-card>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+      <ion-grid class="grid">
+        <ion-row fixed class="button-row">
+          <ion-col>
+            <ion-button color="success" (click)="presentDiscussionModal()">
+              <ion-icon name="add-outline" class="button-icon"></ion-icon>
+              Add discussion
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-card
+              [data]="discussionOverviews"
+              [title]="'Discussions'"
+              (onDeleteClicked)="deleteDiscussion($event)"
+              (onViewClicked)="viewDiscussion($event)"
+            ></app-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-slide>
     <ion-slide class="slide"> Files </ion-slide>
     <ion-slide class="slide">
-      <ion-grid>
-        <ion-row *ngIf="isTeacher" fixed class="add-button-row">
+      <ion-grid class="grid">
+        <ion-row *ngIf="isTeacher" fixed class="button-row">
           <ion-col>
-            <ion-button
-              color="primary"
-              (click)="presentCourseModal()"
-              class="add-button"
-            >
-              <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+            <ion-button color="primary" (click)="presentCourseModal()">
+              <ion-icon name="pencil-outline" class="button-icon"></ion-icon>
               Edit course
             </ion-button>
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col class="ta-center">
-            <ion-card class="mw-1000">
+          <ion-col>
+            <ion-card class="card">
               <ion-card-header>
-                <ion-card-title>Description</ion-card-title>
+                <ion-card-title class="dark-blue">Description</ion-card-title>
               </ion-card-header>
               <ion-card-content
                 [innerHTML]="course.description"
@@ -170,14 +157,10 @@
             </ion-card>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="isTeacher && canDelete" fixed class="add-button-row">
+        <ion-row *ngIf="isTeacher && canDelete" fixed class="button-row">
           <ion-col>
-            <ion-button
-              color="danger"
-              (click)="deleteCourse()"
-              class="add-button"
-            >
-              <ion-icon name="trash-outline" class="add-icon"></ion-icon>
+            <ion-button color="danger" (click)="deleteCourse()">
+              <ion-icon name="trash-outline" class="button-icon"></ion-icon>
               Delete course
             </ion-button>
           </ion-col>
@@ -185,43 +168,44 @@
       </ion-grid>
     </ion-slide>
     <ion-slide *ngIf="isTeacher" class="slide">
-      <div>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <ion-card>
-                <ion-card-header>
-                  <ion-card-title> Available persons </ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                  <ng2-smart-table
-                    [settings]="availablePersonsSettings"
-                    [source]="thinPersons"
-                    (userRowSelect)="onUserRowSelected($event)"
-                  ></ng2-smart-table>
-                </ion-card-content>
-              </ion-card>
-            </ion-col>
-          </ion-row>
-          <ion-row fixed class="add-button-row">
-            <ion-col>
-              <ion-button
-                color="secondary"
-                (click)="inviteClicked()"
-                [disabled]="!personsToInvite.length"
-              >
-                <ion-icon name="add-circle-outline" class="add-icon"></ion-icon>
-                Invite
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+      <ion-grid class="grid">
+        <ion-row>
+          <ion-col>
+            <ion-card class="card smart-table-card">
+              <ion-card-header>
+                <ion-card-title> Available persons </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ng2-smart-table
+                  [settings]="availablePersonsSettings"
+                  [source]="thinPersons"
+                  (userRowSelect)="onUserRowSelected($event)"
+                ></ng2-smart-table>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row fixed class="button-row">
+          <ion-col>
+            <ion-button
+              color="secondary"
+              (click)="inviteClicked()"
+              [disabled]="!personsToInvite.length"
+            >
+              <ion-icon
+                name="add-circle-outline"
+                class="button-icon"
+              ></ion-icon>
+              Invite
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-slide>
   </ion-slides>
 </ion-content>
 
-<ion-footer class="footer">
+<ion-footer>
   <ion-segment
     (ionChange)="segmentChanged($event)"
     scrollable

@@ -8,11 +8,10 @@ import {
   ModalController,
 } from "@ionic/angular";
 import { Subject } from "rxjs";
-import { take, takeUntil } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
 import { CourseFormComponent } from "../dashboard/course-form/course-form.component";
 import { Course } from "../model/course.model";
 import { GeneralOverview } from "../model/general-overview.model";
-import { AssignmentGrade } from "../model/assignment-grade.model";
 import { InvitationCreation } from "../model/invitation.creation.model";
 import { ThinPerson } from "../model/thin.person.model";
 import { AuthService } from "../shared/auth.service";
@@ -52,6 +51,7 @@ export class CourseViewComponent implements OnInit {
   discussionOverviews: GeneralOverview[];
   quizOverviews: GeneralOverview[];
   gradeOverviews: any[];
+  originalGradeOverviews: any[];
   thinPersons: ThinPerson[];
   personsToInvite: ThinPerson[];
 
@@ -68,6 +68,8 @@ export class CourseViewComponent implements OnInit {
   sumOfGrades: number;
   sumOfPoints: number;
   precentage: number;
+
+  edited: boolean;
 
   constructor(
     private backButtonService: BackButtonService,
@@ -108,7 +110,23 @@ export class CourseViewComponent implements OnInit {
         grade: {
           title: "Grade",
           filter: false,
+          type: "html",
           editable: true,
+          valuePrepareFunction: (value, row) => {
+            if (!!row.assingmentId) {
+              if (value === this.getGrade(row.assignmentId)) {
+                return value;
+              } else {
+                return `<div class="edited">${value}</div>`;
+              }
+            } else {
+              if (value === this.getQuizGrade(row.quizId)) {
+                return value;
+              } else {
+                return `<div class="edited">${value}</div>`;
+              }
+            }
+          },
         },
         points: {
           title: "Points",
@@ -145,6 +163,7 @@ export class CourseViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.edited = false;
     this.backButtonService.turnOn();
     this.loadCourse();
     this.isTeacher = this.authService.isTeacher();
@@ -256,6 +275,7 @@ export class CourseViewComponent implements OnInit {
       name: assignment.name,
       grade: this.getGrade(assignment.id),
       points: assignment.points,
+      assingmentId: assignment.id,
     }));
 
     const { quizzes } = this.course;
@@ -264,6 +284,7 @@ export class CourseViewComponent implements OnInit {
         name: quiz.name,
         grade: this.getQuizGrade(quiz.id),
         points: quiz.points,
+        quizId: quiz.id,
       });
     });
 
@@ -641,6 +662,8 @@ export class CourseViewComponent implements OnInit {
   }
 
   onEditConfirmed(event) {
+    this.edited = true;
+
     event.newData.grade = Number.parseFloat(event.newData.grade);
     event.confirm.resolve(event.newData);
 
@@ -648,5 +671,10 @@ export class CourseViewComponent implements OnInit {
 
     this.sumOfGrades = this.sumOfGrades - (oldGrade - event.newData.grade);
     this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
+  }
+
+  onResetClicked() {
+    this.createGradeOverviews();
+    this.edited = false;
   }
 }
