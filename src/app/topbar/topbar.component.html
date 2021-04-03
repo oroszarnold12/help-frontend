@@ -34,10 +34,12 @@
     <ion-toolbar color="medium">
       <ion-title>
         <div *ngIf="username">
-          <ion-icon
-            name="person-circle-outline"
-            class="account-icon"
-          ></ion-icon>
+          <ion-avatar class="avatar">
+            <img
+              [src]="imageUrl"
+              onerror="this.src='assets/icon/account-icon.png'"
+            />
+          </ion-avatar>
           <div class="account-name">
             {{ username }}
           </div>
@@ -47,7 +49,9 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item button>Settings</ion-item>
+      <ion-item button (click)="onProfileSettingsClicked()"
+        >Profile settings</ion-item
+      >
       <ion-item button (click)="onLogOutClicked()">Log out</ion-item>
       <ion-item button (click)="closeMenu()"> Close </ion-item>
     </ion-list>

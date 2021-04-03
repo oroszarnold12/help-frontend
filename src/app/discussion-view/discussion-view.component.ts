@@ -5,6 +5,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DiscussionFormComponent } from "../course-view/discussion-form/discussion-form.component";
 import { Discussion } from "../model/discussion.model";
+import { url } from "../shared/api-config";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CommentService } from "../shared/comment.service";
@@ -23,6 +24,8 @@ export class DiscussionViewComponent implements OnInit {
   isTeacher: boolean;
   courseId: number;
   username: string;
+  creatorImageUrl: string;
+  commentImageUrls: string[];
 
   constructor(
     private courseService: CourseService,
@@ -54,6 +57,14 @@ export class DiscussionViewComponent implements OnInit {
         .subscribe(
           (discussion) => {
             this.discussion = discussion;
+            this.creatorImageUrl = this.getImageUrlById(discussion.creator.id);
+
+            this.commentImageUrls = [];
+            this.discussion.comments.forEach((comment) => {
+              this.commentImageUrls[
+                comment.commenter.id
+              ] = this.getImageUrlById(comment.commenter.id);
+            });
           },
           (error) => {
             this.toasterService.error(
@@ -84,7 +95,7 @@ export class DiscussionViewComponent implements OnInit {
     await modal.present();
   }
 
-  async presentCommentModal(comment) {
+  async presentCommentModal(comment?) {
     const modal = await this.modalController.create({
       component: DiscussionCommentFormComponent,
       componentProps: {
@@ -140,5 +151,9 @@ export class DiscussionViewComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  getImageUrlById(id: number): string {
+    return url + "/user/" + id + "/image/?" + new Date().getTime();
   }
 }

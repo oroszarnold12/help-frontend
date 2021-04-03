@@ -1,0 +1,246 @@
+<ion-content *ngIf="!!user">
+  <ion-grid class="grid">
+    <ion-row>
+      <ion-col>
+        <ion-card class="card">
+          <ion-card-header>
+            <ion-card-title class="dark-blue ion-text-center">
+              Account
+            </ion-card-title>
+            <ion-card-subtitle>
+              <ion-avatar class="avatar">
+                <img
+                  [src]="imageUrl"
+                  onerror="this.src='assets/icon/account-icon.png'"
+                />
+              </ion-avatar>
+              <ion-button
+                class="button-for-image"
+                (click)="onChangeImageClicked()"
+                *ngIf="!changingImage"
+              >
+                <ion-icon name="image-outline" class="button-icon"></ion-icon>
+                Change
+              </ion-button>
+              <ion-button
+                class="button-for-image"
+                *ngIf="changingImage"
+                (click)="onImageCancelClicked()"
+                color="danger"
+              >
+                <ion-icon name="close-outline" class="button-icon"></ion-icon>
+                Cancel
+              </ion-button>
+              <ion-button
+                class="button-for-image"
+                color="medium"
+                (click)="onRemoveClicked()"
+              >
+                <ion-icon name="trash-outline" class="button-icon"></ion-icon>
+                Remove
+              </ion-button>
+              <div *ngIf="changingImage" class="upload-form">
+                <ion-input
+                  type="file"
+                  (change)="onFileChange($event)"
+                  accept="image/*"
+                >
+                </ion-input>
+                <ion-button color="success" (click)="uploadFile()">
+                  <ion-icon name="share-outline" class="button-icon"></ion-icon>
+                  Upload
+                </ion-button>
+              </div>
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="stacked">First name</ion-label>
+                    <ion-input readonly [value]="user.firstName"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="stacked">Last name</ion-label>
+                    <ion-input readonly [value]="user.lastName"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="stacked">Email address</ion-label>
+                    <ion-input readonly [value]="user.email"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="stacked">Role</ion-label>
+                    <ion-input
+                      readonly
+                      [value]="getRoleString(user.role)"
+                    ></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-button
+                    *ngIf="!changignPassword"
+                    (click)="onChangePasswordClicked()"
+                  >
+                    <ion-icon
+                      name="create-outline"
+                      class="button-icon"
+                    ></ion-icon>
+                    Change password
+                  </ion-button>
+                  <ion-button
+                    *ngIf="changignPassword"
+                    (click)="onCancelClicked()"
+                    color="danger"
+                  >
+                    <ion-icon
+                      name="close-outline"
+                      class="button-icon"
+                    ></ion-icon>
+                    Cancel
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="changignPassword">
+                <ion-col class="password-col">
+                  <form [formGroup]="passwordForm" (ngSubmit)="submitForm()">
+                    <ion-item>
+                      <ion-label position="floating" for="password">
+                        New password
+                      </ion-label>
+                      <ion-input
+                        type="password"
+                        id="password"
+                        name="password"
+                        formControlName="password"
+                      ></ion-input>
+                    </ion-item>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="
+                        errorControl.password.touched &&
+                        errorControl.password.errors?.required
+                      "
+                    >
+                      <ion-text color="danger">Password is required.</ion-text>
+                    </span>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="errorControl.password.errors?.maxlength"
+                    >
+                      <ion-text color="danger">Password is too long.</ion-text>
+                    </span>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="errorControl.password.errors?.minlength"
+                    >
+                      <ion-text color="danger">Password is too short.</ion-text>
+                    </span>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="
+                        errorControl.password.errors?.pattern
+                          ?.requiredPattern === '^.*[^A-Za-z0-9].*$'
+                      "
+                    >
+                      <ion-text color="danger">
+                        Password doesn't contain special character.
+                      </ion-text>
+                    </span>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="
+                        errorControl.password.errors?.pattern
+                          ?.requiredPattern === '^.*[0-9].*$'
+                      "
+                    >
+                      <ion-text color="danger">
+                        Password doesn't contain number.
+                      </ion-text>
+                    </span>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="
+                        errorControl.password.errors?.pattern
+                          ?.requiredPattern === '^.*[a-z].*$'
+                      "
+                    >
+                      <ion-text color="danger"
+                        >Password doesn't contain lowercase.
+                      </ion-text>
+                    </span>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="
+                        errorControl.password.errors?.pattern
+                          ?.requiredPattern === '^.*[A-Z].*$'
+                      "
+                    >
+                      <ion-text color="danger">
+                        Password doesn't contain uppercase.
+                      </ion-text>
+                    </span>
+                    <ion-item>
+                      <ion-label position="floating" for="confirmPassword">
+                        Confirm password
+                      </ion-label>
+                      <ion-input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        formControlName="confirmPassword"
+                      ></ion-input>
+                    </ion-item>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="
+                        errorControl.confirmPassword.touched &&
+                        errorControl.confirmPassword.errors?.required
+                      "
+                    >
+                      <ion-text color="danger">
+                        Confirm password is required.
+                      </ion-text>
+                    </span>
+                    <span
+                      class="ion-padding-bottom"
+                      *ngIf="
+                        errorControl.confirmPassword.errors?.passwordMissmatch
+                      "
+                    >
+                      <ion-text color="danger"> Passwords must match.</ion-text>
+                    </span>
+                    <ion-row>
+                      <ion-col>
+                        <ion-button
+                          type="submit"
+                          color="success"
+                          expand="block"
+                          [disabled]="passwordForm.invalid"
+                        >
+                          Submit
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </form>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

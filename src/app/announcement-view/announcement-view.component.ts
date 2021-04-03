@@ -5,6 +5,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AnnouncementFormComponent } from "../course-view/announcement-form/announcement-form.component";
 import { Announcement } from "../model/announcement.model";
+import { url } from "../shared/api-config";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
 import { CommentService } from "../shared/comment.service";
@@ -23,6 +24,8 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
   isTeacher: boolean;
   courseId: number;
   username: string;
+  creatorImageUrl: string;
+  commentImageUrls: string[];
 
   constructor(
     private courseService: CourseService,
@@ -53,7 +56,17 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.stop))
         .subscribe(
           (announcement) => {
+            this.creatorImageUrl = this.getImageUrlById(
+              announcement.creator.id
+            );
             this.announcement = announcement;
+
+            this.commentImageUrls = [];
+            this.announcement.comments.forEach((comment) => {
+              this.commentImageUrls[
+                comment.commenter.id
+              ] = this.getImageUrlById(comment.commenter.id);
+            });
           },
           (error) => {
             this.toasterService.error(
@@ -144,5 +157,9 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     });
 
     await alert.present();
+  }
+
+  getImageUrlById(id: number): string {
+    return url + "/user/" + id + "/image/?" + new Date().getTime();
   }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Person } from "../model/person.model";
 import { ThinPerson } from "../model/thin.person.model";
 import { url } from "./api-config";
@@ -9,6 +9,9 @@ import { url } from "./api-config";
   providedIn: "root",
 })
 export class PersonService {
+  imageChanged: Subject<string> = new Subject();
+  imageChanged$ = this.imageChanged.asObservable();
+
   constructor(private httpClient: HttpClient) {}
 
   getPersons(): Observable<{ persons: ThinPerson[] }> {
@@ -25,5 +28,25 @@ export class PersonService {
 
   deletePerson(id: number): Observable<void> {
     return this.httpClient.delete<void>(`${url}/persons/${id}`);
+  }
+
+  getCurrentUser(): Observable<Person> {
+    return this.httpClient.get<Person>(`${url}/user`);
+  }
+
+  changePassword(password: string): Observable<Person> {
+    return this.httpClient.put<Person>(`${url}/user`, { password: password });
+  }
+
+  saveImage(data: FormData): Observable<Person> {
+    return this.httpClient.post<Person>(`${url}/user/image`, data);
+  }
+
+  removeImage(): Observable<void> {
+    return this.httpClient.delete<void>(`${url}/user/image`);
+  }
+
+  setImageUrl(url: string) {
+    this.imageChanged.next(url);
   }
 }

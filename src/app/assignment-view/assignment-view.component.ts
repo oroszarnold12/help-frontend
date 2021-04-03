@@ -16,6 +16,7 @@ import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
 import { CommentService } from "../shared/comment.service";
 import { AssignmentGradeComment } from "../model/assignment-grade-comment.model";
+import { url } from "../shared/api-config";
 
 @Component({
   selector: "app-assignment-view",
@@ -35,6 +36,7 @@ export class AssignmentViewComponent implements OnInit {
   username: string;
   commentCreation: AssignmentGradeComment;
   editingComment: boolean[] = [];
+  commentImageUrls: string[];
 
   private file;
 
@@ -110,8 +112,12 @@ export class AssignmentViewComponent implements OnInit {
         (grades) => {
           if (grades.length > 0) {
             this.grade = grades[0];
+            this.commentImageUrls = [];
             this.grade.comments.forEach((comment) => {
               this.editingComment[comment.id] = false;
+              this.commentImageUrls[
+                comment.commenter.id
+              ] = this.getImageUrlById(comment.commenter.id);
             });
           } else {
             this.grade = undefined;
@@ -324,5 +330,9 @@ export class AssignmentViewComponent implements OnInit {
           this.toasterService.error(error.error.message, "Please try again!");
         }
       );
+  }
+
+  getImageUrlById(id: number): string {
+    return url + "/user/" + id + "/image/?" + new Date().getTime();
   }
 }

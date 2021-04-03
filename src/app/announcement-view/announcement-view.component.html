@@ -13,10 +13,12 @@
         <ion-card class="max-width start">
           <ion-card-header>
             <ion-card-title>
-              <ion-icon
-                name="person-circle-outline"
-                class="account-icon"
-              ></ion-icon>
+              <ion-avatar class="avatar">
+                <img
+                  [src]="creatorImageUrl"
+                  onerror="this.src='assets/icon/account-icon.png'"
+                />
+              </ion-avatar>
               <div class="title">{{ announcement.name }}</div>
               <ion-card-subtitle class="dark-blue"
                 >{{ announcement.creator.firstName }}
@@ -50,10 +52,12 @@
           <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-item>
-                <ion-icon
-                  name="person-circle-outline"
-                  class="account-icon"
-                ></ion-icon>
+                <ion-avatar class="avatar">
+                  <img
+                    [src]="commentImageUrls[comment.commenter.id]"
+                    onerror="this.src='assets/icon/account-icon.png'"
+                  />
+                </ion-avatar>
                 <ion-buttons
                   slot="end"
                   *ngIf="comment.commenter.email === username"

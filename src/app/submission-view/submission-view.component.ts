@@ -17,6 +17,7 @@ import { GradeService } from "../shared/grade.service";
 import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
 import * as JSZip from "jszip";
+import { url } from "../shared/api-config";
 
 @Component({
   selector: "app-submission-view",
@@ -41,6 +42,8 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   assingmentId: number;
 
   username: string;
+
+  commentImageUrls: string[];
 
   @ViewChild("student") studentSelector: IonSelect;
 
@@ -129,8 +132,12 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           grades.forEach((grade) => {
             this.grades[grade.submitter.id] = grade.grade;
             this.gradesObject[grade.submitter.id] = grade;
+            this.commentImageUrls = [];
             grade.comments.forEach((comment) => {
               this.editingComment[comment.id] = false;
+              this.commentImageUrls[
+                comment.commenter.id
+              ] = this.getImageUrlById(comment.commenter.id);
             });
           });
         },
@@ -436,5 +443,9 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
         "Congratulations!"
       );
     });
+  }
+
+  getImageUrlById(id: number): string {
+    return url + "/user/" + id + "/image/?" + new Date().getTime();
   }
 }

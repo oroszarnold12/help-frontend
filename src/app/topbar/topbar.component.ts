@@ -8,6 +8,9 @@ import { LoginStatusService } from "../shared/login-status.service";
 import { Router } from "@angular/router";
 import { BackButtonService } from "../shared/back-button.service";
 import { PathService } from "../shared/path.service";
+import { url } from "../shared/api-config";
+import { UserDetailsViewComponent } from "../user-details-view/user-details-view.component";
+import { PersonService } from "../shared/person.service";
 
 @Component({
   selector: "app-topbar",
@@ -18,6 +21,7 @@ export class TopbarComponent implements OnInit {
   username: string;
   subscription: Subscription;
   path: string = "";
+  imageUrl = url + "/user/image";
 
   constructor(
     private menuController: MenuController,
@@ -27,10 +31,15 @@ export class TopbarComponent implements OnInit {
     private loginStatusService: LoginStatusService,
     private router: Router,
     private pathService: PathService,
+    private personService: PersonService,
     public backButtonService: BackButtonService
   ) {
     this.subscription = loginStatusService.loggedIn$.subscribe((log) => {
       this.username = this.authService.getUsername();
+    });
+
+    this.personService.imageChanged$.subscribe((url) => {
+      this.imageUrl = url;
     });
   }
 
@@ -64,6 +73,11 @@ export class TopbarComponent implements OnInit {
 
   onCoursesButtonClicked() {
     this.router.navigate(["/participations"]);
+  }
+
+  onProfileSettingsClicked() {
+    this.router.navigate(["user"]);
+    this.closeMenu();
   }
 
   getPath(): string[] {
