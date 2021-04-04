@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { AnnouncementComment } from "../model/announcement-comment.model";
-import { AssignmentGradeComment } from "../model/assignment-grade-comment.model";
+import { AssignmentComment } from "../model/assignment-comment.model";
 import { DiscussionComment } from "../model/discussion-comment.model";
 import { url } from "./api-config";
 
@@ -34,15 +34,18 @@ export class CommentService {
     );
   }
 
-  saveAssingmentGradeComment(
+  saveAssingmentComment(
     courseId: number,
     assignmentId: number,
-    gradeId: number,
-    comment: AssignmentGradeComment
-  ): Observable<AssignmentGradeComment> {
-    return this.httpClient.post<AssignmentGradeComment>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/grades/${gradeId}/comments`,
-      comment
+    recipientEmail: string,
+    comment: string
+  ): Observable<AssignmentComment> {
+    return this.httpClient.post<AssignmentComment>(
+      `${url}/courses/${courseId}/assignments/${assignmentId}/comments`,
+      {
+        content: comment,
+        recipientEmail: recipientEmail,
+      }
     );
   }
 
@@ -70,15 +73,14 @@ export class CommentService {
     );
   }
 
-  updateAssingmentGradeComment(
+  updateAssignmentComment(
     courseId: number,
     assignmentId: number,
-    gradeId: number,
     commentId: number,
-    comment: AssignmentGradeComment
-  ): Observable<AssignmentGradeComment> {
-    return this.httpClient.put<AssignmentGradeComment>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/grades/${gradeId}/comments/${commentId}`,
+    comment: AssignmentComment
+  ): Observable<AssignmentComment> {
+    return this.httpClient.put<AssignmentComment>(
+      `${url}/courses/${courseId}/assignments/${assignmentId}/comments/${commentId}`,
       comment
     );
   }
@@ -103,14 +105,13 @@ export class CommentService {
     );
   }
 
-  deleteAssingmentGradeComment(
+  deleteAssingmentComment(
     courseId: number,
     assignmentId: number,
-    gradeId: number,
     commentId: number
   ): Observable<void> {
     return this.httpClient.delete<void>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/grades/${gradeId}/comments/${commentId}`
+      `${url}/courses/${courseId}/assignments/${assignmentId}/comments/${commentId}`
     );
   }
 }

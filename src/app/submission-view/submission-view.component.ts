@@ -4,7 +4,6 @@ import { AlertController, IonSelect } from "@ionic/angular";
 import { FileSaverService } from "ngx-filesaver";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { AssignmentGradeComment } from "../model/assignment-grade-comment.model";
 import { AssignmentGrade } from "../model/assignment-grade.model";
 import { Assignment } from "../model/assignment.model";
 import { Submission } from "../model/submission.model";
@@ -18,6 +17,7 @@ import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
 import * as JSZip from "jszip";
 import { url } from "../shared/api-config";
+import { AssignmentComment } from "../model/assignment-comment.model";
 
 @Component({
   selector: "app-submission-view",
@@ -33,7 +33,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   content: string;
   content2: string;
   content3: string;
-  commentCreation: AssignmentGradeComment;
+  commentCreation: AssignmentComment;
   gradesObject: AssignmentGrade[] = [];
   editingComment: boolean[] = [];
   blobs: Blob[];
@@ -113,6 +113,13 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (assignemnt) => {
           this.assignment = assignemnt;
+          this.commentImageUrls = [];
+          this.assignment.comments.forEach((comment) => {
+            this.editingComment[comment.id] = false;
+            this.commentImageUrls[comment.commenter.id] = this.getImageUrlById(
+              comment.commenter.id
+            );
+          });
         },
         (error) => {
           this.toasterService.error(
@@ -132,13 +139,6 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           grades.forEach((grade) => {
             this.grades[grade.submitter.id] = grade.grade;
             this.gradesObject[grade.submitter.id] = grade;
-            this.commentImageUrls = [];
-            grade.comments.forEach((comment) => {
-              this.editingComment[comment.id] = false;
-              this.commentImageUrls[
-                comment.commenter.id
-              ] = this.getImageUrlById(comment.commenter.id);
-            });
           });
         },
         (error) => {
@@ -160,7 +160,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
-  grade(submitterId: number) {
+  grade(submitterEmail: string, submitterId: number) {
     this.gradeService
       .saveGradeOfAssignment(
         this.courseId,
@@ -172,24 +172,22 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (grade) => {
           if (!!this.content) {
-            this.commentCreation = {};
-            this.commentCreation.content = this.content;
             this.commentService
-              .saveAssingmentGradeComment(
+              .saveAssingmentComment(
                 this.courseId,
                 this.assingmentId,
-                grade.id,
-                this.commentCreation
+                submitterEmail,
+                this.content
               )
               .pipe(takeUntil(this.stop))
               .subscribe(
                 (comment) => {
                   this.toasterService.success(
-                    "Grade saved successfully!",
+                    "Grade with comment saved successfully!",
                     "Congratulations!"
                   );
 
-                  this.loadGrades();
+                  this.loadAssingment();
                   this.content = undefined;
                 },
                 (error) => {
@@ -287,12 +285,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           text: "Yes",
           handler: () => {
             this.commentService
-              .deleteAssingmentGradeComment(
-                this.courseId,
-                this.assingmentId,
-                this.gradesObject[this.studentSelector.value.id].id,
-                id
-              )
+              .deleteAssingmentComment(this.courseId, this.assingmentId, id)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -300,7 +293,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
                     "Comment deletion successful!",
                     "Congratulations!"
                   );
-                  this.loadGrades();
+                  this.loadAssingment();
                 },
                 (error) => {
                   console.log(error);
@@ -318,15 +311,13 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  onLeaveCommentClicked() {
-    this.commentCreation = {};
-    this.commentCreation.content = this.content2;
+  onLeaveCommentClicked(submitterEmail: string) {
     this.commentService
-      .saveAssingmentGradeComment(
+      .saveAssingmentComment(
         this.courseId,
         this.assingmentId,
-        this.gradesObject[this.studentSelector.value.id].id,
-        this.commentCreation
+        submitterEmail,
+        this.content2
       )
       .pipe(takeUntil(this.stop))
       .subscribe(
@@ -336,7 +327,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
             "Congratulations!"
           );
 
-          this.loadGrades();
+          this.loadAssingment();
           this.content2 = undefined;
         },
         (error) => {
@@ -359,10 +350,9 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     this.commentCreation = {};
     this.commentCreation.content = this.content3;
     this.commentService
-      .updateAssingmentGradeComment(
+      .updateAssignmentComment(
         this.courseId,
         this.assingmentId,
-        this.gradesObject[this.studentSelector.value.id].id,
         commentId,
         this.commentCreation
       )
@@ -374,7 +364,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
             "Congratulations!"
           );
 
-          this.loadGrades();
+          this.loadAssingment();
           this.content3 = undefined;
           this.editingComment[commentId] = false;
         },
@@ -447,5 +437,11 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
 
   getImageUrlById(id: number): string {
     return url + "/user/" + id + "/image/?" + new Date().getTime();
+  }
+
+  getComments(submitterId: number): AssignmentComment[] {
+    return this.assignment.comments.filter((comment) => {
+      return comment.recipient.id === submitterId;
+    });
   }
 }

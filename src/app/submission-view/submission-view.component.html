@@ -147,7 +147,7 @@
                       <ion-button
                         color="success"
                         [disabled]="!gradeFrom.form.valid"
-                        (click)="grade(student.value.id)"
+                        (click)="grade(student.value.email, student.value.id)"
                       >
                         <ion-icon name="ribbon-outline"></ion-icon>
                         Grade
@@ -162,8 +162,7 @@
       </ion-col>
     </ion-row>
     <ion-row class="comment-row"> Comments: </ion-row>
-    <ng-container *ngIf="!!gradesObject[student.value.id]">
-      <ion-row *ngFor="let comment of gradesObject[student.value.id].comments">
+      <ion-row *ngFor="let comment of getComments(student.value.id)">
         <ion-col>
           <ion-card class="comment-card">
             <ion-card-header class="ion-no-padding">
@@ -254,7 +253,6 @@
           </ion-card>
         </ion-col>
       </ion-row>
-    </ng-container>
     <ion-row>
       <ion-col>
         <ion-card class="comment-card">
@@ -278,7 +276,7 @@
                   <ion-button
                     color="success"
                     [disabled]="!!!content2"
-                    (click)="onLeaveCommentClicked()"
+                    (click)="onLeaveCommentClicked(student.value.email)"
                   >
                     <ion-icon
                       name="chatbox-ellipses-outline"

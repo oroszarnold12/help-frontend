@@ -15,8 +15,8 @@ import { GradeService } from "../shared/grade.service";
 import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
 import { CommentService } from "../shared/comment.service";
-import { AssignmentGradeComment } from "../model/assignment-grade-comment.model";
 import { url } from "../shared/api-config";
+import { AssignmentComment } from "../model/assignment-comment.model";
 
 @Component({
   selector: "app-assignment-view",
@@ -28,13 +28,14 @@ export class AssignmentViewComponent implements OnInit {
   stop: Subject<void> = new Subject();
   isTeacher: boolean;
   courseId: number;
+  content: string;
   content2: string;
   content3: string;
   isSubmitting: boolean;
   submissions: Submission[];
   grade: AssignmentGrade;
   username: string;
-  commentCreation: AssignmentGradeComment;
+  commentCreation: AssignmentComment;
   editingComment: boolean[] = [];
   commentImageUrls: string[];
 
@@ -64,6 +65,10 @@ export class AssignmentViewComponent implements OnInit {
 
     this.username = this.authService.getUsername();
 
+    this.loadAssignment();
+  }
+
+  loadAssignment() {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
       this.courseService
@@ -72,6 +77,13 @@ export class AssignmentViewComponent implements OnInit {
         .subscribe(
           (assignemnt) => {
             this.assignment = assignemnt;
+            this.commentImageUrls = [];
+            this.assignment.comments.forEach((comment) => {
+              this.editingComment[comment.id] = false;
+              this.commentImageUrls[
+                comment.commenter.id
+              ] = this.getImageUrlById(comment.commenter.id);
+            });
             this.loadSubmissions();
             if (!this.isTeacher) {
               this.loadGrades();
@@ -112,13 +124,6 @@ export class AssignmentViewComponent implements OnInit {
         (grades) => {
           if (grades.length > 0) {
             this.grade = grades[0];
-            this.commentImageUrls = [];
-            this.grade.comments.forEach((comment) => {
-              this.editingComment[comment.id] = false;
-              this.commentImageUrls[
-                comment.commenter.id
-              ] = this.getImageUrlById(comment.commenter.id);
-            });
           } else {
             this.grade = undefined;
           }
@@ -168,15 +173,50 @@ export class AssignmentViewComponent implements OnInit {
         .pipe(takeUntil(this.stop))
         .subscribe(
           (submission) => {
-            this.toasterService.success(
-              "File uploaded successfully!",
-              "Congratulations!"
-            );
-            this.isSubmitting = false;
-            this.file = null;
-            this.loadSubmissions();
-            if (!this.isTeacher) {
-              this.loadGrades();
+            if (!!this.content) {
+              this.commentService
+                .saveAssingmentComment(
+                  this.courseId,
+                  this.assignment.id,
+                  this.authService.getUsername(),
+                  this.content
+                )
+                .pipe(takeUntil(this.stop))
+                .subscribe(
+                  (comment) => {
+                    this.toasterService.success(
+                      "File with comment uploaded successfully!",
+                      "Congratulations!"
+                    );
+
+                    this.isSubmitting = false;
+                    this.file = null;
+                    this.loadSubmissions();
+                    if (!this.isTeacher) {
+                      this.loadGrades();
+                    }
+                    this.content = undefined;
+                  },
+                  (error) => {
+                    this.toasterService.error(
+                      error.error.message,
+                      "Please try again!"
+                    );
+                  }
+                );
+            } else {
+              this.toasterService.success(
+                "File uploaded successfully!",
+                "Congratulations!"
+              );
+
+              this.isSubmitting = false;
+              this.file = null;
+              this.loadSubmissions();
+              if (!this.isTeacher) {
+                this.loadGrades();
+              }
+              this.content = undefined;
             }
           },
           (error) => {
@@ -235,12 +275,7 @@ export class AssignmentViewComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.commentService
-              .deleteAssingmentGradeComment(
-                this.courseId,
-                this.assignment.id,
-                this.grade.id,
-                id
-              )
+              .deleteAssingmentComment(this.courseId, this.assignment.id, id)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -267,14 +302,12 @@ export class AssignmentViewComponent implements OnInit {
   }
 
   onLeaveCommentClicked() {
-    this.commentCreation = {};
-    this.commentCreation.content = this.content2;
     this.commentService
-      .saveAssingmentGradeComment(
+      .saveAssingmentComment(
         this.courseId,
         this.assignment.id,
-        this.grade.id,
-        this.commentCreation
+        this.authService.getUsername(),
+        this.content2
       )
       .pipe(takeUntil(this.stop))
       .subscribe(
@@ -284,7 +317,7 @@ export class AssignmentViewComponent implements OnInit {
             "Congratulations!"
           );
 
-          this.loadGrades();
+          this.loadAssignment();
           this.content2 = undefined;
         },
         (error) => {
@@ -307,10 +340,9 @@ export class AssignmentViewComponent implements OnInit {
     this.commentCreation = {};
     this.commentCreation.content = this.content3;
     this.commentService
-      .updateAssingmentGradeComment(
+      .updateAssignmentComment(
         this.courseId,
         this.assignment.id,
-        this.grade.id,
         commentId,
         this.commentCreation
       )
@@ -322,7 +354,7 @@ export class AssignmentViewComponent implements OnInit {
             "Congratulations!"
           );
 
-          this.loadGrades();
+          this.loadAssignment();
           this.content3 = undefined;
           this.editingComment[commentId] = false;
         },

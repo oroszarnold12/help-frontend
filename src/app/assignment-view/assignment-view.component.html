@@ -7,7 +7,7 @@
           color="medium"
           (click)="modifyPublished(false)"
         >
-          <ion-icon name="eye-off-outline" class="add-icon"></ion-icon>
+          <ion-icon name="eye-off-outline" class="button-icon"></ion-icon>
           Hide
         </ion-button>
         <ion-button
@@ -15,11 +15,11 @@
           color="success"
           (click)="modifyPublished(true)"
         >
-          <ion-icon name="eye-outline" class="add-icon"></ion-icon>
+          <ion-icon name="eye-outline" class="button-icon"></ion-icon>
           Publish
         </ion-button>
         <ion-button color="primary" (click)="presentAssignmentModal()">
-          <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+          <ion-icon name="pencil-outline" class="button-icon"></ion-icon>
           Edit
         </ion-button>
       </ion-col>
@@ -37,7 +37,17 @@
                   [color]="isSubmitting ? 'danger' : 'success'"
                   (click)="onSubmitClicked()"
                 >
-                  {{ isSubmitting ? "Exit" : "Submit" }}
+                  <ion-icon
+                    *ngIf="isSubmitting"
+                    name="close-outline"
+                    class="button-icon"
+                  ></ion-icon>
+                  <ion-icon
+                    *ngIf="!isSubmitting"
+                    name="push-outline"
+                    class="button-icon"
+                  ></ion-icon>
+                  {{ isSubmitting ? "Cancel" : "Submit" }}
                 </ion-button>
               </div>
             </ion-card-title>
@@ -47,8 +57,21 @@
               {{ assignment.points }}
             </ion-card-subtitle>
             <div *ngIf="isSubmitting">
-              <input type="file" (change)="onFileChange($event)" />
+              <ion-input
+                type="file"
+                (change)="onFileChange($event)"
+              ></ion-input>
+              <ion-item lines="full" class="form-group my-input-padding">
+                <ion-textarea
+                  type="text"
+                  [(ngModel)]="content"
+                  rows="4"
+                  placeholder="Type comment here..."
+                  maxlength="2048"
+                ></ion-textarea>
+              </ion-item>
               <ion-button color="primary" (click)="uploadFile()">
+                <ion-icon name="push-outline" class="button-icon"></ion-icon>
                 Upload
               </ion-button>
             </div>
@@ -56,7 +79,7 @@
               <p class="link" (click)="goToSubmissions()">View submissions</p>
             </div>
             <div *ngIf="!!submissions && submissions.length > 0 && !isTeacher">
-              <p>Submissions:</p>
+              <p class="bold">Submissions:</p>
               <div *ngFor="let submission of submissions" class="owrap">
                 <ion-buttons
                   slot="end"
@@ -80,9 +103,11 @@
                 </ion-buttons>
               </div>
               <ng-container *ngIf="!!grade; else elseTemplate">
-                Grade: {{ grade.grade }} out of {{ assignment.points }}
+                <p class="bold">
+                  Grade: {{ grade.grade }} out of {{ assignment.points }}
+                </p>
               </ng-container>
-              <ng-template #elseTemplate> Not yet graded. </ng-template>
+              <ng-template #elseTemplate> <p>Not yet graded.</p></ng-template>
             </div>
           </ion-card-header>
           <ion-card-content class="mt20">
@@ -92,95 +117,98 @@
       </ion-col>
     </ion-row>
     <ng-container *ngIf="!isTeacher">
-      <ion-row class="comment-row"> Comments: </ion-row>
-      <ng-container *ngIf="!!grade">
-        <ion-row *ngFor="let comment of grade.comments">
-          <ion-col>
-            <ion-card class="comment-card">
-              <ion-card-header class="ion-no-padding">
-                <ion-card-title>
-                  <ion-item>
-                    <ion-avatar class="avatar">
-                      <img
-                        [src]="commentImageUrls[comment.commenter.id]"
-                        onerror="this.src='assets/icon/account-icon.png'"
-                      />
-                    </ion-avatar>
-                    <ion-buttons
-                      slot="end"
-                      *ngIf="comment.commenter.email === username"
-                      class="ion-no-margin"
+      <ion-row class="comment-row bold"> Comments: </ion-row>
+      <ion-row *ngFor="let comment of assignment.comments">
+        <ion-col>
+          <ion-card class="comment-card">
+            <ion-card-header class="ion-no-padding">
+              <ion-card-title>
+                <ion-item>
+                  <ion-avatar class="avatar">
+                    <img
+                      [src]="commentImageUrls[comment.commenter.id]"
+                      onerror="this.src='assets/icon/account-icon.png'"
+                    />
+                  </ion-avatar>
+                  <ion-buttons
+                    slot="end"
+                    *ngIf="comment.commenter.email === username"
+                    class="ion-no-margin"
+                  >
+                    <ion-button
+                      color="primary"
+                      (click)="onEditClicked(comment)"
                     >
-                      <ion-button
-                        color="primary"
-                        (click)="onEditClicked(comment)"
-                      >
-                        <ion-icon name="create-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button
-                        color="danger"
-                        (click)="onDeleteClicked(comment.id)"
-                      >
-                        <ion-icon name="trash-outline"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                    <ion-card-subtitle class="dark-blue"
-                      >{{ comment.commenter.firstName }}
-                      {{ comment.commenter.lastName }}
-                    </ion-card-subtitle>
-                    <ion-card-subtitle>
-                      &nbsp;- {{ comment.date | date: "medium" }}
-                    </ion-card-subtitle>
-                  </ion-item>
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content>
-                <div
-                  *ngIf="!editingComment[comment.id]"
-                  [innerHTML]="comment.content"
-                ></div>
-                <ion-grid *ngIf="editingComment[comment.id]">
-                  <ion-row>
-                    <ion-col>
-                      <ion-item
-                        lines="full"
-                        class="form-group my-input-padding"
-                      >
-                        <ion-textarea
-                          type="text"
-                          [(ngModel)]="content3"
-                          rows="4"
-                          placeholder="Type comment here..."
-                          maxlength="2048"
-                        ></ion-textarea>
-                      </ion-item>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col class="ion-align-self-end">
-                      <ion-button
-                        (click)="onUpdateClicked(comment.id)"
-                        [disabled]="!!!content3"
-                      >
-                        Update comment
-                      </ion-button>
-                    </ion-col>
-                    <ion-col class="ion-text-end">
-                      <ion-button
-                        color="danger"
-                        (click)="onCancelClicked(comment.id)"
-                        [disabled]="!!!content3"
-                      >
-                        Cancel
-                      </ion-button>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ng-container>
+                      <ion-icon name="create-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button
+                      color="danger"
+                      (click)="onDeleteClicked(comment.id)"
+                    >
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                  <ion-card-subtitle class="dark-blue"
+                    >{{ comment.commenter.firstName }}
+                    {{ comment.commenter.lastName }}
+                  </ion-card-subtitle>
+                  <ion-card-subtitle>
+                    &nbsp;- {{ comment.date | date: "medium" }}
+                  </ion-card-subtitle>
+                </ion-item>
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <div
+                *ngIf="!editingComment[comment.id]"
+                [innerHTML]="comment.content"
+              ></div>
+              <ion-grid *ngIf="editingComment[comment.id]">
+                <ion-row>
+                  <ion-col>
+                    <ion-item lines="full" class="form-group my-input-padding">
+                      <ion-textarea
+                        type="text"
+                        [(ngModel)]="content3"
+                        rows="4"
+                        placeholder="Type comment here..."
+                        maxlength="2048"
+                      ></ion-textarea>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-align-self-end">
+                    <ion-button
+                      (click)="onUpdateClicked(comment.id)"
+                      [disabled]="!!!content3"
+                    >
+                      <ion-icon
+                        name="sync-outline"
+                        class="button-icon"
+                      ></ion-icon>
+                      Update comment
+                    </ion-button>
+                  </ion-col>
+                  <ion-col class="ion-text-end">
+                    <ion-button
+                      color="danger"
+                      (click)="onCancelClicked(comment.id)"
+                      [disabled]="!!!content3"
+                    >
+                      <ion-icon
+                        name="close-outline"
+                        class="button-icon"
+                      ></ion-icon>
+                      Cancel
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col>
           <ion-card class="comment-card">
@@ -206,6 +234,10 @@
                       [disabled]="!!!content2"
                       (click)="onLeaveCommentClicked()"
                     >
+                      <ion-icon
+                        name="chatbox-ellipses-outline"
+                        class="button-icon"
+                      ></ion-icon>
                       Leave comment
                     </ion-button>
                   </ion-col>
