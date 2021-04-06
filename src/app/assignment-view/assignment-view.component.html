@@ -57,10 +57,21 @@
               {{ assignment.points }}
             </ion-card-subtitle>
             <div *ngIf="isSubmitting">
-              <ion-input
-                type="file"
-                (change)="onFileChange($event)"
-              ></ion-input>
+              <ion-item
+                *ngFor="let item of [].constructor(numOfFiles); let i = index"
+              >
+                <ion-input type="file" (change)="onFileChange($event, i)">
+                </ion-input>
+                <ion-buttons *ngIf="i === numOfFiles - 1 && i !== 0">
+                  <ion-button color="danger" (click)="onRemoveFileClicked()">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+              <ion-button color="success" (click)="onAddAnotherFileClicked()">
+                <ion-icon name="add-outline" class="button-icon"></ion-icon>
+                Add another file
+              </ion-button>
               <ion-item lines="full" class="form-group my-input-padding">
                 <ion-textarea
                   type="text"
@@ -84,15 +95,16 @@
                 <ion-buttons
                   slot="end"
                   [ngClass]="submission.date > assignment.dueDate ? 'late' : ''"
+                  *ngFor="let file of submission.files"
                 >
-                  {{ submission.fileName }} -
+                  {{ file.fileName }} -
                   {{ submission.date | date: "medium" }}
                   <div *ngIf="submission.date > assignment.dueDate" class="dc">
                     &nbsp;(late)
                   </div>
                   <ion-button
                     (click)="
-                      onSubmissionClicked(submission.id, submission.fileName)
+                      onSubmissionClicked(submission.id, file.fileName, file.id)
                     "
                   >
                     <ion-icon

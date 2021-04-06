@@ -15,7 +15,6 @@ import { CourseService } from "../shared/course.service";
 import { GradeService } from "../shared/grade.service";
 import { SubmissionService } from "../shared/submission.service";
 import { ToasterService } from "../shared/toaster.service";
-import * as JSZip from "jszip";
 import { url } from "../shared/api-config";
 import { AssignmentComment } from "../model/assignment-comment.model";
 
@@ -25,25 +24,24 @@ import { AssignmentComment } from "../model/assignment-comment.model";
   styleUrls: ["./submission-view.component.scss"],
 })
 export class SubmissionViewComponent implements OnInit, OnDestroy {
-  submissions: Submission[];
   stop: Subject<void> = new Subject();
-  grades: number[] = [];
+  submissions: Submission[];
   assignment: Assignment;
   participants: ThinPerson[];
-  content: string;
-  content2: string;
-  content3: string;
-  commentCreation: AssignmentComment;
+  grades: number[] = [];
   gradesObject: AssignmentGrade[] = [];
-  editingComment: boolean[] = [];
-  blobs: Blob[];
 
   courseId: number;
   assingmentId: number;
 
-  username: string;
-
+  uploadCommentContent: string;
+  simpleCommentContent: string;
+  updateCommentContent: string;
+  commentCreation: AssignmentComment;
+  editingComment: boolean[] = [];
   commentImageUrls: string[];
+
+  username: string;
 
   @ViewChild("student") studentSelector: IonSelect;
 
@@ -60,7 +58,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.backButtonService.turnOn();
     this.loadSubmissions();
     this.loadParticipants();
@@ -73,7 +71,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     this.stop.complete();
   }
 
-  loadSubmissions() {
+  loadSubmissions(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.assingmentId = params.assignmentId;
       this.courseId = params.courseId;
@@ -97,16 +95,24 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadParticipants() {
+  loadParticipants(): void {
     this.courseService
       .getParticipants(this.courseId)
       .pipe(takeUntil(this.stop))
-      .subscribe((participants) => {
-        this.participants = participants;
-      });
+      .subscribe(
+        (participants) => {
+          this.participants = participants;
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
   }
 
-  loadAssingment() {
+  loadAssingment(): void {
     this.courseService
       .getAssignment(this.courseId, this.assingmentId)
       .pipe(takeUntil(this.stop))
@@ -130,7 +136,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       );
   }
 
-  loadGrades() {
+  loadGrades(): void {
     this.gradeService
       .getGradesOfAssignment(this.courseId, this.assingmentId)
       .pipe(takeUntil(this.stop))
@@ -150,17 +156,17 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       );
   }
 
-  getSubmissionsBySubmitterId(submitterId: number) {
+  getSubmissionsBySubmitterId(submitterId: number): Submission[] {
     return this.submissions.filter(
       (submission) => submission.submitter.id === submitterId
     );
   }
 
-  compareWith(o1: ThinPerson, o2: ThinPerson) {
+  compareWith(o1: ThinPerson, o2: ThinPerson): boolean {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
-  grade(submitterEmail: string, submitterId: number) {
+  grade(submitterEmail: string, submitterId: number): void {
     this.gradeService
       .saveGradeOfAssignment(
         this.courseId,
@@ -171,13 +177,13 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.stop))
       .subscribe(
         (grade) => {
-          if (!!this.content) {
+          if (!!this.uploadCommentContent) {
             this.commentService
               .saveAssingmentComment(
                 this.courseId,
                 this.assingmentId,
                 submitterEmail,
-                this.content
+                this.uploadCommentContent
               )
               .pipe(takeUntil(this.stop))
               .subscribe(
@@ -188,7 +194,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
                   );
 
                   this.loadAssingment();
-                  this.content = undefined;
+                  this.uploadCommentContent = undefined;
                 },
                 (error) => {
                   this.toasterService.error(
@@ -210,16 +216,25 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       );
   }
 
-  onSubmissionClicked(id, fileName: string) {
+  onSubmissionClicked(
+    submissionId: number,
+    fileName: string,
+    fileId: number
+  ): void {
     this.submissionService
-      .getSubmission(this.courseId, this.assingmentId, id)
+      .getSubmissionFile(this.courseId, this.assingmentId, submissionId, fileId)
       .pipe(takeUntil(this.stop))
-      .subscribe((blob) => {
-        this.fileSaverService.save(blob, fileName);
-      });
+      .subscribe(
+        (blob) => {
+          this.fileSaverService.save(blob, fileName);
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
   }
 
-  onNextClicked() {
+  onNextClicked(): void {
     const index = this.participants.findIndex(
       (participant) => participant.id === this.studentSelector.value.id
     );
@@ -229,7 +244,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     ];
   }
 
-  onPreviousClicked() {
+  onPreviousClicked(): void {
     let index = this.participants.findIndex(
       (participant) => participant.id === this.studentSelector.value.id
     );
@@ -242,7 +257,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     this.studentSelector.value = this.participants[index];
   }
 
-  getDifferenceInDays(date1: Date, date2: Date) {
+  getDifferenceInDays(date1: Date, date2: Date): string {
     let difference = "";
     const diffInMs = Math.abs(
       new Date(date2).getTime() - new Date(date1).getTime()
@@ -272,7 +287,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     return difference;
   }
 
-  async onDeleteClicked(id: number) {
+  async onDeleteClicked(id: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this comment?",
@@ -311,13 +326,13 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  onLeaveCommentClicked(submitterEmail: string) {
+  onLeaveCommentClicked(submitterEmail: string): void {
     this.commentService
       .saveAssingmentComment(
         this.courseId,
         this.assingmentId,
         submitterEmail,
-        this.content2
+        this.simpleCommentContent
       )
       .pipe(takeUntil(this.stop))
       .subscribe(
@@ -328,7 +343,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           );
 
           this.loadAssingment();
-          this.content2 = undefined;
+          this.simpleCommentContent = undefined;
         },
         (error) => {
           this.toasterService.error(error.error.message, "Please try again!");
@@ -336,19 +351,19 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       );
   }
 
-  onEditClicked(comment) {
+  onEditClicked(comment: AssignmentComment): void {
     this.editingComment[comment.id] = true;
-    this.content3 = comment.content;
+    this.updateCommentContent = comment.content;
   }
 
-  onCancelClicked(commentId) {
+  onCancelClicked(commentId: number): void {
     this.editingComment[commentId] = false;
-    this.content3 = undefined;
+    this.updateCommentContent = undefined;
   }
 
-  onUpdateClicked(commentId: number) {
+  onUpdateClicked(commentId: number): void {
     this.commentCreation = {};
-    this.commentCreation.content = this.content3;
+    this.commentCreation.content = this.updateCommentContent;
     this.commentService
       .updateAssignmentComment(
         this.courseId,
@@ -365,7 +380,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           );
 
           this.loadAssingment();
-          this.content3 = undefined;
+          this.updateCommentContent = undefined;
           this.editingComment[commentId] = false;
         },
         (error) => {
@@ -374,65 +389,21 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       );
   }
 
-  onDownloadAllClicked() {
-    let count = 0;
-    this.blobs = [];
-
-    this.submissions.forEach((submission) => {
-      this.submissionService
-        .getSubmission(this.courseId, this.assingmentId, submission.id)
-        .pipe(takeUntil(this.stop))
-        .subscribe(
-          (blob) => {
-            this.blobs[submission.id] = blob;
-          },
-          (error) => {
-            this.toasterService.error(error.error.message, "Please try again!");
-          },
-          () => {
-            count++;
-          }
-        );
-    });
-
-    let interval = setInterval(() => {
-      if (count === this.submissions.length) {
-        clearInterval(interval);
-        this.downloadBlobs();
-      }
-    }, 500);
-  }
-
-  downloadBlobs() {
-    let zip: JSZip = new JSZip();
-
-    this.blobs.forEach((blob, index) => {
-      const submission = this.submissions.find(
-        (submission) => submission.id === index
+  onDownloadAllClicked(): void {
+    this.submissionService
+      .getFilesOfAssignment(this.courseId, this.assingmentId)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (blob) => {
+          this.fileSaverService.save(
+            blob,
+            (this.assignment.name + "_submissions.zip").replace(/ +/g, "_")
+          );
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
       );
-      zip.file(
-        (
-          submission.submitter.firstName +
-          " " +
-          submission.submitter.lastName +
-          "/" +
-          submission.fileName
-        ).replace(/ +/g, "_"),
-        blob
-      );
-    });
-
-    zip.generateAsync({ type: "blob" }).then((content) => {
-      this.fileSaverService.save(
-        content,
-        (this.assignment.name + "_submissions.zip").replace(/ +/g, "_")
-      );
-
-      this.toasterService.success(
-        "The files are being saved!",
-        "Congratulations!"
-      );
-    });
   }
 
   getImageUrlById(id: number): string {

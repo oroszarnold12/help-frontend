@@ -10,9 +10,21 @@ import { url } from "./api-config";
 export class SubmissionService {
   constructor(private httpClient: HttpClient) {}
 
-  getSubmission(courseId: number, assignmentId: number, submissionId: number) {
+  getFilesOfAssignment(courseId: number, assignmentId: number) {
     return this.httpClient.get(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}`,
+      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/files`,
+      { responseType: "blob" }
+    );
+  }
+
+  getSubmissionFile(
+    courseId: number,
+    assignmentId: number,
+    submissionId: number,
+    fileId: number
+  ) {
+    return this.httpClient.get(
+      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}/files/${fileId}`,
       { responseType: "blob" }
     );
   }

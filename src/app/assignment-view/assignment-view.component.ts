@@ -39,7 +39,8 @@ export class AssignmentViewComponent implements OnInit {
   editingComment: boolean[] = [];
   commentImageUrls: string[];
 
-  private file;
+  private files: Blob[];
+  numOfFiles = 1;
 
   constructor(
     private courseService: CourseService,
@@ -158,16 +159,46 @@ export class AssignmentViewComponent implements OnInit {
 
   onSubmitClicked() {
     this.isSubmitting = !this.isSubmitting;
+    this.files = null;
+    this.numOfFiles = 1;
   }
 
-  onFileChange(fileChangeEvent) {
-    this.file = fileChangeEvent.target.files[0];
+  onFileChange(fileChangeEvent, index) {
+    if (!!!this.files) {
+      this.files = [];
+    }
+    this.files[index] = fileChangeEvent.target.files[0];
+  }
+
+  onAddAnotherFileClicked() {
+    if (this.numOfFiles < 5) {
+      this.numOfFiles++;
+    } else {
+      this.toasterService.error(
+        "The maximum number of files is 5!",
+        "Something went wrong!"
+      );
+    }
+  }
+
+  onRemoveFileClicked() {
+    if (!!!this.files) {
+      this.files = [];
+    }
+
+    this.files[this.numOfFiles - 1] = null;
+    if (this.numOfFiles > 1) {
+      this.numOfFiles--;
+    }
   }
 
   uploadFile() {
-    const formData = new FormData();
-    formData.append("file", this.file);
-    if (!!this.file) {
+    if (!!this.files) {
+      const formData = new FormData();
+      this.files.forEach((file) => {
+        formData.append("files", file);
+      });
+
       this.submissionService
         .saveSubmission(this.courseId, this.assignment.id, formData)
         .pipe(takeUntil(this.stop))
@@ -190,7 +221,7 @@ export class AssignmentViewComponent implements OnInit {
                     );
 
                     this.isSubmitting = false;
-                    this.file = null;
+                    this.files = null;
                     this.loadSubmissions();
                     if (!this.isTeacher) {
                       this.loadGrades();
@@ -211,7 +242,7 @@ export class AssignmentViewComponent implements OnInit {
               );
 
               this.isSubmitting = false;
-              this.file = null;
+              this.files = null;
               this.loadSubmissions();
               if (!this.isTeacher) {
                 this.loadGrades();
@@ -228,9 +259,9 @@ export class AssignmentViewComponent implements OnInit {
     }
   }
 
-  onSubmissionClicked(id, fileName: string) {
+  onSubmissionClicked(id, fileName: string, fileId: number) {
     this.submissionService
-      .getSubmission(this.courseId, this.assignment.id, id)
+      .getSubmissionFile(this.courseId, this.assignment.id, id, fileId)
       .pipe(takeUntil(this.stop))
       .subscribe((blob) => {
         this.fileSaverService.save(blob, fileName);
