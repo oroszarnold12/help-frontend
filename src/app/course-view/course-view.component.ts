@@ -1,5 +1,11 @@
-import { DatePipe } from "@angular/common";
-import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { DatePipe, DecimalPipe, formatNumber } from "@angular/common";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
   AlertController,
@@ -29,6 +35,9 @@ import { DiscussionFormComponent } from "./discussion-form/discussion-form.compo
 import { QuizFormComponent } from "./quiz-form/quiz-form.component";
 import { Grades } from "../model/grades.model";
 import { PathService } from "../shared/path.service";
+import { CourseFile } from "../model/course-file.model";
+import { FileSaverService } from "ngx-filesaver";
+import { AssignmentGrade } from "../model/assignment-grade.model";
 
 @Component({
   selector: "app-course-view",
@@ -36,15 +45,19 @@ import { PathService } from "../shared/path.service";
   styleUrls: ["./course-view.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class CourseViewComponent implements OnInit {
+export class CourseViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
   course: Course;
+  canDelete: boolean;
+  isTeacher: boolean;
+
   @ViewChild("slides") slides: IonSlides;
   @ViewChild("segments") segments: IonSegment;
   options = {
     speed: 400,
     initialSlide: this.defaultSlideService.getDefaultSlide(),
   };
+  defaultSlide: number;
 
   assignmentOverviews: GeneralOverview[];
   announcementOverviews: GeneralOverview[];
@@ -52,24 +65,23 @@ export class CourseViewComponent implements OnInit {
   quizOverviews: GeneralOverview[];
   gradeOverviews: any[];
   originalGradeOverviews: any[];
+
   thinPersons: ThinPerson[];
   personsToInvite: ThinPerson[];
-
-  settings: any;
-  availablePersonsSettings: any;
-  personsToInviteSettings: any;
-  defaultSlide: number;
-
-  isTeacher: boolean;
-  canDelete: boolean;
+  gradeTableSettings: any;
+  availablePersonsTableSettings: any;
 
   grades: Grades;
-
   sumOfGrades: number;
   sumOfPoints: number;
   precentage: number;
+  editedGrade: boolean;
 
-  edited: boolean;
+  uploadingCourseFile: boolean;
+  numOfCourseFiles: number = 1;
+  private courseFiles: Blob[];
+  courseFilesTableSettings: any;
+  courseFilesToDownload: CourseFile[];
 
   constructor(
     private backButtonService: BackButtonService,
@@ -86,9 +98,10 @@ export class CourseViewComponent implements OnInit {
     private invitationService: InvitationService,
     private gradeService: GradeService,
     private quizService: QuizService,
-    private pathService: PathService
+    private pathService: PathService,
+    private fileSaverService: FileSaverService
   ) {
-    this.settings = {
+    this.gradeTableSettings = {
       actions: {
         add: false,
         edit: true,
@@ -136,7 +149,7 @@ export class CourseViewComponent implements OnInit {
       },
     };
 
-    this.availablePersonsSettings = {
+    this.availablePersonsTableSettings = {
       selectMode: "multi",
       actions: {
         add: false,
@@ -158,15 +171,57 @@ export class CourseViewComponent implements OnInit {
       },
     };
 
+    this.isTeacher = this.authService.isTeacher();
+
+    this.courseFilesTableSettings = {
+      selectMode: "multi",
+      actions: {
+        add: false,
+        edit: false,
+        delete: this.isTeacher,
+        columnTitle: "",
+      },
+      delete: {
+        confirmDelete: true,
+        deleteButtonContent: '<i class="bi bi-trash danger"></i>',
+      },
+      columns: {
+        fileName: {
+          title: "Name",
+        },
+        creationDate: {
+          title: "Creation Date",
+          filter: false,
+          valuePrepareFunction: (cell, row) => {
+            return datePite.transform(cell, "medium");
+          },
+        },
+        size: {
+          title: "Size",
+          filter: false,
+          valuePrepareFunction: (cell, row) => {
+            return formatNumber(cell / 1000000, "en-EN") + " Mb";
+          },
+        },
+        uploader: {
+          title: "Creator",
+          filter: false,
+          valuePrepareFunction: (cell, row) => {
+            return cell.firstName + " " + cell.lastName;
+          },
+        },
+      },
+    };
+
     this.defaultSlide = defaultSlideService.getDefaultSlide();
     this.personsToInvite = [];
   }
 
-  ngOnInit() {
-    this.edited = false;
+  ngOnInit(): void {
+    this.editedGrade = false;
+    this.uploadingCourseFile = false;
     this.backButtonService.turnOn();
     this.loadCourse();
-    this.isTeacher = this.authService.isTeacher();
     if (this.isTeacher) {
       this.loadPersons();
     }
@@ -178,13 +233,21 @@ export class CourseViewComponent implements OnInit {
     this.stop.complete();
   }
 
-  loadPersons() {
+  loadPersons(): void {
     this.personService
       .getPersons()
       .pipe(takeUntil(this.stop))
-      .subscribe(({ persons }) => {
-        this.thinPersons = persons;
-      });
+      .subscribe(
+        ({ persons }) => {
+          this.thinPersons = persons;
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
   }
 
   loadCourse(): void {
@@ -204,24 +267,35 @@ export class CourseViewComponent implements OnInit {
             this.loadGrades();
           },
           (error) => {
-            this.toasterService.error("Course not found!", "Selection failed!");
+            this.toasterService.error(
+              error.error.message,
+              "Something went wrong!"
+            );
           }
         );
     });
   }
 
-  loadGrades() {
+  loadGrades(): void {
     this.gradeService
       .getGradesOfAllAssignments(this.course.id)
       .pipe(takeUntil(this.stop))
-      .subscribe((grades) => {
-        this.grades = grades;
-        this.createAssignmentOverviews();
-        this.createGradeOverviews();
-      });
+      .subscribe(
+        (grades) => {
+          this.grades = grades;
+          this.createAssignmentOverviews();
+          this.createGradeOverviews();
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
   }
 
-  createAssignmentOverviews() {
+  createAssignmentOverviews(): void {
     const { assignments } = this.course;
     this.assignmentOverviews = assignments.map((assignment) => ({
       id: assignment.id,
@@ -234,7 +308,14 @@ export class CourseViewComponent implements OnInit {
     }));
   }
 
-  createQuizOverviews() {
+  createAssingmentDescription(id: number, points: number): string {
+    const grade = this.grades.assignmentGrades.find(
+      (grade) => grade.assignment.id === id
+    );
+    return !!grade ? `Grade: ${grade.grade}/${points}` : "Not yet graded!";
+  }
+
+  createQuizOverviews(): void {
     const { quizzes } = this.course;
     this.quizOverviews = quizzes.map((quiz) => ({
       id: quiz.id,
@@ -246,20 +327,7 @@ export class CourseViewComponent implements OnInit {
     }));
   }
 
-  createAssingmentDescription(id: number, points: number) {
-    const grade = this.grades.assignmentGrades.find(
-      (grade) => grade.assignment.id === id
-    );
-    return !!grade ? `Grade: ${grade.grade}/${points}` : "Not yet graded!";
-  }
-
-  private stripHtml(text) {
-    var div = document.createElement("div");
-    div.innerHTML = text;
-    return div.textContent || div.innerText || "";
-  }
-
-  createAnnouncementOverviews() {
+  createAnnouncementOverviews(): void {
     const { announcements } = this.course;
     this.announcementOverviews = announcements.map((announcement) => ({
       id: announcement.id,
@@ -269,7 +337,13 @@ export class CourseViewComponent implements OnInit {
     }));
   }
 
-  createGradeOverviews() {
+  private stripHtml(text): string {
+    var div = document.createElement("div");
+    div.innerHTML = text;
+    return div.textContent || div.innerText || "";
+  }
+
+  createGradeOverviews(): void {
     const { assignments } = this.course;
     this.gradeOverviews = assignments.map((assignment) => ({
       name: assignment.name,
@@ -291,20 +365,7 @@ export class CourseViewComponent implements OnInit {
     this.calculateTotal();
   }
 
-  createDiscussionOverviews() {
-    const { discussions } = this.course;
-    this.discussionOverviews = discussions.map((discussion) => ({
-      id: discussion.id,
-      name: discussion.name,
-      description: `Date: ${this.datePite.transform(
-        new Date(discussion.date),
-        "medium"
-      )}`,
-      creatorUsername: discussion.creator.email,
-    }));
-  }
-
-  calculateTotal() {
+  calculateTotal(): void {
     this.sumOfPoints = 0;
     this.sumOfGrades = 0;
     this.gradeOverviews.forEach((gradeOverview) => {
@@ -318,21 +379,34 @@ export class CourseViewComponent implements OnInit {
     this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
   }
 
-  getGrade(assignmentId) {
+  getGrade(assignmentId: number): number | string {
     const grade = this.grades.assignmentGrades.find(
       (grade) => grade.assignment.id === assignmentId
     );
     return !!grade ? grade.grade : "-";
   }
 
-  getQuizGrade(quizId) {
+  getQuizGrade(quizId: number): number | string {
     const grade = this.grades.quizGrades.find(
       (grade) => grade.quiz.id === quizId
     );
     return !!grade ? grade.grade : "-";
   }
 
-  segmentChanged(event) {
+  createDiscussionOverviews(): void {
+    const { discussions } = this.course;
+    this.discussionOverviews = discussions.map((discussion) => ({
+      id: discussion.id,
+      name: discussion.name,
+      description: `Date: ${this.datePite.transform(
+        new Date(discussion.date),
+        "medium"
+      )}`,
+      creatorUsername: discussion.creator.email,
+    }));
+  }
+
+  segmentChanged(event: any): void {
     this.slides.slideTo(event.detail.value);
   }
 
@@ -347,27 +421,33 @@ export class CourseViewComponent implements OnInit {
     });
   }
 
-  viewAnnouncement(event) {
-    this.router.navigate([`/courses/${this.course.id}/announcements/${event}`]);
+  viewAnnouncement(announcementId: number): void {
+    this.router.navigate([
+      `/courses/${this.course.id}/announcements/${announcementId}`,
+    ]);
     this.pathService.setPath(`${this.course.name}/Announcements`);
   }
 
-  viewAssignment(event) {
-    this.router.navigate([`/courses/${this.course.id}/assignments/${event}`]);
+  viewAssignment(assignmentId: number): void {
+    this.router.navigate([
+      `/courses/${this.course.id}/assignments/${assignmentId}`,
+    ]);
     this.pathService.setPath(`${this.course.name}/Assignments`);
   }
 
-  viewQuiz(event) {
-    this.router.navigate([`/courses/${this.course.id}/quizzes/${event}`]);
+  viewQuiz(quizId: number): void {
+    this.router.navigate([`/courses/${this.course.id}/quizzes/${quizId}`]);
     this.pathService.setPath(`${this.course.name}/Quizzes`);
   }
 
-  viewDiscussion(event) {
-    this.router.navigate([`/courses/${this.course.id}/discussions/${event}`]);
+  viewDiscussion(discussionId: number): void {
+    this.router.navigate([
+      `/courses/${this.course.id}/discussions/${discussionId}`,
+    ]);
     this.pathService.setPath(`${this.course.name}/Discussions`);
   }
 
-  async deleteAnnouncement(event) {
+  async deleteAnnouncement(announcementId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this announcement?",
@@ -380,7 +460,7 @@ export class CourseViewComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.courseService
-              .deleteAnnouncement(this.course.id, event)
+              .deleteAnnouncement(this.course.id, announcementId)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -405,7 +485,7 @@ export class CourseViewComponent implements OnInit {
     await alert.present();
   }
 
-  async deleteAssignment(event) {
+  async deleteAssignment(assignmentId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this assignment?",
@@ -418,7 +498,7 @@ export class CourseViewComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.courseService
-              .deleteAssignment(this.course.id, event)
+              .deleteAssignment(this.course.id, assignmentId)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -443,7 +523,7 @@ export class CourseViewComponent implements OnInit {
     await alert.present();
   }
 
-  async deleteQuiz(event) {
+  async deleteQuiz(quizId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this quiz?",
@@ -456,7 +536,7 @@ export class CourseViewComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.quizService
-              .deleteQuiz(this.course.id, event)
+              .deleteQuiz(this.course.id, quizId)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -481,7 +561,7 @@ export class CourseViewComponent implements OnInit {
     await alert.present();
   }
 
-  async deleteDiscussion(event) {
+  async deleteDiscussion(discussionId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this discussion?",
@@ -494,7 +574,7 @@ export class CourseViewComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.courseService
-              .deleteDiscussions(this.course.id, event)
+              .deleteDiscussions(this.course.id, discussionId)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -519,7 +599,7 @@ export class CourseViewComponent implements OnInit {
     await alert.present();
   }
 
-  async deleteCourse() {
+  async deleteCourse(): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this course?",
@@ -558,7 +638,7 @@ export class CourseViewComponent implements OnInit {
     await alert.present();
   }
 
-  async presentAnnouncementModal() {
+  async presentAnnouncementModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
       componentProps: {
@@ -571,7 +651,7 @@ export class CourseViewComponent implements OnInit {
     await modal.present();
   }
 
-  async presentAssignmentModal() {
+  async presentAssignmentModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
       componentProps: {
@@ -584,7 +664,7 @@ export class CourseViewComponent implements OnInit {
     await modal.present();
   }
 
-  async presentQuizModal() {
+  async presentQuizModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: QuizFormComponent,
       componentProps: {
@@ -597,7 +677,7 @@ export class CourseViewComponent implements OnInit {
     await modal.present();
   }
 
-  async presentDiscussionModal() {
+  async presentDiscussionModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: DiscussionFormComponent,
       componentProps: {
@@ -610,7 +690,7 @@ export class CourseViewComponent implements OnInit {
     await modal.present();
   }
 
-  async presentCourseModal() {
+  async presentCourseModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: CourseFormComponent,
       componentProps: {
@@ -623,11 +703,11 @@ export class CourseViewComponent implements OnInit {
     await modal.present();
   }
 
-  onUserRowSelected(event) {
+  onUserRowSelected(event: any): void {
     this.personsToInvite = event.selected;
   }
 
-  inviteClicked() {
+  inviteClicked(): void {
     if (this.personsToInvite.length) {
       const invitations: InvitationCreation = {};
       invitations.courseId = this.course.id;
@@ -661,8 +741,8 @@ export class CourseViewComponent implements OnInit {
     }
   }
 
-  onEditConfirmed(event) {
-    this.edited = true;
+  onEditConfirmed(event: any): void {
+    this.editedGrade = true;
 
     event.newData.grade = Number.parseFloat(event.newData.grade);
     event.confirm.resolve(event.newData);
@@ -673,8 +753,190 @@ export class CourseViewComponent implements OnInit {
     this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
   }
 
-  onResetClicked() {
+  onResetClicked(): void {
     this.createGradeOverviews();
-    this.edited = false;
+    this.editedGrade = false;
+  }
+
+  onUploadFilesClicked(): void {
+    this.uploadingCourseFile = !this.uploadingCourseFile;
+    this.courseFiles = null;
+    this.numOfCourseFiles = 1;
+  }
+
+  onCourseFileChange(fileChangeEvent: any, index: number): void {
+    if (!!!this.courseFiles) {
+      this.courseFiles = [];
+    }
+    this.courseFiles[index] = fileChangeEvent.target.files[0];
+  }
+
+  onRemoveCourseFileClicked(): void {
+    if (!!!this.courseFiles) {
+      this.courseFiles = [];
+    }
+
+    this.courseFiles[this.numOfCourseFiles - 1] = null;
+    if (this.numOfCourseFiles > 1) {
+      this.numOfCourseFiles--;
+    }
+  }
+
+  onAddAnotherCourseFileClicked(): void {
+    if (this.numOfCourseFiles < 5) {
+      this.numOfCourseFiles++;
+    } else {
+      this.toasterService.error(
+        "The maximum number of files is 5!",
+        "Something went wrong!"
+      );
+    }
+  }
+
+  uploadCourseFile(): void {
+    if (!!this.courseFiles) {
+      const formData = new FormData();
+      this.courseFiles.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      this.courseService
+        .saveCourseFile(this.course.id, formData)
+        .pipe(takeUntil(this.stop))
+        .subscribe(
+          (courseFiles) => {
+            this.toasterService.success(
+              "Files uploaded successfully!",
+              "Congratulations!"
+            );
+
+            this.uploadingCourseFile = false;
+            this.courseFiles = null;
+            this.loadCourse();
+          },
+          (error) => {
+            this.toasterService.error(error.error.message, "Please try again!");
+          }
+        );
+    } else {
+      this.toasterService.error("File is required!", "Please try again!");
+    }
+  }
+
+  onCourseFileSelected(event: any): void {
+    this.courseFilesToDownload = event.selected;
+  }
+
+  onCourseFilesDownloadClicked(): void {
+    if (!!this.courseFilesToDownload && this.courseFilesToDownload.length > 0) {
+      switch (this.courseFilesToDownload.length) {
+        case 1: {
+          this.downloadSingleCourseFile(
+            this.courseFilesToDownload[0].id,
+            this.courseFilesToDownload[0].fileName
+          );
+          break;
+        }
+        case this.course.files.length: {
+          this.downloadAllCourseFiles();
+          break;
+        }
+        default: {
+          const courseFilesIds = this.courseFilesToDownload.map(
+            (courseFileToDownload) => courseFileToDownload.id.toString()
+          );
+          this.downloadSomeCourseFiles(courseFilesIds);
+          break;
+        }
+      }
+    } else {
+      this.toasterService.error("No files selected!", "Please try again!");
+    }
+  }
+
+  downloadSingleCourseFile(fileId: number, fileName: string): void {
+    this.courseService
+      .getCourseFile(this.course.id, fileId)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (blob) => {
+          this.fileSaverService.save(blob, fileName);
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
+  }
+
+  downloadAllCourseFiles(): void {
+    this.courseService
+      .getAllCourseFiles(this.course.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (blob) => {
+          this.fileSaverService.save(
+            blob,
+            (this.course.name + "_files.zip").replace("/ +/g", "_")
+          );
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
+  }
+
+  downloadSomeCourseFiles(courseFilesIds: string[]): void {
+    this.courseService
+      .getSomeCourseFiles(this.course.id, courseFilesIds)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (blob) => {
+          this.fileSaverService.save(
+            blob,
+            (this.course.name + "_files.zip").replace("/ +/g", "_")
+          );
+        },
+        (error) => {
+          this.toasterService.error(error.error.message, "Please try again!");
+        }
+      );
+  }
+
+  async onCourseFileDeleteClicked(event: any): Promise<void> {
+    const alert = await this.alertController.create({
+      header: "Confirm!",
+      message: "Are you sure that you want to delete this file?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Yes",
+          handler: () => {
+            this.courseService
+              .deleteCourseFile(this.course.id, event.data.id)
+              .pipe(takeUntil(this.stop))
+              .subscribe(
+                () => {
+                  this.toasterService.success(
+                    "Course file deletion successful!",
+                    "Congratulations!"
+                  );
+                  event.confirm.resolve();
+                },
+                (error) => {
+                  this.toasterService.error(
+                    error.error.message,
+                    "Please try again!"
+                  );
+                }
+              );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

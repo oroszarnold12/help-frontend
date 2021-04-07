@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Course } from "../model/course.model";
 
 import { Observable } from "rxjs";
@@ -9,6 +9,7 @@ import { Assignment } from "../model/assignment.model";
 import { Discussion } from "../model/discussion.model";
 import { url } from "./api-config";
 import { ThinPerson } from "../model/thin.person.model";
+import { CourseFile } from "../model/course-file.model";
 
 @Injectable({
   providedIn: "root",
@@ -42,9 +43,7 @@ export class CourseService {
     );
   }
 
-  getParticipants(
-    courseId: number,
-  ): Observable<ThinPerson[]> {
+  getParticipants(courseId: number): Observable<ThinPerson[]> {
     return this.http.get<ThinPerson[]>(
       `${url}/courses/${courseId}/participants`
     );
@@ -57,6 +56,27 @@ export class CourseService {
     return this.http.get<Discussion>(
       `${url}/courses/${courseId}/discussions/${discussionId}`
     );
+  }
+
+  getCourseFile(courseId: number, fileId: number) {
+    return this.http.get(`${url}/courses/${courseId}/files/${fileId}`, {
+      responseType: "blob",
+    });
+  }
+
+  getAllCourseFiles(courseId: number) {
+    return this.http.get(`${url}/courses/${courseId}/files`, {
+      responseType: "blob",
+    });
+  }
+
+  getSomeCourseFiles(courseId: number, courseFilesIds: string[]) {
+    let headers = new HttpHeaders().set("courseFilesIds", courseFilesIds);
+
+    return this.http.get(`${url}/courses/${courseId}/files`, {
+      responseType: "blob",
+      headers: headers,
+    });
   }
 
   saveCourse(course: CourseCreation): Observable<Course> {
@@ -90,6 +110,13 @@ export class CourseService {
     return this.http.post<Discussion>(
       `${url}/courses/${courseId}/discussions`,
       discussion
+    );
+  }
+
+  saveCourseFile(courseId: number, data: FormData): Observable<CourseFile[]> {
+    return this.http.post<CourseFile[]>(
+      `${url}/courses/${courseId}/files`,
+      data
     );
   }
 
@@ -153,5 +180,9 @@ export class CourseService {
     return this.http.delete<void>(
       `${url}/courses/${courseId}/discussions/${discussionId}`
     );
+  }
+
+  deleteCourseFile(courseId: number, fileId: number): Observable<void> {
+    return this.http.delete<void>(`${url}/courses/${courseId}/files/${fileId}`);
   }
 }

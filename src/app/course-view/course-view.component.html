@@ -73,7 +73,7 @@
     </ion-slide>
     <ion-slide class="slide">
       <ion-grid class="grid">
-        <ion-row *ngIf="edited" class="button-row">
+        <ion-row *ngIf="editedGrade" class="button-row">
           <ion-col>
             <ion-button color="warning" (click)="onResetClicked()">
               <ion-icon name="reload-outline" class="button-icon"></ion-icon>
@@ -83,13 +83,13 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card class="card smart-table-card">
+            <ion-card class="card ion-text-center">
               <ion-card-header>
                 <ion-card-title class="dark-blue"> Grades </ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <ng2-smart-table
-                  [settings]="settings"
+                  [settings]="gradeTableSettings"
                   [source]="gradeOverviews"
                   (editConfirm)="onEditConfirmed($event)"
                 ></ng2-smart-table>
@@ -132,7 +132,124 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
-    <ion-slide class="slide"> Files </ion-slide>
+    <ion-slide class="slide">
+      <ion-grid class="grid">
+        <ion-row class="title-row">
+          <ion-col>
+            <ion-item class="dark-blue title">
+              <ng-container *ngIf="!!courseFilesToDownload; else elseTemplate">
+                {{ courseFilesToDownload.length }} files selected
+              </ng-container>
+              <ng-template #elseTemplate> 0 files selected </ng-template>
+              <ion-buttons
+                slot="end"
+                *ngIf="
+                  !!courseFilesToDownload && courseFilesToDownload.length > 0
+                "
+              >
+                <ion-button (click)="onCourseFilesDownloadClicked()">
+                  <ion-icon
+                    name="download-outline"
+                    class="button-icon"
+                  ></ion-icon>
+                  Download
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card class="card ion-text-center">
+              <ion-card-header>
+                <ion-card-title class="dark-blue">Files</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ng2-smart-table
+                  [settings]="courseFilesTableSettings"
+                  [source]="course.files"
+                  (userRowSelect)="onCourseFileSelected($event)"
+                  (deleteConfirm)="onCourseFileDeleteClicked($event)"
+                ></ng2-smart-table>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="isTeacher" class="upload-button-row">
+          <ion-col class="ion-text-end">
+            <ion-button
+              [color]="uploadingCourseFile ? 'danger' : 'success'"
+              (click)="onUploadFilesClicked()"
+            >
+              <ion-icon
+                *ngIf="uploadingCourseFile"
+                name="close-outline"
+                class="button-icon"
+              ></ion-icon>
+              <ion-icon
+                *ngIf="!uploadingCourseFile"
+                name="push-outline"
+                class="button-icon"
+              ></ion-icon>
+              {{ uploadingCourseFile ? "Cancel" : "Upload file" }}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="uploadingCourseFile">
+          <ion-col>
+            <ion-card class="card">
+              <ion-card-content>
+                <ion-item
+                  *ngFor="
+                    let item of [].constructor(numOfCourseFiles);
+                    let i = index
+                  "
+                >
+                  <ion-input
+                    type="file"
+                    (change)="onCourseFileChange($event, i)"
+                  >
+                  </ion-input>
+                  <ion-buttons *ngIf="i === numOfCourseFiles - 1 && i !== 0">
+                    <ion-button
+                      color="danger"
+                      (click)="onRemoveCourseFileClicked()"
+                    >
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                </ion-item>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-button
+                        color="success"
+                        (click)="onAddAnotherCourseFileClicked()"
+                      >
+                        <ion-icon
+                          name="add-outline"
+                          class="button-icon"
+                        ></ion-icon>
+                        Add another file
+                      </ion-button>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button color="primary" (click)="uploadCourseFile()">
+                        <ion-icon
+                          name="push-outline"
+                          class="button-icon"
+                        ></ion-icon>
+                        Upload
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
     <ion-slide class="slide">
       <ion-grid class="grid">
         <ion-row *ngIf="isTeacher" fixed class="button-row">
@@ -177,7 +294,7 @@
               </ion-card-header>
               <ion-card-content>
                 <ng2-smart-table
-                  [settings]="availablePersonsSettings"
+                  [settings]="availablePersonsTableSettings"
                   [source]="thinPersons"
                   (userRowSelect)="onUserRowSelected($event)"
                 ></ng2-smart-table>

@@ -14,10 +14,6 @@ ion-segment-button {
   max-width: 1000px;
 }
 
-.smart-table-card {
-  text-align: center;
-}
-
 .button-icon {
   padding-right: 5px;
 }
@@ -60,4 +56,20 @@ tr {
 
 .edited {
   color: var(--ion-color-warning);
+}
+
+.upload-button-row {
+  max-width: 1000px;
+}
+
+.title-row {
+  max-width: 1000px;
+}
+
+.title {
+  font-style: italic;
+}
+
+.danger {
+  color: var(--ion-color-danger);
 }
