@@ -255,8 +255,8 @@
         <ion-row *ngIf="isTeacher" fixed class="button-row">
           <ion-col>
             <ion-button color="primary" (click)="presentCourseModal()">
-              <ion-icon name="pencil-outline" class="button-icon"></ion-icon>
-              Edit course
+              <ion-icon name="create-outline" class="button-icon"></ion-icon>
+              Edit
             </ion-button>
           </ion-col>
         </ion-row>
@@ -266,20 +266,13 @@
               <ion-card-header>
                 <ion-card-title class="dark-blue">Description</ion-card-title>
               </ion-card-header>
-              <ion-card-content
-                [innerHTML]="course.description"
-                class="description"
-              >
+              <ion-card-content class="description">
+                <quill-view-html
+                  [content]="course.description"
+                  theme="snow"
+                ></quill-view-html>
               </ion-card-content>
             </ion-card>
-          </ion-col>
-        </ion-row>
-        <ion-row *ngIf="isTeacher && canDelete" fixed class="button-row">
-          <ion-col>
-            <ion-button color="danger" (click)="deleteCourse()">
-              <ion-icon name="trash-outline" class="button-icon"></ion-icon>
-              Delete course
-            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -314,6 +307,14 @@
                 class="button-icon"
               ></ion-icon>
               Invite
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="isTeacher && canDelete" fixed class="button-row">
+          <ion-col>
+            <ion-button color="danger" (click)="deleteCourse()">
+              <ion-icon name="trash-outline" class="button-icon"></ion-icon>
+              Delete course
             </ion-button>
           </ion-col>
         </ion-row>

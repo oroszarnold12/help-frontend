@@ -84,6 +84,7 @@ export class DiscussionViewComponent implements OnInit {
   async presentDiscussionModal() {
     const modal = await this.modalController.create({
       component: DiscussionFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.courseId,
         discussion: this.discussion,
@@ -98,6 +99,7 @@ export class DiscussionViewComponent implements OnInit {
   async presentCommentModal(comment?) {
     const modal = await this.modalController.create({
       component: DiscussionCommentFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.courseId,
         discussionId: this.discussion.id,

@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe, formatNumber } from "@angular/common";
+import { DatePipe, formatNumber } from "@angular/common";
 import {
   Component,
   OnDestroy,
@@ -37,7 +37,6 @@ import { Grades } from "../model/grades.model";
 import { PathService } from "../shared/path.service";
 import { CourseFile } from "../model/course-file.model";
 import { FileSaverService } from "ngx-filesaver";
-import { AssignmentGrade } from "../model/assignment-grade.model";
 
 @Component({
   selector: "app-course-view",
@@ -126,7 +125,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           type: "html",
           editable: true,
           valuePrepareFunction: (value, row) => {
-            if (!!row.assingmentId) {
+            if (!!row.assignmentId) {
               if (value === this.getGrade(row.assignmentId)) {
                 return value;
               } else {
@@ -349,7 +348,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       name: assignment.name,
       grade: this.getGrade(assignment.id),
       points: assignment.points,
-      assingmentId: assignment.id,
+      assignmentId: assignment.id,
     }));
 
     const { quizzes } = this.course;
@@ -641,6 +640,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentAnnouncementModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.course.id,
       },
@@ -654,6 +654,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentAssignmentModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.course.id,
       },
@@ -667,6 +668,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentQuizModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: QuizFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.course.id,
       },
@@ -680,6 +682,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentDiscussionModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: DiscussionFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.course.id,
       },
@@ -693,6 +696,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentCourseModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: CourseFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         course: this.course,
       },

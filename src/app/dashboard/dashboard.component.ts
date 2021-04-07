@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { CourseService } from "../shared/course.service";
 import { takeUntil } from "rxjs/operators";
@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit {
   async presentModal() {
     const modal = await this.modalController.create({
       component: CourseFormComponent,
+      cssClass: "my-custom-modal-css",
     });
 
     modal.onDidDismiss().then(() => this.ngOnInit());

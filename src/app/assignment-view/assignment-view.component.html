@@ -123,7 +123,10 @@
             </div>
           </ion-card-header>
           <ion-card-content class="mt20">
-            <div [innerHTML]="assignment.description"></div>
+            <quill-view-html
+              [content]="assignment.description"
+              theme="snow"
+            ></quill-view-html>
           </ion-card-content>
         </ion-card>
       </ion-col>

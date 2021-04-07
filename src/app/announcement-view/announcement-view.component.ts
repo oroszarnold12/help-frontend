@@ -86,6 +86,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
   async presentAnnouncementModal() {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.courseId,
         announcement: this.announcement,
@@ -100,6 +101,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
   async presentCommentModal(comment?) {
     const modal = await this.modalController.create({
       component: AnnouncementCommentFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.courseId,
         announcementId: this.announcement.id,

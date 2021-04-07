@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { LoginRequest } from "../model/login-request.model";
-import { Role } from "../model/role.enum";
 import { AuthService } from "../shared/auth.service";
 import { ToasterService } from "../shared/toaster.service";
 

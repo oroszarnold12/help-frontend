@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { AnnouncementComment } from "src/app/model/announcement-comment.model";
 import { DiscussionComment } from "src/app/model/discussion-comment.model";
 import { CommentService } from "src/app/shared/comment.service";
 import { ToasterService } from "src/app/shared/toaster.service";

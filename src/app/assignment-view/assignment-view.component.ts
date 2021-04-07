@@ -146,6 +146,7 @@ export class AssignmentViewComponent implements OnInit {
   async presentAssignmentModal() {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.courseId,
         assignment: this.assignment,

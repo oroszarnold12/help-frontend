@@ -194,6 +194,7 @@ export class QuizViewComponent implements OnInit {
   async presentQuizModal() {
     const modal = await this.modalController.create({
       component: QuizFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.courseId,
         quiz: this.quiz,
@@ -208,6 +209,7 @@ export class QuizViewComponent implements OnInit {
   async presentQuestionModal(question?) {
     const modal = await this.modalController.create({
       component: QuestionFormComponent,
+      cssClass: "my-custom-modal-css",
       componentProps: {
         courseId: this.courseId,
         quizId: this.quiz.id,

@@ -30,7 +30,10 @@
             </ion-card-title>
           </ion-card-header>
           <ion-card-content class="mt20">
-            <div [innerHTML]="announcement.content"></div>
+            <quill-view-html
+              [content]="announcement.content"
+              theme="snow"
+            ></quill-view-html>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -84,7 +87,10 @@
             </ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <div [innerHTML]="comment.content"></div>
+            <quill-view-html
+              [content]="comment.content"
+              theme="snow"
+            ></quill-view-html>
           </ion-card-content>
         </ion-card>
       </ion-col>
