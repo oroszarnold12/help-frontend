@@ -185,4 +185,10 @@ export class CourseService {
   deleteCourseFile(courseId: number, fileId: number): Observable<void> {
     return this.http.delete<void>(`${url}/courses/${courseId}/files/${fileId}`);
   }
+
+  deleteParticipant(courseId: number, participantId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${url}/courses/${courseId}/participants/${participantId}`
+    );
+  }
 }

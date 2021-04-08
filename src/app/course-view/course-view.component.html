@@ -283,7 +283,27 @@
           <ion-col>
             <ion-card class="card smart-table-card">
               <ion-card-header>
-                <ion-card-title> Available persons </ion-card-title>
+                <ion-card-title class="dark-blue">
+                  Participants
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ng2-smart-table
+                  [settings]="participantsTableSettings"
+                  [source]="participants"
+                  (deleteConfirm)="onKickParticipantClicked($event)"
+                ></ng2-smart-table>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card class="card smart-table-card">
+              <ion-card-header>
+                <ion-card-title class="dark-blue">
+                  Available persons
+                </ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <ng2-smart-table
@@ -352,7 +372,7 @@
       <ion-label>Description</ion-label>
     </ion-segment-button>
     <ion-segment-button *ngIf="isTeacher" value="7" id="segment-7">
-      <ion-label>Invitation</ion-label>
+      <ion-label>Settings</ion-label>
     </ion-segment-button>
   </ion-segment>
 </ion-footer>

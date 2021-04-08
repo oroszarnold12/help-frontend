@@ -66,9 +66,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   originalGradeOverviews: any[];
 
   thinPersons: ThinPerson[];
+  participants: ThinPerson[];
   personsToInvite: ThinPerson[];
   gradeTableSettings: any;
   availablePersonsTableSettings: any;
+  participantsTableSettings: any;
 
   grades: Grades;
   sumOfGrades: number;
@@ -170,6 +172,33 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
     };
 
+    this.participantsTableSettings = {
+      actions: {
+        add: false,
+        edit: false,
+        delete: this.isTeacher,
+        columnTitle: "",
+      },
+      delete: {
+        confirmDelete: true,
+        deleteButtonContent: '<i class="bi bi-slash-circle danger"></i>',
+      },
+      columns: {
+        name: {
+          title: "Name",
+          editable: false,
+          type: "string",
+          valuePrepareFunction: (cell, row) => {
+            return row.firstName + " " + row.lastName;
+          },
+        },
+        email: {
+          title: "Email address",
+          filter: false,
+        },
+      },
+    };
+
     this.isTeacher = this.authService.isTeacher();
 
     this.courseFilesTableSettings = {
@@ -221,9 +250,6 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.uploadingCourseFile = false;
     this.backButtonService.turnOn();
     this.loadCourse();
-    if (this.isTeacher) {
-      this.loadPersons();
-    }
   }
 
   ngOnDestroy(): void {
@@ -239,6 +265,14 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       .subscribe(
         ({ persons }) => {
           this.thinPersons = persons;
+
+          this.thinPersons = this.thinPersons.filter((person) => {
+            return (
+              this.participants.filter((participant) => {
+                return participant.id === person.id;
+              }).length === 0
+            );
+          });
         },
         (error) => {
           this.toasterService.error(
@@ -264,6 +298,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
             this.createDiscussionOverviews();
             this.createQuizOverviews();
             this.loadGrades();
+            this.loadParticipants();
           },
           (error) => {
             this.toasterService.error(
@@ -284,6 +319,26 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           this.grades = grades;
           this.createAssignmentOverviews();
           this.createGradeOverviews();
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            "Something went wrong!"
+          );
+        }
+      );
+  }
+
+  loadParticipants(): void {
+    this.courseService
+      .getParticipants(this.course.id)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (participants) => {
+          this.participants = participants;
+          if (this.isTeacher) {
+            this.loadPersons();
+          }
         },
         (error) => {
           this.toasterService.error(
@@ -942,5 +997,52 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     });
 
     await alert.present();
+  }
+
+  async onKickParticipantClicked(event: any): Promise<void> {
+    if (event.data.email === this.authService.getUsername()) {
+      this.toasterService.error(
+        "You can't kick yourself!",
+        "Choose another participant!"
+      );
+    } else {
+      const alert = await this.alertController.create({
+        header: "Confirm!",
+        message: "Are you sure that you want to kick this student?",
+        buttons: [
+          {
+            text: "Cancel",
+            role: "cancel",
+          },
+          {
+            text: "Yes",
+            handler: () => {
+              this.courseService
+                .deleteParticipant(this.course.id, event.data.id)
+                .pipe(takeUntil(this.stop))
+                .subscribe(
+                  () => {
+                    this.toasterService.success(
+                      "Participant kicked successfuly!",
+                      "Congratulations!"
+                    );
+
+                    event.confirm.resolve();
+                    this.loadParticipants();
+                  },
+                  (error) => {
+                    this.toasterService.error(
+                      error.error.message,
+                      "Please try again!"
+                    );
+                  }
+                );
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+    }
   }
 }
