@@ -8,6 +8,7 @@ import { PersonSignup } from "../model/person-signup.model";
 import { Person } from "../model/person.model";
 import { Role } from "../model/role.enum";
 import { url } from "./api-config";
+import { FcmService } from "./fcm.service";
 import { LoginStatusService } from "./login-status.service";
 
 @Injectable({
@@ -19,7 +20,8 @@ export class AuthService {
   constructor(
     private httpClient: HttpClient,
     private router: Router,
-    private loginStatusService: LoginStatusService
+    private loginStatusService: LoginStatusService,
+    private fcmService: FcmService
   ) {}
 
   login(loginRequest: LoginRequest): Observable<any> {
@@ -30,6 +32,7 @@ export class AuthService {
       })
       .pipe(
         tap((res) => {
+          this.fcmService.initPush();
           localStorage.setItem("role", res.body.role);
           localStorage.setItem("username", loginRequest.username);
           this.loginStatus.next({

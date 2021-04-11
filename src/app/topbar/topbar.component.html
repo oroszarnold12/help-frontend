@@ -34,7 +34,7 @@
     <ion-toolbar color="medium">
       <ion-title>
         <div *ngIf="username">
-          <ion-avatar class="avatar">
+          <ion-avatar class="avatar" slot="start">
             <img
               [src]="imageUrl"
               onerror="this.src='assets/icon/account-icon.png'"

@@ -49,4 +49,8 @@ export class PersonService {
   setImageUrl(url: string) {
     this.imageChanged.next(url);
   }
+
+  saveNotificationToken(token: string): Observable<void> {
+    return this.httpClient.post<void>(`${url}/notificationToken`, token);
+  }
 }
