@@ -74,10 +74,19 @@ export class FcmService {
             );
           });
         }
+
         if (data.forAssignmentSubmission) {
           this.ngZone.run(() => {
             this.router.navigateByUrl(
               `/courses/${data.courseId}/assignments/${data.assignmentId}/submissions`
+            );
+          });
+        }
+
+        if (data.forAnnouncement) {
+          this.ngZone.run(() => {
+            this.router.navigateByUrl(
+              `/courses/${data.courseId}/announcements/${data.announcementId}`
             );
           });
         }
