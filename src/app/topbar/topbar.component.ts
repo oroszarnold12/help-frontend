@@ -22,6 +22,7 @@ export class TopbarComponent implements OnInit {
   subscription: Subscription;
   path: string = "";
   imageUrl = url + "/user/image";
+  admin: boolean;
 
   constructor(
     private menuController: MenuController,
@@ -45,6 +46,7 @@ export class TopbarComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.authService.getUsername();
+    this.admin = this.authService.isAdmin();
 
     this.pathService.path$.subscribe((path) => {
       this.path = path;

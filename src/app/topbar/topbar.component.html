@@ -18,7 +18,7 @@
       ></ion-icon>
     </ng-container>
     <ion-buttons slot="end">
-      <ion-button (click)="onCoursesButtonClicked()">
+      <ion-button *ngIf="!admin" (click)="onCoursesButtonClicked()">
         <ion-icon name="book-outline"></ion-icon>
       </ion-button>
       <ion-button (click)="onDashboardButtonClicked()">

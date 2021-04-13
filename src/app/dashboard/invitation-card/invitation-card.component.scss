@@ -1,21 +1,13 @@
-.card {
-  width: 1000px;
-  padding-bottom: 100px;
-}
-
-@media (max-width: 1000px) {
-  .card {
-    width: 100vw;
-    position: relative;
-    margin-left: -50vw;
-    left: 50%;
-  }
-}
-
 .text-center {
   text-align: center;
 }
 
 .dark-blue {
   color: #1e6bb8;
+}
+
+@media (max-width: 600px) {
+  .buttons {
+    width: 100px;
+  }
 }

@@ -5,18 +5,13 @@ import { AuthService } from "../shared/auth.service";
 @Injectable({
   providedIn: "root",
 })
-export class TeacherGuardService {
+export class NonAdminGuardService {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate() {
-    return this.canLoad();
-  }
-
-  canLoad() {
-    if (!this.authService.isTeacher()) {
-      this.router.navigate(["dashboard"]);
+    if (this.authService.isAdmin()) {
+      this.router.navigate(["/admin"]);
     }
-
-    return this.authService.isTeacher();
+    return !this.authService.isAdmin();
   }
 }

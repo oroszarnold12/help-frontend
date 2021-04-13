@@ -17,6 +17,7 @@ import { QuizViewComponent } from "./quiz-view/quiz-view.component";
 import { QuizTakingViewComponent } from "./quiz-taking-view/quiz-taking-view.component";
 import { ParticipationsViewComponent } from "./participations-view/participations-view.component";
 import { UserDetailsViewComponent } from "./user-details-view/user-details-view.component";
+import { NonAdminGuardService } from "./guards/non-admin-guard.service";
 
 const routes: Routes = [
   {
@@ -32,12 +33,12 @@ const routes: Routes = [
   {
     path: "dashboard",
     component: DashboardComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
   {
     path: "participations",
     component: ParticipationsViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
   {
     path: "user",
@@ -47,7 +48,7 @@ const routes: Routes = [
   {
     path: "courses/:id",
     component: CourseViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
   {
     path: "registration",
@@ -56,37 +57,37 @@ const routes: Routes = [
   {
     path: "admin",
     component: AdminViewComponent,
-    canActivate: [AdminGuardService],
+    canActivate: [AuthGuardService, AdminGuardService],
   },
   {
     path: "courses/:courseId/announcements/:announcementId",
     component: AnnouncementViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
   {
     path: "courses/:courseId/assignments/:assignmentId",
     component: AssignmentViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
   {
     path: "courses/:courseId/quizzes/:quizId",
     component: QuizViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
   {
     path: "courses/:courseId/discussions/:discussionId",
     component: DiscussionViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
   {
     path: "courses/:courseId/assignments/:assignmentId/submissions",
     component: SubmissionViewComponent,
-    canActivate: [TeacherGuardService],
+    canActivate: [AuthGuardService, TeacherGuardService],
   },
   {
     path: "courses/:courseId/quizzes/:quizId/questions",
     component: QuizTakingViewComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuardService, NonAdminGuardService],
   },
 ];
 

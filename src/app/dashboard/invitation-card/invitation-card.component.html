@@ -1,23 +1,31 @@
-<div class="card">
+<div>
   <ion-card>
     <ion-card-header>
       <ion-card-title class="text-center dark-blue">{{ title }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item *ngFor="let item of data">
-        <ion-label>
+        <ion-label class="ion-text-wrap">
           <h2>{{ item.name }}</h2>
           <p>{{ item.description }}</p>
         </ion-label>
-        <ion-buttons slot="end">
-          <ion-button color="success" (click)="acceptClicked(item.id)">
-            <ion-icon name="checkmark-outline"></ion-icon>
-            Accept
-          </ion-button>
-          <ion-button color="danger" (click)="declineClicked(item.id)">
-            <ion-icon name="close-outline"></ion-icon>
-            Decline
-          </ion-button>
+        <ion-buttons slot="end" class="buttons">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-button color="success" (click)="acceptClicked(item.id)">
+                  <ion-icon name="checkmark-outline"></ion-icon>
+                  Accept
+                </ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button color="danger" (click)="declineClicked(item.id)">
+                  <ion-icon name="close-outline"></ion-icon>
+                  Decline
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-buttons>
       </ion-item>
     </ion-card-content>

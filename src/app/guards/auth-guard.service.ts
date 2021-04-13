@@ -15,8 +15,6 @@ export class AuthGuardService {
   canLoad() {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(["login"]);
-    } else if (this.authService.isAdmin()) {
-      this.router.navigate(["admin"]);
     }
 
     return this.authService.isLoggedIn();
