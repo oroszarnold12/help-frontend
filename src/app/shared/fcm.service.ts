@@ -90,6 +90,28 @@ export class FcmService {
             );
           });
         }
+
+        if (data.forDiscussion) {
+          this.ngZone.run(() => {
+            this.router.navigateByUrl(
+              `/courses/${data.courseId}/discussions/${data.discussionId}`
+            );
+          });
+        }
+
+        if (data.forInvitation) {
+          this.ngZone.run(() => {
+            this.router.navigateByUrl(`/dashboard`);
+          });
+        }
+
+        if (data.forQuiz) {
+          this.ngZone.run(() => {
+            this.router.navigateByUrl(
+              `/courses/${data.courseId}/quizzes/${data.quizId}`
+            );
+          });
+        }
       }
     );
   }
