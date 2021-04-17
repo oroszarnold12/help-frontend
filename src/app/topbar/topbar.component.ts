@@ -9,7 +9,6 @@ import { Router } from "@angular/router";
 import { BackButtonService } from "../shared/back-button.service";
 import { PathService } from "../shared/path.service";
 import { url } from "../shared/api-config";
-import { UserDetailsViewComponent } from "../user-details-view/user-details-view.component";
 import { PersonService } from "../shared/person.service";
 
 @Component({

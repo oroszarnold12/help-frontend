@@ -10,10 +10,9 @@ import { Invitation } from "../model/invitation.model";
 import { InvitationService } from "../shared/invitation.service";
 import { GeneralOverview } from "../model/general-overview.model";
 import { ToasterService } from "../shared/toaster.service";
-import { LoginStatusService } from "../shared/login-status.service";
-import { PathService } from "../shared/path.service";
 import { ParticipationService } from "../shared/participation.service";
 import { NavigationEnd, Router } from "@angular/router";
+import { BackButtonService } from "../shared/back-button.service";
 
 @Component({
   selector: "app-dashboard",
@@ -35,17 +34,10 @@ export class DashboardComponent implements OnInit {
     private invitationService: InvitationService,
     private alertController: AlertController,
     private toasterService: ToasterService,
-    private pathService: PathService,
     private participationService: ParticipationService,
     private router: Router,
-    loginStatusService: LoginStatusService
+    private bakcButtonService: BackButtonService
   ) {
-    this.subscription = loginStatusService.loggedIn$.subscribe((log) => {
-      if (log === true) {
-        this.ngOnInit();
-      }
-    });
-
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         if (event.url === "/dashboard") {
@@ -59,8 +51,7 @@ export class DashboardComponent implements OnInit {
     this.loadCourses();
     this.loadInvitations();
     this.teacher = this.authService.isTeacher();
-
-    this.pathService.setPath("Dashboard");
+    this.bakcButtonService.turnOff();
   }
 
   async presentModal() {

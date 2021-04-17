@@ -46,7 +46,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
-    path: "courses/:id",
+    path: "courses/:courseId",
     component: CourseViewComponent,
     canActivate: [AuthGuardService, NonAdminGuardService],
   },

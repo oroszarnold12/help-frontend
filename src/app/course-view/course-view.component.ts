@@ -34,7 +34,6 @@ import { AssignmentFormComponent } from "./assignment-form/assignment-form.compo
 import { DiscussionFormComponent } from "./discussion-form/discussion-form.component";
 import { QuizFormComponent } from "./quiz-form/quiz-form.component";
 import { Grades } from "../model/grades.model";
-import { PathService } from "../shared/path.service";
 import { CourseFile } from "../model/course-file.model";
 import { FileSaverService } from "ngx-filesaver";
 
@@ -99,7 +98,6 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private gradeService: GradeService,
     private quizService: QuizService,
-    private pathService: PathService,
     private fileSaverService: FileSaverService
   ) {
     this.gradeTableSettings = {
@@ -253,7 +251,6 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.backButtonService.turnOff();
     this.stop.next();
     this.stop.complete();
   }
@@ -286,12 +283,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   loadCourse(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseService
-        .getCourse(params.id)
+        .getCourse(params.courseId)
         .pipe(takeUntil(this.stop))
         .subscribe(
           (course) => {
             this.course = course;
-            this.pathService.setPath(this.course.name);
             this.canDelete =
               this.course.teacher.email === this.authService.getUsername();
             this.createAnnouncementOverviews();
@@ -479,26 +475,22 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.router.navigate([
       `/courses/${this.course.id}/announcements/${announcementId}`,
     ]);
-    this.pathService.setPath(`${this.course.name}/Announcements`);
   }
 
   viewAssignment(assignmentId: number): void {
     this.router.navigate([
       `/courses/${this.course.id}/assignments/${assignmentId}`,
     ]);
-    this.pathService.setPath(`${this.course.name}/Assignments`);
   }
 
   viewQuiz(quizId: number): void {
     this.router.navigate([`/courses/${this.course.id}/quizzes/${quizId}`]);
-    this.pathService.setPath(`${this.course.name}/Quizzes`);
   }
 
   viewDiscussion(discussionId: number): void {
     this.router.navigate([
       `/courses/${this.course.id}/discussions/${discussionId}`,
     ]);
-    this.pathService.setPath(`${this.course.name}/Discussions`);
   }
 
   async deleteAnnouncement(announcementId: number): Promise<void> {

@@ -11,7 +11,7 @@ import { ToasterService } from "../shared/toaster.service";
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.scss"],
 })
-export class RegistrationComponent implements OnInit, OnDestroy {
+export class RegistrationComponent implements OnInit {
   registrationForm: FormGroup;
   personSignup: PersonSignup;
 
@@ -24,10 +24,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.registrationForm = this.createFormGroup();
     this.backButtonService.turnOn();
-  }
-
-  ngOnDestroy(): void {
-    this.backButtonService.turnOff();
   }
 
   createFormGroup() {

@@ -7,7 +7,6 @@ import { Person } from "../model/person.model";
 import { url } from "../shared/api-config";
 import { BackButtonService } from "../shared/back-button.service";
 import { passwordMatchValidator } from "../shared/passwordUtils";
-import { PathService } from "../shared/path.service";
 import { PersonService } from "../shared/person.service";
 import { ToasterService } from "../shared/toaster.service";
 
@@ -29,13 +28,11 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     private backButtonService: BackButtonService,
     private personService: PersonService,
     private toasterService: ToasterService,
-    private pathService: PathService,
     private alertController: AlertController
   ) {}
 
   ngOnInit() {
     this.backButtonService.turnOn();
-    this.pathService.setPath("Account settings");
     this.changignPassword = false;
     this.changingImage = false;
 

@@ -1,11 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Ng2SmartTableComponent } from "ng2-smart-table";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Participation } from "../model/participation.model";
 import { BackButtonService } from "../shared/back-button.service";
 import { ParticipationService } from "../shared/participation.service";
-import { PathService } from "../shared/path.service";
 import { ToasterService } from "../shared/toaster.service";
 
 @Component({
@@ -20,13 +18,11 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
   constructor(
     private participationService: ParticipationService,
     private bakcButtonService: BackButtonService,
-    private toasterService: ToasterService,
-    private pathService: PathService
+    private toasterService: ToasterService
   ) {}
 
   ngOnInit() {
     this.bakcButtonService.turnOn();
-    this.pathService.setPath("Courses");
 
     this.participationService
       .getParticipations()
@@ -44,8 +40,6 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stop.next();
     this.stop.complete();
-
-    this.bakcButtonService.turnOff();
   }
 
   onSaveClicked() {
