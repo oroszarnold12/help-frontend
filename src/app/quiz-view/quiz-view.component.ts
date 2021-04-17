@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
@@ -22,14 +22,17 @@ import { QuestionFormComponent } from "./question-form/question-form.component";
   templateUrl: "./quiz-view.component.html",
   styleUrls: ["./quiz-view.component.scss"],
 })
-export class QuizViewComponent implements OnInit {
-  quiz: Quiz;
+export class QuizViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
-  isTeacher: boolean;
-  courseId: number;
+
+  quiz: Quiz;
   questions: Question[];
   quizSubmissions: QuizSubmission[];
   grade: QuizGrade;
+
+  isTeacher: boolean;
+
+  courseId: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,7 +48,7 @@ export class QuizViewComponent implements OnInit {
     private gradeService: GradeService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.backButtonService.turnOn();
 
     this.isTeacher = this.authService.isTeacher();
@@ -58,7 +61,7 @@ export class QuizViewComponent implements OnInit {
     this.stop.complete();
   }
 
-  loadQuiz() {
+  loadQuiz(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
       this.quizService
@@ -67,6 +70,7 @@ export class QuizViewComponent implements OnInit {
         .subscribe(
           (quiz) => {
             this.quiz = quiz;
+
             if (this.isTeacher) {
               this.loadQuestions();
             } else {
@@ -74,7 +78,7 @@ export class QuizViewComponent implements OnInit {
               this.loadGrades();
             }
           },
-          (error) => {
+          () => {
             this.toasterService.error(
               "Could not get quiz!",
               "Something went wrong!"
@@ -84,7 +88,7 @@ export class QuizViewComponent implements OnInit {
     });
   }
 
-  loadQuestions() {
+  loadQuestions(): void {
     this.questionService
       .getQuestions(this.courseId, this.quiz.id)
       .pipe(takeUntil(this.stop))
@@ -92,7 +96,7 @@ export class QuizViewComponent implements OnInit {
         (questions) => {
           this.questions = questions;
         },
-        (error) => {
+        () => {
           this.toasterService.error(
             "Could not get questions!",
             "Something went wrong!"
@@ -101,19 +105,20 @@ export class QuizViewComponent implements OnInit {
       );
   }
 
-  loadQuizSubmissions() {
+  loadQuizSubmissions(): void {
     this.quizSubmissionService
       .getSubmissions(this.courseId, this.quiz.id)
       .pipe(takeUntil(this.stop))
       .subscribe((quizSubmissions) => {
         this.quizSubmissions = quizSubmissions;
+
         if (this.quizSubmissions.length !== 0) {
           this.loadQuestions();
         }
       });
   }
 
-  loadGrades() {
+  loadGrades(): void {
     this.gradeService
       .getGradesOfQuiz(this.courseId, this.quiz.id)
       .pipe(takeUntil(this.stop))
@@ -134,8 +139,8 @@ export class QuizViewComponent implements OnInit {
       );
   }
 
-  checkIfPicked(answer, index) {
-    let picked = false;
+  checkIfPicked(answer, index): boolean {
+    let picked: boolean = false;
     this.quizSubmissions[index].answerSubmissions.forEach((answer1) => {
       if (answer1.answer.id === answer.id) {
         picked = answer1.picked;
@@ -145,13 +150,13 @@ export class QuizViewComponent implements OnInit {
     return picked;
   }
 
-  editQuestion(questionId) {
+  editQuestion(questionId): void {
     this.presentQuestionModal(
       this.questions.find((question) => question.id === questionId)
     );
   }
 
-  async deleteQuestion(questionId) {
+  async deleteQuestion(questionId): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this question?",
@@ -172,11 +177,11 @@ export class QuizViewComponent implements OnInit {
                     "Question deletion successful!",
                     "Congratulations!"
                   );
+
                   this.loadQuiz();
                   this.loadQuestions();
                 },
                 (error) => {
-                  console.log(error);
                   this.toasterService.error(
                     error.error.message,
                     "Please try again!"
@@ -191,7 +196,7 @@ export class QuizViewComponent implements OnInit {
     await alert.present();
   }
 
-  async presentQuizModal() {
+  async presentQuizModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: QuizFormComponent,
       cssClass: "my-custom-modal-css",
@@ -206,7 +211,7 @@ export class QuizViewComponent implements OnInit {
     await modal.present();
   }
 
-  async presentQuestionModal(question?) {
+  async presentQuestionModal(question?: Question): Promise<void> {
     const modal = await this.modalController.create({
       component: QuestionFormComponent,
       cssClass: "my-custom-modal-css",
@@ -222,19 +227,19 @@ export class QuizViewComponent implements OnInit {
     await modal.present();
   }
 
-  onTakeClicked() {
+  onTakeClicked(): void {
     this.router.navigate([
       `courses/${this.courseId}/quizzes/${this.quiz.id}/questions`,
     ]);
   }
 
-  modifyPublished(published: boolean) {
+  modifyPublished(published: boolean): void {
     this.quiz.published = published;
     this.quizService
       .updateQuiz(this.quiz, this.courseId, this.quiz.id)
       .pipe(takeUntil(this.stop))
       .subscribe(
-        (quiz) => {
+        () => {
           this.toasterService.success(
             "Congratulations!",
             published ? "Quiz published!" : "Quiz is hidden"

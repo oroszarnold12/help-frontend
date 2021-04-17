@@ -18,10 +18,12 @@ import { PersonService } from "../shared/person.service";
 })
 export class TopbarComponent implements OnInit {
   username: string;
-  subscription: Subscription;
-  path: string = "";
-  imageUrl = url + "/user/image";
   admin: boolean;
+  subscription: Subscription;
+
+  path: string;
+
+  imageUrl: string;
 
   constructor(
     private menuController: MenuController,
@@ -34,6 +36,9 @@ export class TopbarComponent implements OnInit {
     private personService: PersonService,
     public backButtonService: BackButtonService
   ) {
+    this.imageUrl = url + "/user/image";
+    this.path = "";
+
     this.subscription = loginStatusService.loggedIn$.subscribe((log) => {
       this.username = this.authService.getUsername();
     });
@@ -43,7 +48,7 @@ export class TopbarComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.username = this.authService.getUsername();
     this.admin = this.authService.isAdmin();
 
@@ -52,31 +57,39 @@ export class TopbarComponent implements OnInit {
     });
   }
 
-  closeMenu() {
+  closeMenu(): void {
     this.menuController.close();
   }
 
-  backClicked() {
+  backClicked(): void {
     this.location.back();
   }
 
-  onLogOutClicked() {
-    this.authService.logout().subscribe(() => {
-      this.menuController.close();
-      this.loginStatusService.changeStatus(false);
-      this.toasterService.success("The log out was successful!");
-    });
+  onLogOutClicked(): void {
+    this.authService.logout().subscribe(
+      () => {
+        this.menuController.close();
+        this.loginStatusService.changeStatus(false);
+        this.toasterService.success("The log out was successful!");
+      },
+      () => {
+        this.toasterService.error(
+          "The logout was unsuccessful!",
+          "Please try again!"
+        );
+      }
+    );
   }
 
-  onDashboardButtonClicked() {
+  onDashboardButtonClicked(): void {
     this.router.navigate(["/dashboard"]);
   }
 
-  onCoursesButtonClicked() {
+  onCoursesButtonClicked(): void {
     this.router.navigate(["/participations"]);
   }
 
-  onProfileSettingsClicked() {
+  onProfileSettingsClicked(): void {
     this.router.navigate(["user"]);
     this.closeMenu();
   }

@@ -1,24 +1,6 @@
-.top-padding {
-  top: 10%;
-}
-
-.max-width {
-  max-width: 1000px;
-}
-
-.center {
+.grid {
+  padding-top: 75px;
   text-align: -webkit-center;
-}
-
-.start {
-  text-align: start;
-}
-
-.account-icon {
-  font-size: 40px;
-  display: inline-block;
-  margin-right: 5px;
-  cursor: pointer;
 }
 
 .title {
@@ -26,28 +8,23 @@
   vertical-align: super;
 }
 
-.dark-blue {
-  color: #1e6bb8;
-}
-
-.add-icon {
+.button-icon {
   padding-right: 5px;
 }
 
-.add-button-row {
+.button-row {
   text-align: end;
+  max-width: 1000px;
 }
 
-.mb-0 {
+.card {
+  text-align: start;
+  max-width: 1000px;
+}
+
+.comments-label {
   margin-bottom: 0px;
-}
-
-.mt-30 {
   margin-top: 30px;
-}
-
-.pb-100 {
-  padding-bottom: 100px;
 }
 
 .avatar {

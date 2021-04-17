@@ -1,5 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  AbstractControl,
+} from "@angular/forms";
 import { AlertController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -18,10 +23,13 @@ import { ToasterService } from "../shared/toaster.service";
 export class UserDetailsViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
   user: Person;
+
   passwordForm: FormGroup;
   changignPassword: boolean;
+
   changingImage: boolean;
-  imageUrl: string = this.getImageUrl();
+  imageUrl: string;
+
   private image;
 
   constructor(
@@ -29,9 +37,11 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     private personService: PersonService,
     private toasterService: ToasterService,
     private alertController: AlertController
-  ) {}
+  ) {
+    this.imageUrl = this.getImageUrl();
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.backButtonService.turnOn();
     this.changignPassword = false;
     this.changingImage = false;
@@ -46,7 +56,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     this.stop.complete();
   }
 
-  loadUser() {
+  loadUser(): void {
     this.personService
       .getCurrentUser()
       .pipe(takeUntil(this.stop))
@@ -63,7 +73,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
       );
   }
 
-  createFormGroup() {
+  createFormGroup(): FormGroup {
     return new FormGroup(
       {
         password: new FormControl("", [
@@ -83,7 +93,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  get errorControl() {
+  get errorControl(): { [key: string]: AbstractControl } {
     return this.passwordForm.controls;
   }
 
@@ -91,7 +101,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     return role.replace("ROLE_", "");
   }
 
-  submitForm() {
+  submitForm(): void {
     const passowrds = this.passwordForm.value;
 
     if (passowrds.password === passowrds.confirmPassword) {
@@ -99,7 +109,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
         .changePassword(passowrds.password)
         .pipe(takeUntil(this.stop))
         .subscribe(
-          (user) => {
+          () => {
             this.toasterService.success(
               "Password changed successfuly!",
               "Congratulations!"
@@ -116,41 +126,43 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangePasswordClicked() {
+  onChangePasswordClicked(): void {
     this.changignPassword = true;
   }
 
-  onCancelClicked() {
+  onCancelClicked(): void {
     this.changignPassword = false;
     this.passwordForm.reset();
   }
 
-  onChangeImageClicked() {
+  onChangeImageClicked(): void {
     this.changingImage = true;
   }
 
-  onImageCancelClicked() {
+  onImageCancelClicked(): void {
     this.changingImage = false;
     this.image = null;
   }
 
-  onFileChange(fileChangeEvent) {
+  onFileChange(fileChangeEvent): void {
     this.image = fileChangeEvent.target.files[0];
   }
 
-  uploadFile() {
+  uploadFile(): void {
     const formData = new FormData();
     formData.append("image", this.image);
+
     if (!!this.image) {
       this.personService
         .saveImage(formData)
         .pipe(takeUntil(this.stop))
         .subscribe(
-          (person) => {
+          () => {
             this.toasterService.success(
               "Image uploaded successfully!",
               "Congratulations!"
             );
+
             this.changingImage = false;
             this.image = null;
             this.imageUrl = this.getImageUrl();
@@ -164,7 +176,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onRemoveClicked() {
+  async onRemoveClicked(): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this image?",
@@ -185,6 +197,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
                     "Image removed successfuly!",
                     "Congratulations!"
                   );
+
                   this.imageUrl = this.getImageUrl();
                 },
                 (error) => {
@@ -202,7 +215,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  getImageUrl() {
+  getImageUrl(): string {
     const newUrl = url + "/user/image" + "?" + new Date().getTime();
     this.personService.setImageUrl(newUrl);
     return newUrl;

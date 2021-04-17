@@ -4,8 +4,10 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class BackButtonService {
-  private activeStatus = false;
-  constructor() {}
+  private activeStatus: boolean;
+  constructor() {
+    this.activeStatus = false;
+  }
 
   isActive(): boolean {
     return this.activeStatus;

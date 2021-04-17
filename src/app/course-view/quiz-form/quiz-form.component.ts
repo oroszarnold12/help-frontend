@@ -1,5 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  AbstractControl,
+} from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -13,52 +18,63 @@ import { ToasterService } from "src/app/shared/toaster.service";
   styleUrls: ["./quiz-form.component.scss"],
 })
 export class QuizFormComponent implements OnInit, OnDestroy {
+  private stop: Subject<void> = new Subject();
+
   quizForm: FormGroup;
   newQuiz: Quiz;
+
   @Input() courseId: number;
   @Input() quiz: Quiz;
-  private stop: Subject<void> = new Subject();
-  editorMaxLength = 8192;
 
-  editorStyle = {
-    height: "300px",
-  };
-
-  config = {
-    toolbar: [
-      ["bold", "italic", "underline", "strike"],
-      ["blockquote", "code-block"],
-
-      [{ header: 1 }, { header: 2 }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ script: "sub" }, { script: "super" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-
-      [{ size: ["small", false, "large", "huge"] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-      [{ color: [] }, { background: [] }],
-      [{ font: [] }],
-      [{ align: [] }],
-
-      ["link"],
-    ],
-  };
+  editorMaxLength: number;
+  editorStyle: any;
+  editorConfig: any;
 
   constructor(
     private modalController: ModalController,
     private toasterService: ToasterService,
     private quizService: QuizService
-  ) {}
+  ) {
+    this.editorMaxLength = 8192;
+    this.editorStyle = {
+      height: "300px",
+    };
+    this.editorConfig = {
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote", "code-block"],
 
-  ngOnInit() {
+        [{ header: 1 }, { header: 2 }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }],
+        [{ indent: "-1" }, { indent: "+1" }],
+
+        [{ size: ["small", false, "large", "huge"] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }],
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["link"],
+      ],
+    };
+  }
+
+  ngOnInit(): void {
     this.quizForm = this.createFormGroup();
+
     if (!!this.quiz) {
       this.quizForm.patchValue(this.quiz);
     }
   }
 
-  createFormGroup() {
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
+  }
+
+  createFormGroup(): FormGroup {
     return new FormGroup({
       name: new FormControl("", [
         Validators.required,
@@ -76,23 +92,26 @@ export class QuizFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  dismissModal() {
+  dismissModal(): void {
     this.modalController.dismiss();
   }
 
-  get errorControl() {
+  get errorControl(): {
+    [key: string]: AbstractControl;
+  } {
     return this.quizForm.controls;
   }
 
-  submitForm() {
+  submitForm(): void {
     if (this.quizForm.valid) {
       if (!!this.quiz) {
         this.newQuiz = this.quizForm.value;
+
         this.quizService
           .updateQuiz(this.newQuiz, this.courseId, this.quiz.id)
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (quiz) => {
+            () => {
               this.quizForm.reset();
               this.toasterService.success("Congratulations!", "Quiz updated!");
               this.modalController.dismiss();
@@ -106,11 +125,12 @@ export class QuizFormComponent implements OnInit, OnDestroy {
           );
       } else {
         this.newQuiz = this.quizForm.value;
+
         this.quizService
           .saveQuiz(this.newQuiz, this.courseId)
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (quiz) => {
+            () => {
               this.quizForm.reset();
               this.toasterService.success("Congratulations!", "Quiz created!");
               this.modalController.dismiss();
@@ -129,10 +149,5 @@ export class QuizFormComponent implements OnInit, OnDestroy {
         "Quiz creation failed!"
       );
     }
-  }
-
-  ngOnDestroy() {
-    this.stop.next();
-    this.stop.complete();
   }
 }

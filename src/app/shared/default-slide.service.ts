@@ -4,11 +4,13 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class DefaultSlideService {
-  defaultSlide = 0;
+  defaultSlide: number;
 
-  constructor() {}
+  constructor() {
+    this.defaultSlide = 0;
+  }
 
-  changeDefaultSlide(slide: number) {
+  changeDefaultSlide(slide: number): void {
     this.defaultSlide = slide;
   }
 

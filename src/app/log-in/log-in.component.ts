@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { LoginRequest } from "../model/login-request.model";
@@ -10,22 +10,22 @@ import { ToasterService } from "../shared/toaster.service";
   templateUrl: "./log-in.component.html",
   styleUrls: ["./log-in.component.scss"],
 })
-export class LogInComponent implements OnInit {
+export class LogInComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
     private toasterService: ToasterService
   ) {}
 
-  ngOnInit() {}
-
-  onSubmit(authForm: NgForm) {
+  onSubmit(authForm: NgForm): void {
     if (!authForm.valid) {
       return;
     }
+
     const loginRequest: LoginRequest = new LoginRequest();
     loginRequest.username = authForm.value.email;
     loginRequest.password = authForm.value.password;
+
     let response;
     this.authService.login(loginRequest).subscribe(
       (res) => {

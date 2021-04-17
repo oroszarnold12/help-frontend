@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormArray, FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IonSlides } from "@ionic/angular";
@@ -18,19 +18,23 @@ import { ToasterService } from "../shared/toaster.service";
   templateUrl: "./quiz-taking-view.component.html",
   styleUrls: ["./quiz-taking-view.component.scss"],
 })
-export class QuizTakingViewComponent implements OnInit {
+export class QuizTakingViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
+
   questions: Question[];
-  @ViewChild("slides") slides: IonSlides;
+  questionsForm: FormArray;
+
   timeLeft: number;
   oneThirdReached: boolean = false;
-  questionsForm: FormArray;
-  courseId: number;
-  quizId: number;
-  quiz: Quiz;
   secondPassedSubscription: Subscription;
   timeOutSubscription: Subscription;
   oneThirdReachedSubscription: Subscription;
+
+  courseId: number;
+  quizId: number;
+  quiz: Quiz;
+
+  @ViewChild("slides") slides: IonSlides;
 
   constructor(
     private backButtonService: BackButtonService,
@@ -43,7 +47,7 @@ export class QuizTakingViewComponent implements OnInit {
     private quizTimerService: QuizTimerService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.backButtonService.turnOn();
 
     this.loadQuiz();
@@ -59,10 +63,11 @@ export class QuizTakingViewComponent implements OnInit {
     this.stop.complete();
   }
 
-  loadQuestions() {
+  loadQuestions(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
       this.quizId = params.quizId;
+
       this.questionService
         .getQuestions(params.courseId, params.quizId)
         .pipe(takeUntil(this.stop))
@@ -77,7 +82,7 @@ export class QuizTakingViewComponent implements OnInit {
               this.questionsForm = this.quizTimerService.questionsForm;
             }
           },
-          (error) => {
+          () => {
             this.toasterService.error(
               "Could not get questions!",
               "Something went wrong!"
@@ -87,7 +92,7 @@ export class QuizTakingViewComponent implements OnInit {
     });
   }
 
-  loadQuiz() {
+  loadQuiz(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.quizService
         .getQuiz(params.courseId, params.quizId)
@@ -96,6 +101,7 @@ export class QuizTakingViewComponent implements OnInit {
           (quiz) => {
             this.quiz = quiz;
             const timeArray = quiz.timeLimit.split(":");
+
             if (!this.quizTimerService.isTimerSet()) {
               this.timeLeft =
                 Number(timeArray[0]) * 3600 +
@@ -106,7 +112,7 @@ export class QuizTakingViewComponent implements OnInit {
             }
             this.subscribeToTimer();
           },
-          (error) => {
+          () => {
             this.toasterService.error(
               "Could not get quiz!",
               "Something went wrong!"
@@ -116,11 +122,12 @@ export class QuizTakingViewComponent implements OnInit {
     });
   }
 
-  createFormGroup() {
+  createFormGroup(): void {
     this.questionsForm = new FormArray([]);
+
     this.questions.forEach((question) => {
       const answerArray = new FormArray([]);
-      question.answers.forEach((answer) => {
+      question.answers.forEach(() => {
         answerArray.push(new FormControl(false));
       });
 
@@ -128,11 +135,11 @@ export class QuizTakingViewComponent implements OnInit {
     });
   }
 
-  changeSlideTo(index) {
+  changeSlideTo(index): void {
     this.slides.slideTo(index);
   }
 
-  subscribeToTimer() {
+  subscribeToTimer(): void {
     this.timeOutSubscription = this.quizTimerService.timeOut$.subscribe(() => {
       this.onSubmitClicked();
       this.oneThirdReached = false;
@@ -152,7 +159,7 @@ export class QuizTakingViewComponent implements OnInit {
     );
   }
 
-  unsubscribeFromTimer() {
+  unsubscribeFromTimer(): void {
     this.timeOutSubscription.unsubscribe();
 
     this.oneThirdReachedSubscription.unsubscribe();
@@ -160,14 +167,14 @@ export class QuizTakingViewComponent implements OnInit {
     this.secondPassedSubscription.unsubscribe();
   }
 
-  playAudio() {
+  playAudio(): void {
     let audio = new Audio();
     audio.src = "../../../assets/sounds/time-low.mp3";
     audio.load();
     audio.play();
   }
 
-  onSubmitClicked() {
+  onSubmitClicked(): void {
     this.quizTimerService.stop();
 
     const quizSubmission = [];
@@ -184,7 +191,7 @@ export class QuizTakingViewComponent implements OnInit {
       .saveQuizSubmission(this.courseId, this.quizId, quizSubmission)
       .pipe(takeUntil(this.stop))
       .subscribe(
-        (questions) => {
+        () => {
           this.toasterService.success(
             "Answers saved successfuly!",
             "Congratulations!"

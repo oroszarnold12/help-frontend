@@ -8,18 +8,6 @@
   text-align: start;
 }
 
-.center {
-  text-align: -webkit-center;
-}
-
-.mt20 {
-  margin-top: 20px;
-}
-
-.dark-blue {
-  color: #1e6bb8;
-}
-
 .button-icon {
   padding-right: 5px;
 }
@@ -59,15 +47,9 @@
   text-align: start;
 }
 
-.account-icon {
-  font-size: 40px;
-  display: inline-block;
-  margin-right: 5px;
-  cursor: pointer;
-}
-
 .grid {
   padding-top: 100px;
+  text-align: -webkit-center;
 }
 
 .avatar {

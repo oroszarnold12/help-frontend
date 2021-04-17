@@ -8,7 +8,6 @@ import { takeWhile } from "rxjs/operators";
 })
 export class LoaderService {
   isLoading = new BehaviorSubject<boolean>(false);
-
   isLoading$ = this.isLoading.asObservable();
 
   subscription: Subscription;
@@ -19,13 +18,14 @@ export class LoaderService {
       .subscribe(this.presentLoader);
   }
 
-  presentLoader = async (value) => {
+  presentLoader = async (value: boolean): Promise<void> => {
     if (value === true) {
       this.subscription.unsubscribe();
       const loading = await this.loadingController.create({
         spinner: "circular",
         translucent: true,
       });
+
       loading.present().then(() => {
         this.subscription = this.isLoading$
           .pipe(takeWhile((value) => value === true, true))
@@ -34,17 +34,18 @@ export class LoaderService {
     }
   };
 
-  dismissLoader = (value) => {
+  dismissLoader = (value: boolean): void => {
     if (value === false) {
       this.subscription.unsubscribe();
       this.loadingController.dismiss();
+
       this.subscription = this.isLoading$
         .pipe(takeWhile((value) => value === false, true))
         .subscribe(this.presentLoader);
     }
   };
 
-  changeStatus(log: boolean) {
+  changeStatus(log: boolean): void {
     if (this.isLoading.getValue() !== log) {
       this.isLoading.next(log);
     }

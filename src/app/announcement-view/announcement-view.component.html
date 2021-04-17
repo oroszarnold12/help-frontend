@@ -1,16 +1,16 @@
-<ion-content class="top-padding center" *ngIf="!!announcement">
-  <ion-grid class="pb-100">
-    <ion-row *ngIf="isTeacher" fixed class="add-button-row max-width">
+<ion-content *ngIf="!!announcement">
+  <ion-grid class="grid">
+    <ion-row *ngIf="isTeacher" fixed class="button-row">
       <ion-col>
         <ion-button color="primary" (click)="presentAnnouncementModal()">
-          <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+          <ion-icon name="create-outline" class="button-icon"></ion-icon>
           Edit announcement
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="max-width start">
+        <ion-card class="card">
           <ion-card-header>
             <ion-card-title>
               <ion-avatar class="avatar">
@@ -29,7 +29,7 @@
               </ion-card-subtitle>
             </ion-card-title>
           </ion-card-header>
-          <ion-card-content class="mt20">
+          <ion-card-content class="ion-margin-top">
             <quill-view-html
               [content]="announcement.content"
               theme="snow"
@@ -38,20 +38,20 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <ion-row fixed class="add-button-row max-width">
-      <ion-col class="start">
-        <p class="mb-0 mt-30">Comments</p>
+    <ion-row fixed class="button-row">
+      <ion-col class="ion-text-start">
+        <p class="comments-label">Comments</p>
       </ion-col>
       <ion-col>
         <ion-button color="success" (click)="presentCommentModal()">
-          <ion-icon name="arrow-undo-outline"></ion-icon>
+          <ion-icon name="arrow-undo-outline" class="button-icon"></ion-icon>
           Reply
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row *ngFor="let comment of announcement.comments">
       <ion-col>
-        <ion-card class="max-width start">
+        <ion-card class="card">
           <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-item>

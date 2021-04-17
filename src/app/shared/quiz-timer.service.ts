@@ -6,7 +6,7 @@ import { Subject } from "rxjs";
   providedIn: "root",
 })
 export class QuizTimerService {
-  timerSet: boolean = false;
+  timerSet: boolean;
   interval;
   timeLeft: number;
   oneThird: number;
@@ -22,7 +22,9 @@ export class QuizTimerService {
   private secondPassed = new Subject<number>();
   secondPassed$ = this.secondPassed.asObservable();
 
-  constructor() {}
+  constructor() {
+    this.timerSet = false;
+  }
 
   start(): void {
     this.timerSet = true;
@@ -31,6 +33,7 @@ export class QuizTimerService {
       if (this.timeLeft > 0) {
         this.timeLeft--;
         this.secondPassed.next(this.timeLeft);
+
         if (this.timeLeft === this.oneThird) {
           this.oneThirdReached.next();
         }
@@ -51,7 +54,7 @@ export class QuizTimerService {
     return this.timerSet;
   }
 
-  setTimeLeft(seconds: number) {
+  setTimeLeft(seconds: number): void {
     this.timeLeft = seconds;
     this.oneThird = Math.floor(this.timeLeft / 3);
   }

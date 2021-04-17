@@ -14,6 +14,7 @@ import { ToasterService } from "../shared/toaster.service";
 })
 export class AdminViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
+
   persons: Person[];
   personsSettings: any;
 
@@ -43,7 +44,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         name: {
           title: "Name",
           editable: false,
-          valuePrepareFunction: (cell, row) => {
+          valuePrepareFunction: (_cell, row) => {
             return row.firstName + " " + row.lastName;
           },
         },
@@ -64,7 +65,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadPersons();
   }
 
@@ -73,16 +74,24 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     this.stop.complete();
   }
 
-  loadPersons() {
+  loadPersons(): void {
     this.personService
       .getPersonsForAdmin()
       .pipe(takeUntil(this.stop))
-      .subscribe(({ persons }) => {
-        this.persons = persons.filter((person) => person.role !== Role.ADMIN);
-      });
+      .subscribe(
+        ({ persons }) => {
+          this.persons = persons.filter((person) => person.role !== Role.ADMIN);
+        },
+        () => {
+          this.toasterService.error(
+            "Could not load persons!",
+            "Something went wrong!"
+          );
+        }
+      );
   }
 
-  async onDeleteConfirm(event) {
+  async onDeleteConfirm(event: any): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this user?",
@@ -103,6 +112,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                     "Person deletion successful!",
                     "Congratulations!"
                   );
+
                   event.confirm.resolve();
                 },
                 (error) => {
@@ -120,16 +130,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  onEditConfirm(event) {
+  onEditConfirm(event: any): void {
     this.personService
       .updatePerson(event.newData, event.newData.id)
       .pipe(takeUntil(this.stop))
       .subscribe(
-        (person) => {
+        () => {
           this.toasterService.success(
             "Person update successful!",
             "Congratulations!"
           );
+
           event.confirm.resolve();
         },
         (error) => {

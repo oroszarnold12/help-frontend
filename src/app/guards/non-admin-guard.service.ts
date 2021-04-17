@@ -8,10 +8,11 @@ import { AuthService } from "../shared/auth.service";
 export class NonAdminGuardService {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate() {
+  canActivate(): boolean {
     if (this.authService.isAdmin()) {
       this.router.navigate(["/admin"]);
     }
+
     return !this.authService.isAdmin();
   }
 }

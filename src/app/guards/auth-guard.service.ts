@@ -8,11 +8,11 @@ import { AuthService } from "../shared/auth.service";
 export class AuthGuardService {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate() {
+  canActivate(): boolean {
     return this.canLoad();
   }
 
-  canLoad() {
+  canLoad(): boolean {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(["login"]);
     }

@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, Optional } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AnnouncementFormComponent } from "../course-view/announcement-form/announcement-form.component";
+import { AnnouncementComment } from "../model/announcement-comment.model";
 import { Announcement } from "../model/announcement.model";
 import { url } from "../shared/api-config";
 import { AuthService } from "../shared/auth.service";
@@ -19,11 +20,14 @@ import { AnnouncementCommentFormComponent } from "./announcement-comment-form/an
   styleUrls: ["./announcement-view.component.scss"],
 })
 export class AnnouncementViewComponent implements OnInit, OnDestroy {
-  announcement: Announcement;
   stop: Subject<void> = new Subject();
-  isTeacher: boolean;
+
+  announcement: Announcement;
   courseId: number;
+
+  isTeacher: boolean;
   username: string;
+
   creatorImageUrl: string;
   commentImageUrls: string[];
 
@@ -38,19 +42,24 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.backButtonService.turnOn();
 
     this.isTeacher = this.authService.isTeacher();
-
     this.username = this.authService.getUsername();
 
     this.loadAnnouncement();
   }
 
-  loadAnnouncement() {
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
+  }
+
+  loadAnnouncement(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
+
       this.courseService
         .getAnnouncement(params.courseId, params.announcementId)
         .pipe(takeUntil(this.stop))
@@ -59,6 +68,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
             this.creatorImageUrl = this.getImageUrlById(
               announcement.creator.id
             );
+
             this.announcement = announcement;
 
             this.commentImageUrls = [];
@@ -68,7 +78,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
               ] = this.getImageUrlById(comment.commenter.id);
             });
           },
-          (error) => {
+          () => {
             this.toasterService.error(
               "Could not get announcement!",
               "Something went wrong!"
@@ -78,12 +88,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.stop.next();
-    this.stop.complete();
-  }
-
-  async presentAnnouncementModal() {
+  async presentAnnouncementModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
       cssClass: "my-custom-modal-css",
@@ -98,7 +103,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     await modal.present();
   }
 
-  async presentCommentModal(comment?) {
+  async presentCommentModal(comment?: AnnouncementComment): Promise<void> {
     const modal = await this.modalController.create({
       component: AnnouncementCommentFormComponent,
       cssClass: "my-custom-modal-css",
@@ -114,11 +119,11 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
     await modal.present();
   }
 
-  onEditClicked(comment) {
+  onEditClicked(comment: AnnouncementComment): void {
     this.presentCommentModal(comment);
   }
 
-  async onDeleteClicked(id) {
+  async onDeleteClicked(commentId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this comment?",
@@ -134,7 +139,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
               .deleteAnnouncementComment(
                 this.courseId,
                 this.announcement.id,
-                id
+                commentId
               )
               .pipe(takeUntil(this.stop))
               .subscribe(
@@ -143,6 +148,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
                     "Comment deletion successful!",
                     "Congratulations!"
                   );
+                  
                   this.loadAnnouncement();
                 },
                 (error) => {

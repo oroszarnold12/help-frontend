@@ -1,13 +1,13 @@
-<ion-content class="top-padding center" *ngIf="!!quiz">
-  <ion-grid class="padding-bottom">
-    <ion-row *ngIf="isTeacher" fixed class="tae max-width">
+<ion-content *ngIf="!!quiz">
+  <ion-grid class="grid">
+    <ion-row *ngIf="isTeacher" fixed class="button-row">
       <ion-col>
         <ion-button
           *ngIf="quiz.published"
           color="medium"
           (click)="modifyPublished(false)"
         >
-          <ion-icon name="eye-off-outline" class="add-icon"></ion-icon>
+          <ion-icon name="eye-off-outline" class="button-icon"></ion-icon>
           Hide
         </ion-button>
         <ion-button
@@ -15,18 +15,18 @@
           color="success"
           (click)="modifyPublished(true)"
         >
-          <ion-icon name="eye-outline" class="add-icon"></ion-icon>
+          <ion-icon name="eye-outline" class="button-icon"></ion-icon>
           Publish
         </ion-button>
         <ion-button color="primary" (click)="presentQuizModal()">
-          <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+          <ion-icon name="create-outline" class="button-icon"></ion-icon>
           Edit quiz
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="max-width start">
+        <ion-card class="card">
           <ion-card-header>
             <ion-card-title>
               <div class="inline-block">
@@ -46,7 +46,7 @@
               <ng-template #elseTemplate> Not yet graded. </ng-template>
             </ion-card-subtitle>
           </ion-card-header>
-          <ion-card-content class="mt20">
+          <ion-card-content class="ion-margin-top">
             <div [innerHTML]="quiz.description"></div>
           </ion-card-content>
         </ion-card>
@@ -62,29 +62,29 @@
       class="inline-block ion-padding-bottom"
     >
       <ion-button color="secondary" (click)="onTakeClicked()">
-        <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+        <ion-icon name="pencil-outline" class="button-icon"></ion-icon>
         Take the quiz
       </ion-button>
     </ion-row>
     <ion-row *ngIf="isTeacher" class="inline-block">
       <ion-button color="success" (click)="presentQuestionModal()">
-        <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+        <ion-icon name="add-outline" class="button-icon"></ion-icon>
         Add question
       </ion-button>
     </ion-row>
     <ion-row
       fixed
-      class="max-width"
+      class="question-label-row"
       *ngIf="!!questions && isTeacher && questions.length > 0"
     >
-      <ion-col class="start">
-        <p class="mb-0 mt-30">Questions:</p>
+      <ion-col>
+        <p class="question-label">Questions:</p>
       </ion-col>
     </ion-row>
     <ng-container *ngIf="isTeacher">
       <ion-row *ngFor="let question of questions; let i = index">
         <ion-col>
-          <ion-card class="max-width start">
+          <ion-card class="card">
             <ion-card-header>
               <ion-card-title>
                 <ion-item>
@@ -128,7 +128,7 @@
           <ion-text class="dark-blue"> Attempt {{ j + 1 }}: </ion-text>
           <ion-row *ngFor="let question of questions; let i = index">
             <ion-col>
-              <ion-card class="max-width start">
+              <ion-card class="card">
                 <ion-card-header>
                   <ion-card-title>
                     <ion-item>

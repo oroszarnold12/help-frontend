@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { GeneralOverview } from "src/app/model/general-overview.model";
 
 @Component({
@@ -6,21 +6,20 @@ import { GeneralOverview } from "src/app/model/general-overview.model";
   templateUrl: "./invitation-card.component.html",
   styleUrls: ["./invitation-card.component.scss"],
 })
-export class InvitationCardComponent implements OnInit {
+export class InvitationCardComponent {
   @Input() data: GeneralOverview[];
   @Input() title: string;
+
   @Output() onAcceptClicked = new EventEmitter<number>();
   @Output() onDeclineClicked = new EventEmitter<number>();
 
   constructor() {}
 
-  ngOnInit() {}
-
-  acceptClicked(index) {
+  acceptClicked(index: number): void {
     this.onAcceptClicked.emit(index);
   }
 
-  declineClicked(index) {
+  declineClicked(index: number): void {
     this.onDeclineClicked.emit(index);
   }
 }

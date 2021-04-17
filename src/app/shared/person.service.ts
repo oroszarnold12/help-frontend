@@ -46,7 +46,7 @@ export class PersonService {
     return this.httpClient.delete<void>(`${url}/user/image`);
   }
 
-  setImageUrl(url: string) {
+  setImageUrl(url: string): void {
     this.imageChanged.next(url);
   }
 

@@ -1,79 +1,34 @@
-.top-padding {
-  top: 10%;
-}
-
-.max-width {
-  max-width: 1000px;
-}
-
-.center {
+.grid {
+  padding-top: 75px;
   text-align: -webkit-center;
 }
 
-.start {
+.button-row {
+  max-width: 1000px;
+  text-align: end;
+}
+
+.card {
+  max-width: 1000px;
   text-align: start;
 }
 
-.mt20 {
-  margin-top: 20px;
+.question-label-row {
+  max-width: 1000px;
+  text-align: start;
 }
 
-.dark-blue {
-  color: #1e6bb8;
-}
-
-.add-icon {
+.button-icon {
   padding-right: 5px;
-}
-
-.tae {
-  text-align: end;
 }
 
 .inline-block {
   display: inline-block;
 }
 
-.float-right {
-  float: right;
-}
-
-.icon-font-size {
-  font-size: 20px;
-}
-
-.late {
-  color: red;
-}
-
-.link {
-  text-decoration: underline;
-  cursor: pointer;
-  color: -webkit-link;
-}
-
-.owrap {
-  overflow-wrap: anywhere;
-}
-
-.dc {
-  display: contents;
-}
-
-.mb-0 {
+.question-label {
   margin-bottom: 0px;
-}
-
-.mt-30 {
   margin-top: 30px;
-}
-
-.start {
-  text-align: start;
-}
-
-.padding-bottom {
-  padding-bottom: 100px;
 }
 
 .incorrect-answer {

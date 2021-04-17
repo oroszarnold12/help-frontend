@@ -1,5 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  AbstractControl,
+} from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -12,53 +17,64 @@ import { ToasterService } from "src/app/shared/toaster.service";
   templateUrl: "./discussion-form.component.html",
   styleUrls: ["./discussion-form.component.scss"],
 })
-export class DiscussionFormComponent implements OnInit {
+export class DiscussionFormComponent implements OnInit, OnDestroy {
+  private stop: Subject<void> = new Subject();
+
   discussionFrom: FormGroup;
   newDiscussion: Discussion;
+
   @Input() courseId: number;
   @Input() discussion: Discussion;
-  private stop: Subject<void> = new Subject();
-  editorMaxLength = 16384;
 
-  editorStyle = {
-    height: "300px",
-  };
-
-  config = {
-    toolbar: [
-      ["bold", "italic", "underline", "strike"],
-      ["blockquote", "code-block"],
-
-      [{ header: 1 }, { header: 2 }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ script: "sub" }, { script: "super" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-
-      [{ size: ["small", false, "large", "huge"] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-      [{ color: [] }, { background: [] }],
-      [{ font: [] }],
-      [{ align: [] }],
-
-      ["link"],
-    ],
-  };
+  editorMaxLength: number;
+  editorStyle: any;
+  editorConfig: any;
 
   constructor(
     private modalController: ModalController,
     private toasterService: ToasterService,
     private courseService: CourseService
-  ) {}
+  ) {
+    this.editorMaxLength = 16384;
+    this.editorStyle = {
+      height: "300px",
+    };
+    this.editorConfig = {
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote", "code-block"],
 
-  ngOnInit() {
+        [{ header: 1 }, { header: 2 }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }],
+        [{ indent: "-1" }, { indent: "+1" }],
+
+        [{ size: ["small", false, "large", "huge"] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }],
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["link"],
+      ],
+    };
+  }
+
+  ngOnInit(): void {
     this.discussionFrom = this.createFormGroup();
+
     if (!!this.discussion) {
       this.discussionFrom.patchValue(this.discussion);
     }
   }
 
-  createFormGroup() {
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
+  }
+
+  createFormGroup(): FormGroup {
     return new FormGroup({
       name: new FormControl("", [
         Validators.required,
@@ -71,18 +87,21 @@ export class DiscussionFormComponent implements OnInit {
     });
   }
 
-  dismissModal() {
+  dismissModal(): void {
     this.modalController.dismiss();
   }
 
-  get errorControl() {
+  get errorControl(): {
+    [key: string]: AbstractControl;
+  } {
     return this.discussionFrom.controls;
   }
 
-  submitForm() {
+  submitForm(): void {
     if (this.discussionFrom.valid) {
       if (!!this.discussion) {
         this.newDiscussion = this.discussionFrom.value;
+
         this.courseService
           .updateDiscussion(
             this.newDiscussion,
@@ -91,12 +110,14 @@ export class DiscussionFormComponent implements OnInit {
           )
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (discussion) => {
+            () => {
               this.discussionFrom.reset();
+
               this.toasterService.success(
                 "Congratulations!",
                 "Discussion updated!"
               );
+
               this.modalController.dismiss();
             },
             (error) => {
@@ -108,16 +129,19 @@ export class DiscussionFormComponent implements OnInit {
           );
       } else {
         this.newDiscussion = this.discussionFrom.value;
+
         this.courseService
           .saveDiscussion(this.newDiscussion, this.courseId)
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (discussion) => {
+            () => {
               this.discussionFrom.reset();
+
               this.toasterService.success(
                 "Congratulations!",
                 "Discussion created!"
               );
+
               this.modalController.dismiss();
             },
             (error) => {
@@ -134,10 +158,5 @@ export class DiscussionFormComponent implements OnInit {
         "Discussion creation failed!"
       );
     }
-  }
-
-  ngOnDestroy() {
-    this.stop.next();
-    this.stop.complete();
   }
 }

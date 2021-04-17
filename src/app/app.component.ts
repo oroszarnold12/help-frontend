@@ -20,9 +20,14 @@ export class AppComponent {
     this.initializeApp();
   }
 
-  initializeApp() {
+  initializeApp(): void {
     if (this.authService.isLoggedIn) {
-      this.authService.pingBackend().subscribe();
+      this.authService.pingBackend().subscribe(
+        () => {},
+        () => {
+          this.authService.logout();
+        }
+      );
     }
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();

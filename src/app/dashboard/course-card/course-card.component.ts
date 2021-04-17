@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { DefaultSlideService } from "src/app/shared/default-slide.service";
 import { Course } from "../../model/course.model";
@@ -8,7 +8,7 @@ import { Course } from "../../model/course.model";
   templateUrl: "./course-card.component.html",
   styleUrls: ["./course-card.component.scss"],
 })
-export class CourseCardComponent implements OnInit {
+export class CourseCardComponent {
   @Input() course: Course;
 
   constructor(
@@ -16,9 +16,7 @@ export class CourseCardComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {}
-
-  goToSlide(slide: number) {
+  goToSlide(slide: number): void {
     this.defaultSlideService.changeDefaultSlide(slide);
     this.router.navigate([`/courses/${this.course.id}`]);
   }

@@ -11,26 +11,25 @@ import { AuthService } from "src/app/shared/auth.service";
 export class CardComponent implements OnInit {
   @Input() data: GeneralOverview[];
   @Input() title: string;
+
   @Output() onDeleteClicked = new EventEmitter<number>();
   @Output() onViewClicked = new EventEmitter<number>();
 
   isTeacher: boolean;
-
   username: string;
 
   constructor(private authService: AuthService) {}
 
-  deleteClicked(index: number) {
+  deleteClicked(index: number): void {
     this.onDeleteClicked.emit(index);
   }
 
-  viewClicked(index: number) {
+  viewClicked(index: number): void {
     this.onViewClicked.emit(index);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isTeacher = this.authService.isTeacher();
-
     this.username = this.authService.getUsername();
   }
 }

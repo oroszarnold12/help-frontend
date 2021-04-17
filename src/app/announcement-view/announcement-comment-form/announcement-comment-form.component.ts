@@ -1,5 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -12,54 +17,66 @@ import { ToasterService } from "src/app/shared/toaster.service";
   templateUrl: "./announcement-comment-form.component.html",
   styleUrls: ["./announcement-comment-form.component.scss"],
 })
-export class AnnouncementCommentFormComponent implements OnInit {
+export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
+  private stop: Subject<void> = new Subject();
+
   commentForm: FormGroup;
   commentCreation: AnnouncementComment;
+
   @Input() comment: AnnouncementComment;
   @Input() courseId: number;
   @Input() announcementId: number;
-  private stop: Subject<void> = new Subject();
 
-  editorMaxLength = 2048;
-  editorStyle = {
-    height: "300px",
-  };
-
-  config = {
-    toolbar: [
-      ["bold", "italic", "underline", "strike"],
-      ["blockquote", "code-block"],
-
-      [{ header: 1 }, { header: 2 }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ script: "sub" }, { script: "super" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-
-      [{ size: ["small", false, "large", "huge"] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-      [{ color: [] }, { background: [] }],
-      [{ font: [] }],
-      [{ align: [] }],
-
-      ["link"],
-    ],
-  };
+  editorMaxLength: number;
+  editorStyle: any;
+  editorConfig: any;
 
   constructor(
     private modalController: ModalController,
     private toasterService: ToasterService,
     private commentService: CommentService
-  ) {}
+  ) {
+    this.editorMaxLength = 2048;
+    this.editorStyle = {
+      height: "300px",
+    };
 
-  ngOnInit() {
+    this.editorConfig = {
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote", "code-block"],
+
+        [{ header: 1 }, { header: 2 }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }],
+        [{ indent: "-1" }, { indent: "+1" }],
+
+        [{ size: ["small", false, "large", "huge"] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ color: [] }, { background: [] }],
+        [{ font: [] }],
+        [{ align: [] }],
+
+        ["link"],
+      ],
+    };
+  }
+
+  ngOnInit(): void {
     this.commentForm = this.createFormGroup();
+
     if (!!this.comment) {
       this.commentForm.patchValue(this.comment);
     }
   }
 
-  createFormGroup() {
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
+  }
+
+  createFormGroup(): FormGroup {
     return new FormGroup({
       content: new FormControl("", [
         Validators.required,
@@ -68,10 +85,11 @@ export class AnnouncementCommentFormComponent implements OnInit {
     });
   }
 
-  submitForm() {
+  submitForm(): void {
     if (this.commentForm.valid) {
       if (!!this.comment) {
         this.commentCreation = this.commentForm.value;
+
         this.commentService
           .updateAnnouncementComment(
             this.courseId,
@@ -81,12 +99,14 @@ export class AnnouncementCommentFormComponent implements OnInit {
           )
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (comment) => {
+            () => {
               this.commentForm.reset();
+
               this.toasterService.success(
                 "Congratulations!",
                 "Comment updated!"
               );
+
               this.modalController.dismiss();
             },
             (error) => {
@@ -98,6 +118,7 @@ export class AnnouncementCommentFormComponent implements OnInit {
           );
       } else {
         this.commentCreation = this.commentForm.value;
+
         this.commentService
           .saveAnnouncementComment(
             this.courseId,
@@ -106,12 +127,14 @@ export class AnnouncementCommentFormComponent implements OnInit {
           )
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (comment) => {
+            () => {
               this.commentForm.reset();
+
               this.toasterService.success(
                 "Congratulations!",
                 "Comment created!"
               );
+
               this.modalController.dismiss();
             },
             (error) => {
@@ -130,16 +153,13 @@ export class AnnouncementCommentFormComponent implements OnInit {
     }
   }
 
-  dismissModal() {
+  dismissModal(): void {
     this.modalController.dismiss();
   }
 
-  get errorControl() {
+  get errorControl(): {
+    [key: string]: AbstractControl;
+  } {
     return this.commentForm.controls;
-  }
-
-  ngOnDestroy() {
-    this.stop.next();
-    this.stop.complete();
   }
 }

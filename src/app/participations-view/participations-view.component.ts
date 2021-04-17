@@ -12,8 +12,9 @@ import { ToasterService } from "../shared/toaster.service";
   styleUrls: ["./participations-view.component.scss"],
 })
 export class ParticipationsViewComponent implements OnInit, OnDestroy {
-  participaions: Participation[];
   stop: Subject<void> = new Subject();
+
+  participaions: Participation[];
 
   constructor(
     private participationService: ParticipationService,
@@ -21,7 +22,7 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
     private toasterService: ToasterService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.bakcButtonService.turnOn();
 
     this.participationService
@@ -42,7 +43,7 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
     this.stop.complete();
   }
 
-  onSaveClicked() {
+  onSaveClicked(): void {
     const newParticipations = this.participaions.map((participation) => ({
       courseId: participation.course.id,
       showOnDashboard: participation.showOnDashboard,

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Course } from "../model/course.model";
 
 import { Observable } from "rxjs";
@@ -58,19 +58,22 @@ export class CourseService {
     );
   }
 
-  getCourseFile(courseId: number, fileId: number) {
+  getCourseFile(courseId: number, fileId: number): Observable<Blob> {
     return this.http.get(`${url}/courses/${courseId}/files/${fileId}`, {
       responseType: "blob",
     });
   }
 
-  getAllCourseFiles(courseId: number) {
+  getAllCourseFiles(courseId: number): Observable<Blob> {
     return this.http.get(`${url}/courses/${courseId}/files`, {
       responseType: "blob",
     });
   }
 
-  getSomeCourseFiles(courseId: number, courseFilesIds: string[]) {
+  getSomeCourseFiles(
+    courseId: number,
+    courseFilesIds: string[]
+  ): Observable<Blob> {
     let headers = new HttpHeaders().set("courseFilesIds", courseFilesIds);
 
     return this.http.get(`${url}/courses/${courseId}/files`, {

@@ -1,20 +1,20 @@
-<ion-content class="top-padding center" *ngIf="!!discussion">
-  <ion-grid>
+<ion-content *ngIf="!!discussion">
+  <ion-grid class="grid">
     <ion-row
       *ngIf="isTeacher || discussion.creator.email === username"
       fixed
-      class="add-button-row max-width"
+      class="button-row"
     >
       <ion-col>
         <ion-button color="primary" (click)="presentDiscussionModal()">
-          <ion-icon name="pencil-outline" class="add-icon"></ion-icon>
+          <ion-icon name="pencil-outline" class="button-icon"></ion-icon>
           Edit discussion
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="max-width start">
+        <ion-card class="card">
           <ion-card-header>
             <ion-card-title>
               <ion-avatar class="avatar">
@@ -33,7 +33,7 @@
               </ion-card-subtitle>
             </ion-card-title>
           </ion-card-header>
-          <ion-card-content class="mt20">
+          <ion-card-content class="ion-margin-top">
             <quill-view-html
               [content]="discussion.content"
               theme="snow"
@@ -42,9 +42,9 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    <ion-row fixed class="add-button-row max-width">
-      <ion-col class="start">
-        <p class="mb-0 mt-30">Comments</p>
+    <ion-row fixed class="button-row">
+      <ion-col class="ion-text-start">
+        <p class="comments-label">Comments</p>
       </ion-col>
       <ion-col>
         <ion-button color="success" (click)="presentCommentModal()">
@@ -55,7 +55,7 @@
     </ion-row>
     <ion-row *ngFor="let comment of discussion.comments">
       <ion-col>
-        <ion-card class="max-width start">
+        <ion-card class="card">
           <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-item>

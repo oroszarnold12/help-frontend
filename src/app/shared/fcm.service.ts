@@ -22,7 +22,7 @@ export class FcmService {
     private ngZone: NgZone
   ) {}
 
-  initPush() {
+  initPush(): void {
     if (Capacitor.platform !== "web") {
       this.registerPush();
     }
@@ -45,7 +45,7 @@ export class FcmService {
       (token: PushNotificationToken) => {
         this.personService.saveNotificationToken(token.value).subscribe(
           () => {},
-          (error) => {
+          () => {
             this.toasterService.error(
               "Notification token saving failed!",
               "Try to log in again!"
@@ -55,7 +55,7 @@ export class FcmService {
       }
     );
 
-    PushNotifications.addListener("registrationError", (error: any) => {
+    PushNotifications.addListener("registrationError", () => {
       this.toasterService.error(
         "Registration for notifications failed!",
         "Try to log in again!"
@@ -66,7 +66,7 @@ export class FcmService {
       "pushNotificationActionPerformed",
       async (notification: PushNotificationActionPerformed) => {
         const data = notification.notification.data;
-        console.log(data);
+
         if (data.forAssignment) {
           this.ngZone.run(() => {
             this.router.navigateByUrl(

@@ -1,5 +1,11 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormArray,
+  AbstractControl,
+} from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -12,13 +18,15 @@ import { ToasterService } from "src/app/shared/toaster.service";
   templateUrl: "./question-form.component.html",
   styleUrls: ["./question-form.component.scss"],
 })
-export class QuestionFormComponent implements OnInit {
+export class QuestionFormComponent implements OnInit, OnDestroy {
+  private stop: Subject<void> = new Subject();
+
   questionForm: FormGroup;
   newQuestion: Question;
+
   @Input() courseId: number;
   @Input() quizId: number;
   @Input() question: Question;
-  private stop: Subject<void> = new Subject();
 
   constructor(
     private modalController: ModalController,
@@ -26,15 +34,21 @@ export class QuestionFormComponent implements OnInit {
     private questionService: QuestionService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.questionForm = this.createFormGroup();
+
     if (!!this.question) {
       this.matchAnswers();
       this.questionForm.patchValue(this.question);
     }
   }
 
-  createFormGroup() {
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
+  }
+
+  createFormGroup(): FormGroup {
     return new FormGroup({
       content: new FormControl("", [
         Validators.required,
@@ -74,9 +88,10 @@ export class QuestionFormComponent implements OnInit {
     });
   }
 
-  matchAnswers() {
+  matchAnswers(): void {
     let currentNumberOfAnswers = this.answers.length;
     const targetNumberOfAnswers = this.question.answers.length;
+
     while (currentNumberOfAnswers != targetNumberOfAnswers) {
       if (currentNumberOfAnswers < targetNumberOfAnswers) {
         this.addAnswer();
@@ -88,19 +103,21 @@ export class QuestionFormComponent implements OnInit {
     }
   }
 
-  dismissModal() {
+  dismissModal(): void {
     this.modalController.dismiss();
   }
 
-  get errorControl() {
+  get errorControl(): {
+    [key: string]: AbstractControl;
+  } {
     return this.questionForm.controls;
   }
 
-  get answers() {
+  get answers(): FormArray {
     return this.questionForm.controls.answers as FormArray;
   }
 
-  removeAnswer(index: number) {
+  removeAnswer(index: number): void {
     if (this.answers.length <= 2) {
       this.toasterService.error(
         "A question should have atleast 2 answers!",
@@ -111,7 +128,7 @@ export class QuestionFormComponent implements OnInit {
     }
   }
 
-  addAnswer() {
+  addAnswer(): void {
     this.answers.push(
       new FormGroup({
         content: new FormControl("", [
@@ -123,17 +140,19 @@ export class QuestionFormComponent implements OnInit {
     );
   }
 
-  clearAnswers() {
+  clearAnswers(): void {
     this.answers.clear();
+
     for (let i = 0; i < 4; i++) {
       this.addAnswer();
     }
   }
 
-  submitForm() {
+  submitForm(): void {
     if (this.questionForm.valid) {
       if (!!this.question) {
         this.newQuestion = this.questionForm.value;
+
         this.questionService
           .updateQuestion(
             this.courseId,
@@ -143,12 +162,14 @@ export class QuestionFormComponent implements OnInit {
           )
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (question) => {
+            () => {
               this.questionForm.reset();
+
               this.toasterService.success(
                 "Congratulations!",
                 "Question updated!"
               );
+
               this.modalController.dismiss();
             },
             (error) => {
@@ -160,16 +181,19 @@ export class QuestionFormComponent implements OnInit {
           );
       } else {
         this.newQuestion = this.questionForm.value;
+
         this.questionService
           .saveQuestion(this.courseId, this.quizId, this.newQuestion)
           .pipe(takeUntil(this.stop))
           .subscribe(
-            (question) => {
+            () => {
               this.questionForm.reset();
+
               this.toasterService.success(
                 "Congratulations!",
                 "Question created!"
               );
+
               this.clearAnswers();
             },
             (error) => {
@@ -186,10 +210,5 @@ export class QuestionFormComponent implements OnInit {
         "Question creation failed!"
       );
     }
-  }
-
-  ngOnDestroy() {
-    this.stop.next();
-    this.stop.complete();
   }
 }

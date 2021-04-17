@@ -387,7 +387,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     }));
   }
 
-  private stripHtml(text): string {
+  private stripHtml(text: string): string {
     var div = document.createElement("div");
     div.innerHTML = text;
     return div.textContent || div.innerText || "";

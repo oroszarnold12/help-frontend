@@ -8,11 +8,11 @@ import { AuthService } from "../shared/auth.service";
 export class TeacherGuardService {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate() {
+  canActivate(): boolean {
     return this.canLoad();
   }
 
-  canLoad() {
+  canLoad(): boolean {
     if (!this.authService.isTeacher()) {
       this.router.navigate(["dashboard"]);
     }

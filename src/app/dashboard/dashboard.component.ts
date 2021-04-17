@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { CourseService } from "../shared/course.service";
 import { takeUntil } from "rxjs/operators";
@@ -19,12 +19,16 @@ import { BackButtonService } from "../shared/back-button.service";
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.scss"],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
+
   courses: Course[];
+
   teacher: boolean;
+
   invitations: Invitation[];
   invitationOverviews: GeneralOverview[];
+
   subscription: Subscription;
 
   constructor(
@@ -47,25 +51,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCourses();
     this.loadInvitations();
+
     this.teacher = this.authService.isTeacher();
+
     this.bakcButtonService.turnOff();
   }
 
-  async presentModal() {
-    const modal = await this.modalController.create({
-      component: CourseFormComponent,
-      cssClass: "my-custom-modal-css",
-    });
-
-    modal.onDidDismiss().then(() => this.ngOnInit());
-
-    await modal.present();
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
   }
 
-  loadCourses() {
+  loadCourses(): void {
     this.courseService
       .getCourses()
       .pipe(takeUntil(this.stop))
@@ -83,17 +83,18 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  loadInvitations() {
+  loadInvitations(): void {
     this.invitationService
       .getInvitations()
       .pipe(takeUntil(this.stop))
       .subscribe(({ invitations }) => {
         this.invitations = invitations;
+
         this.createInvitationOverviews();
       });
   }
 
-  createInvitationOverviews() {
+  createInvitationOverviews(): void {
     this.invitationOverviews = this.invitations.map((invitation) => ({
       id: invitation.id,
       name: `You have been invited to course: ${invitation.course.name}`,
@@ -101,7 +102,7 @@ export class DashboardComponent implements OnInit {
     }));
   }
 
-  async acceptClicked(event) {
+  async acceptClicked(invitationId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to accept this invitation?",
@@ -114,7 +115,7 @@ export class DashboardComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.invitationService
-              .acceptInvitation(event)
+              .acceptInvitation(invitationId)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -122,6 +123,7 @@ export class DashboardComponent implements OnInit {
                     "Invitation accepted!",
                     "Congratulations!"
                   );
+
                   this.ngOnInit();
                 },
                 (error) => {
@@ -139,7 +141,7 @@ export class DashboardComponent implements OnInit {
     await alert.present();
   }
 
-  async declineClicked(event) {
+  async declineClicked(invitationId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to decline this invitation?",
@@ -152,7 +154,7 @@ export class DashboardComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.invitationService
-              .declineInvitation(event)
+              .declineInvitation(invitationId)
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -160,6 +162,7 @@ export class DashboardComponent implements OnInit {
                     "Invitation declined!",
                     "Congratulations!"
                   );
+
                   this.ngOnInit();
                 },
                 (error) => {
@@ -175,5 +178,16 @@ export class DashboardComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async presentModal(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: CourseFormComponent,
+      cssClass: "my-custom-modal-css",
+    });
+
+    modal.onDidDismiss().then(() => this.ngOnInit());
+
+    await modal.present();
   }
 }

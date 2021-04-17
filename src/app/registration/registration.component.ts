@@ -1,5 +1,10 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { PersonSignup } from "../model/person-signup.model";
 import { AuthService } from "../shared/auth.service";
 import { BackButtonService } from "../shared/back-button.service";
@@ -21,12 +26,12 @@ export class RegistrationComponent implements OnInit {
     private backButtonService: BackButtonService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.registrationForm = this.createFormGroup();
     this.backButtonService.turnOn();
   }
 
-  createFormGroup() {
+  createFormGroup(): FormGroup {
     return new FormGroup(
       {
         firstName: new FormControl("", [
@@ -59,15 +64,18 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  get errorControl() {
+  get errorControl(): {
+    [key: string]: AbstractControl;
+  } {
     return this.registrationForm.controls;
   }
 
-  submitForm() {
+  submitForm(): void {
     if (this.registrationForm.valid) {
       this.personSignup = this.registrationForm.value;
+
       this.authService.register(this.personSignup).subscribe(
-        (person) => {
+        () => {
           this.registrationForm.reset();
           this.toasterService.success(
             "Congratulations!",

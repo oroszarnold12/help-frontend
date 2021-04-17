@@ -6,7 +6,6 @@ import { Subject } from "rxjs";
 })
 export class LoginStatusService {
   private loggedIn = new Subject<boolean>();
-
   loggedIn$ = this.loggedIn.asObservable();
 
   constructor() {}

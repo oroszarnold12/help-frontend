@@ -1,4 +1,4 @@
-<ion-content class="center" *ngIf="!!assignment">
+<ion-content *ngIf="!!assignment">
   <ion-grid class="grid">
     <ion-row *ngIf="isTeacher" fixed class="buttons-row">
       <ion-col>
@@ -75,7 +75,7 @@
               <ion-item lines="full" class="form-group my-input-padding">
                 <ion-textarea
                   type="text"
-                  [(ngModel)]="content"
+                  [(ngModel)]="commentContentForUpload"
                   rows="4"
                   placeholder="Type comment here..."
                   maxlength="2048"
@@ -122,7 +122,7 @@
               <ng-template #elseTemplate> <p>Not yet graded.</p></ng-template>
             </div>
           </ion-card-header>
-          <ion-card-content class="mt20">
+          <ion-card-content class="ion-margin-top">
             <quill-view-html
               [content]="assignment.description"
               theme="snow"
@@ -184,7 +184,7 @@
                     <ion-item lines="full" class="form-group my-input-padding">
                       <ion-textarea
                         type="text"
-                        [(ngModel)]="content3"
+                        [(ngModel)]="updateCommentContent"
                         rows="4"
                         placeholder="Type comment here..."
                         maxlength="2048"
@@ -196,7 +196,7 @@
                   <ion-col class="ion-align-self-end">
                     <ion-button
                       (click)="onUpdateClicked(comment.id)"
-                      [disabled]="!!!content3"
+                      [disabled]="!!!updateCommentContent"
                     >
                       <ion-icon
                         name="sync-outline"
@@ -209,7 +209,7 @@
                     <ion-button
                       color="danger"
                       (click)="onCancelClicked(comment.id)"
-                      [disabled]="!!!content3"
+                      [disabled]="!!!updateCommentContent"
                     >
                       <ion-icon
                         name="close-outline"
@@ -234,7 +234,7 @@
                     <ion-item lines="full" class="form-group my-input-padding">
                       <ion-textarea
                         type="text"
-                        [(ngModel)]="content2"
+                        [(ngModel)]="leavedCommentContent"
                         rows="4"
                         placeholder="Type comment here..."
                         maxlength="2048"
@@ -246,7 +246,7 @@
                   <ion-col class="ion-align-self-end">
                     <ion-button
                       color="success"
-                      [disabled]="!!!content2"
+                      [disabled]="!!!leavedCommentContent"
                       (click)="onLeaveCommentClicked()"
                     >
                       <ion-icon

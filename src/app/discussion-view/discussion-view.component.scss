@@ -1,24 +1,11 @@
-.top-padding {
-  top: 10%;
-}
-
-.max-width {
+.card {
   max-width: 1000px;
-}
-
-.center {
-  text-align: -webkit-center;
-}
-
-.start {
   text-align: start;
 }
 
-.account-icon {
-  font-size: 40px;
-  display: inline-block;
-  margin-right: 5px;
-  cursor: pointer;
+.grid {
+  padding-top: 75px;
+  text-align: -webkit-center;
 }
 
 .title {
@@ -26,32 +13,18 @@
   vertical-align: super;
 }
 
-.mt20 {
-  margin-top: 20px;
-}
-
-.dark-blue {
-  color: #1e6bb8;
-}
-
-.add-icon {
+.button-icon {
   padding-right: 5px;
 }
 
-.add-button-row {
+.button-row {
   text-align: end;
+  max-width: 1000px;
 }
 
-.mb-0 {
+.comments-label {
   margin-bottom: 0px;
-}
-
-.mt-30 {
   margin-top: 30px;
-}
-
-.pb-100 {
-  padding-bottom: 100px;
 }
 
 .avatar {

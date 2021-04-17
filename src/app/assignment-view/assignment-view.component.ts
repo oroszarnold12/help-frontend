@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertController, ModalController } from "@ionic/angular";
 import { FileSaverService } from "ngx-filesaver";
@@ -23,24 +23,27 @@ import { AssignmentComment } from "../model/assignment-comment.model";
   templateUrl: "./assignment-view.component.html",
   styleUrls: ["./assignment-view.component.scss"],
 })
-export class AssignmentViewComponent implements OnInit {
-  assignment: Assignment;
+export class AssignmentViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
-  isTeacher: boolean;
+
   courseId: number;
-  content: string;
-  content2: string;
-  content3: string;
-  isSubmitting: boolean;
+  assignment: Assignment;
   submissions: Submission[];
+  isSubmitting: boolean;
   grade: AssignmentGrade;
-  username: string;
   commentCreation: AssignmentComment;
-  editingComment: boolean[] = [];
+  editingComment: boolean[];
   commentImageUrls: string[];
 
+  isTeacher: boolean;
+  username: string;
+
+  commentContentForUpload: string;
+  leavedCommentContent: string;
+  updateCommentContent: string;
+
   private files: Blob[];
-  numOfFiles = 1;
+  numOfFiles: number;
 
   constructor(
     private courseService: CourseService,
@@ -55,29 +58,39 @@ export class AssignmentViewComponent implements OnInit {
     private gradeService: GradeService,
     private alertController: AlertController,
     private commentService: CommentService
-  ) {}
+  ) {
+    this.numOfFiles = 1;
 
-  ngOnInit() {
+    this.editingComment = [];
+  }
+
+  ngOnInit(): void {
     this.backButtonService.turnOn();
 
     this.isSubmitting = false;
 
     this.isTeacher = this.authService.isTeacher();
-
     this.username = this.authService.getUsername();
 
     this.loadAssignment();
   }
 
-  loadAssignment() {
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
+  }
+
+  loadAssignment(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
+
       this.courseService
         .getAssignment(params.courseId, params.assignmentId)
         .pipe(takeUntil(this.stop))
         .subscribe(
           (assignemnt) => {
             this.assignment = assignemnt;
+
             this.commentImageUrls = [];
             this.assignment.comments.forEach((comment) => {
               this.editingComment[comment.id] = false;
@@ -85,12 +98,14 @@ export class AssignmentViewComponent implements OnInit {
                 comment.commenter.id
               ] = this.getImageUrlById(comment.commenter.id);
             });
+
             this.loadSubmissions();
+
             if (!this.isTeacher) {
               this.loadGrades();
             }
           },
-          (error) => {
+          () => {
             this.toasterService.error(
               "Could not get assignment!",
               "Something went wrong!"
@@ -100,7 +115,7 @@ export class AssignmentViewComponent implements OnInit {
     });
   }
 
-  loadSubmissions() {
+  loadSubmissions(): void {
     this.submissionService
       .getSubmissions(this.courseId, this.assignment.id)
       .pipe(takeUntil(this.stop))
@@ -117,7 +132,7 @@ export class AssignmentViewComponent implements OnInit {
       );
   }
 
-  loadGrades() {
+  loadGrades(): void {
     this.gradeService
       .getGradesOfAssignment(this.courseId, this.assignment.id)
       .pipe(takeUntil(this.stop))
@@ -138,12 +153,7 @@ export class AssignmentViewComponent implements OnInit {
       );
   }
 
-  ngOnDestroy(): void {
-    this.stop.next();
-    this.stop.complete();
-  }
-
-  async presentAssignmentModal() {
+  async presentAssignmentModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
       cssClass: "my-custom-modal-css",
@@ -158,20 +168,21 @@ export class AssignmentViewComponent implements OnInit {
     await modal.present();
   }
 
-  onSubmitClicked() {
+  onSubmitClicked(): void {
     this.isSubmitting = !this.isSubmitting;
     this.files = null;
     this.numOfFiles = 1;
   }
 
-  onFileChange(fileChangeEvent, index) {
+  onFileChange(fileChangeEvent, index): void {
     if (!!!this.files) {
       this.files = [];
     }
+
     this.files[index] = fileChangeEvent.target.files[0];
   }
 
-  onAddAnotherFileClicked() {
+  onAddAnotherFileClicked(): void {
     if (this.numOfFiles < 5) {
       this.numOfFiles++;
     } else {
@@ -182,18 +193,19 @@ export class AssignmentViewComponent implements OnInit {
     }
   }
 
-  onRemoveFileClicked() {
+  onRemoveFileClicked(): void {
     if (!!!this.files) {
       this.files = [];
     }
 
     this.files[this.numOfFiles - 1] = null;
+
     if (this.numOfFiles > 1) {
       this.numOfFiles--;
     }
   }
 
-  uploadFile() {
+  uploadFile(): void {
     if (!!this.files) {
       const formData = new FormData();
       this.files.forEach((file) => {
@@ -204,18 +216,18 @@ export class AssignmentViewComponent implements OnInit {
         .saveSubmission(this.courseId, this.assignment.id, formData)
         .pipe(takeUntil(this.stop))
         .subscribe(
-          (submission) => {
-            if (!!this.content) {
+          () => {
+            if (!!this.commentContentForUpload) {
               this.commentService
                 .saveAssingmentComment(
                   this.courseId,
                   this.assignment.id,
                   this.authService.getUsername(),
-                  this.content
+                  this.commentContentForUpload
                 )
                 .pipe(takeUntil(this.stop))
                 .subscribe(
-                  (comment) => {
+                  () => {
                     this.toasterService.success(
                       "File with comment uploaded successfully!",
                       "Congratulations!"
@@ -224,10 +236,12 @@ export class AssignmentViewComponent implements OnInit {
                     this.isSubmitting = false;
                     this.files = null;
                     this.loadSubmissions();
+
                     if (!this.isTeacher) {
                       this.loadGrades();
                     }
-                    this.content = undefined;
+
+                    this.commentContentForUpload = undefined;
                   },
                   (error) => {
                     this.toasterService.error(
@@ -245,10 +259,12 @@ export class AssignmentViewComponent implements OnInit {
               this.isSubmitting = false;
               this.files = null;
               this.loadSubmissions();
+
               if (!this.isTeacher) {
                 this.loadGrades();
               }
-              this.content = undefined;
+
+              this.commentContentForUpload = undefined;
             }
           },
           (error) => {
@@ -260,23 +276,28 @@ export class AssignmentViewComponent implements OnInit {
     }
   }
 
-  onSubmissionClicked(id, fileName: string, fileId: number) {
+  onSubmissionClicked(submissionId, fileName: string, fileId: number): void {
     this.submissionService
-      .getSubmissionFile(this.courseId, this.assignment.id, id, fileId)
+      .getSubmissionFile(
+        this.courseId,
+        this.assignment.id,
+        submissionId,
+        fileId
+      )
       .pipe(takeUntil(this.stop))
       .subscribe((blob) => {
         this.fileSaverService.save(blob, fileName);
       });
   }
 
-  modifyPublished(published: boolean) {
+  modifyPublished(published: boolean): void {
     this.assignment.published = published;
 
     this.courseService
       .updateAssignment(this.assignment, this.courseId, this.assignment.id)
       .pipe(takeUntil(this.stop))
       .subscribe(
-        (assignment) => {
+        () => {
           this.toasterService.success(
             "Congratulations!",
             published ? "Assignment published!" : "Assignemnt is hidden!"
@@ -288,13 +309,13 @@ export class AssignmentViewComponent implements OnInit {
       );
   }
 
-  goToSubmissions() {
+  goToSubmissions(): void {
     this.rotuer.navigate([
       `/courses/${this.courseId}/assignments/${this.assignment.id}/submissions`,
     ]);
   }
 
-  async onDeleteClicked(id: number) {
+  async onDeleteClicked(commentId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this comment?",
@@ -307,7 +328,11 @@ export class AssignmentViewComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.commentService
-              .deleteAssingmentComment(this.courseId, this.assignment.id, id)
+              .deleteAssingmentComment(
+                this.courseId,
+                this.assignment.id,
+                commentId
+              )
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -315,10 +340,10 @@ export class AssignmentViewComponent implements OnInit {
                     "Comment deletion successful!",
                     "Congratulations!"
                   );
+
                   this.loadGrades();
                 },
                 (error) => {
-                  console.log(error);
                   this.toasterService.error(
                     error.error.message,
                     "Please try again!"
@@ -333,24 +358,24 @@ export class AssignmentViewComponent implements OnInit {
     await alert.present();
   }
 
-  onLeaveCommentClicked() {
+  onLeaveCommentClicked(): void {
     this.commentService
       .saveAssingmentComment(
         this.courseId,
         this.assignment.id,
         this.authService.getUsername(),
-        this.content2
+        this.leavedCommentContent
       )
       .pipe(takeUntil(this.stop))
       .subscribe(
-        (comment) => {
+        () => {
           this.toasterService.success(
             "Comment saved successfully!",
             "Congratulations!"
           );
 
           this.loadAssignment();
-          this.content2 = undefined;
+          this.leavedCommentContent = undefined;
         },
         (error) => {
           this.toasterService.error(error.error.message, "Please try again!");
@@ -358,19 +383,20 @@ export class AssignmentViewComponent implements OnInit {
       );
   }
 
-  onEditClicked(comment) {
+  onEditClicked(comment: AssignmentComment): void {
     this.editingComment[comment.id] = true;
-    this.content3 = comment.content;
+    this.updateCommentContent = comment.content;
   }
 
-  onCancelClicked(commentId) {
+  onCancelClicked(commentId: number): void {
     this.editingComment[commentId] = false;
-    this.content3 = undefined;
+    this.updateCommentContent = undefined;
   }
 
-  onUpdateClicked(commentId: number) {
+  onUpdateClicked(commentId: number): void {
     this.commentCreation = {};
-    this.commentCreation.content = this.content3;
+    this.commentCreation.content = this.updateCommentContent;
+
     this.commentService
       .updateAssignmentComment(
         this.courseId,
@@ -380,14 +406,15 @@ export class AssignmentViewComponent implements OnInit {
       )
       .pipe(takeUntil(this.stop))
       .subscribe(
-        (comment) => {
+        () => {
           this.toasterService.success(
             "Comment updated successfully!",
             "Congratulations!"
           );
 
           this.loadAssignment();
-          this.content3 = undefined;
+
+          this.updateCommentContent = undefined;
           this.editingComment[commentId] = false;
         },
         (error) => {

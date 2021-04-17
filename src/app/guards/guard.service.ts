@@ -8,7 +8,7 @@ import { AuthService } from "../shared/auth.service";
 export class GuardService implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate() {
+  canActivate(): boolean {
     if (this.authService.isLoggedIn()) {
       if (this.authService.isAdmin()) {
         this.router.navigate(["admin"]);
@@ -16,6 +16,7 @@ export class GuardService implements CanActivate {
         this.router.navigate(["/dashboard"]);
       }
     }
+
     return !this.authService.isLoggedIn();
   }
 }

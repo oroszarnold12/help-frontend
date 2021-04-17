@@ -10,7 +10,10 @@ import { url } from "./api-config";
 export class SubmissionService {
   constructor(private httpClient: HttpClient) {}
 
-  getFilesOfAssignment(courseId: number, assignmentId: number) {
+  getFilesOfAssignment(
+    courseId: number,
+    assignmentId: number
+  ): Observable<Blob> {
     return this.httpClient.get(
       `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/files`,
       { responseType: "blob" }
@@ -22,7 +25,7 @@ export class SubmissionService {
     assignmentId: number,
     submissionId: number,
     fileId: number
-  ) {
+  ): Observable<Blob> {
     return this.httpClient.get(
       `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}/files/${fileId}`,
       { responseType: "blob" }

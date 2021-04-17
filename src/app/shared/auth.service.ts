@@ -33,8 +33,10 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.fcmService.initPush();
+
           localStorage.setItem("role", res.body.role);
           localStorage.setItem("username", loginRequest.username);
+
           this.loginStatus.next({
             username: this.getUsername(),
             loggedIn: this.isLoggedIn(),
@@ -53,7 +55,9 @@ export class AuthService {
         tap(() => {
           localStorage.setItem("username", "");
           localStorage.setItem("role", "");
+
           this.router.navigate([""]);
+
           this.loginStatus.next({
             username: this.getUsername(),
             loggedIn: this.isLoggedIn(),
@@ -73,11 +77,11 @@ export class AuthService {
     });
   }
 
-  getUsername() {
+  getUsername(): string {
     return localStorage.getItem("username");
   }
 
-  getRole() {
+  getRole(): string {
     return localStorage.getItem("role");
   }
 
@@ -89,7 +93,7 @@ export class AuthService {
     return localStorage.getItem("role") === Role.ADMIN;
   }
 
-  isLoggedIn() {
+  isLoggedIn(): boolean {
     return !!localStorage.getItem("username");
   }
 }

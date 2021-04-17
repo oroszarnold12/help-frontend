@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
@@ -18,12 +18,16 @@ import { DiscussionCommentFormComponent } from "./discussion-comment-form/discus
   templateUrl: "./discussion-view.component.html",
   styleUrls: ["./discussion-view.component.scss"],
 })
-export class DiscussionViewComponent implements OnInit {
-  discussion: Discussion;
+export class DiscussionViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
+
+  discussion: Discussion;
+
   isTeacher: boolean;
-  courseId: number;
   username: string;
+
+  courseId: number;
+
   creatorImageUrl: string;
   commentImageUrls: string[];
 
@@ -38,19 +42,24 @@ export class DiscussionViewComponent implements OnInit {
     private commentService: CommentService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.backButtonService.turnOn();
 
     this.isTeacher = this.authService.isTeacher();
-
     this.username = this.authService.getUsername();
 
     this.loadDiscussion();
   }
 
-  loadDiscussion() {
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
+  }
+
+  loadDiscussion(): void {
     this.route.params.pipe(takeUntil(this.stop)).subscribe((params) => {
       this.courseId = params.courseId;
+
       this.courseService
         .getDiscussion(params.courseId, params.discussionId)
         .pipe(takeUntil(this.stop))
@@ -66,7 +75,7 @@ export class DiscussionViewComponent implements OnInit {
               ] = this.getImageUrlById(comment.commenter.id);
             });
           },
-          (error) => {
+          () => {
             this.toasterService.error(
               "Could not get discussion!",
               "Something went wrong!"
@@ -76,12 +85,7 @@ export class DiscussionViewComponent implements OnInit {
     });
   }
 
-  ngOnDestroy(): void {
-    this.stop.next();
-    this.stop.complete();
-  }
-
-  async presentDiscussionModal() {
+  async presentDiscussionModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: DiscussionFormComponent,
       cssClass: "my-custom-modal-css",
@@ -96,7 +100,7 @@ export class DiscussionViewComponent implements OnInit {
     await modal.present();
   }
 
-  async presentCommentModal(comment?) {
+  async presentCommentModal(comment?: Comment): Promise<void> {
     const modal = await this.modalController.create({
       component: DiscussionCommentFormComponent,
       cssClass: "my-custom-modal-css",
@@ -112,11 +116,11 @@ export class DiscussionViewComponent implements OnInit {
     await modal.present();
   }
 
-  onEditClicked(comment) {
+  onEditClicked(comment: Comment): void {
     this.presentCommentModal(comment);
   }
 
-  async onDeleteClicked(id) {
+  async onDeleteClicked(commentId: number): Promise<void> {
     const alert = await this.alertController.create({
       header: "Confirm!",
       message: "Are you sure that you want to delete this comment?",
@@ -129,7 +133,11 @@ export class DiscussionViewComponent implements OnInit {
           text: "Yes",
           handler: () => {
             this.commentService
-              .deleteDiscussionComment(this.courseId, this.discussion.id, id)
+              .deleteDiscussionComment(
+                this.courseId,
+                this.discussion.id,
+                commentId
+              )
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
@@ -137,10 +145,10 @@ export class DiscussionViewComponent implements OnInit {
                     "Comment deletion successful!",
                     "Congratulations!"
                   );
+
                   this.loadDiscussion();
                 },
                 (error) => {
-                  console.log(error);
                   this.toasterService.error(
                     error.error.message,
                     "Please try again!"
