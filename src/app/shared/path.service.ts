@@ -23,6 +23,10 @@ export class PathService {
 
   convertUrlToPath(url: string): void {
     switch (true) {
+      case "/chat" === url: {
+        this.path.next("Chat");
+        break;
+      }
       case "/dashboard" === url: {
         this.path.next("Dashboard");
         break;

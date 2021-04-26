@@ -42,6 +42,10 @@ import { QuestionFormComponent } from "./quiz-view/question-form/question-form.c
 import { QuizTakingViewComponent } from "./quiz-taking-view/quiz-taking-view.component";
 import { ParticipationsViewComponent } from "./participations-view/participations-view.component";
 import { UserDetailsViewComponent } from "./user-details-view/user-details-view.component";
+import { ChatViewComponent } from "./chat-view/chat-view.component";
+import { ConversationFormComponent } from "./chat-view/conversation-form/conversation-form.component";
+import { TagInputModule } from "ngx-chips";
+import { ParticipantViewComponent } from "./chat-view/participant-view/participant-view.component";
 
 @NgModule({
   declarations: [
@@ -71,6 +75,9 @@ import { UserDetailsViewComponent } from "./user-details-view/user-details-view.
     QuizTakingViewComponent,
     ParticipationsViewComponent,
     UserDetailsViewComponent,
+    ChatViewComponent,
+    ConversationFormComponent,
+    ParticipantViewComponent,
   ],
   entryComponents: [
     CourseFormComponent,
@@ -81,6 +88,8 @@ import { UserDetailsViewComponent } from "./user-details-view/user-details-view.
     DiscussionCommentFormComponent,
     QuizFormComponent,
     QuestionFormComponent,
+    ConversationFormComponent,
+    ParticipantViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,6 +102,7 @@ import { UserDetailsViewComponent } from "./user-details-view/user-details-view.
     Ng2SmartTableModule,
     ReactiveFormsModule,
     QuillModule.forRoot(),
+    TagInputModule,
   ],
   providers: [
     StatusBar,

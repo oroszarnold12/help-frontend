@@ -81,6 +81,10 @@ export class TopbarComponent implements OnInit {
     );
   }
 
+  onChatButtonClicked(): void {
+    this.router.navigate(["/chat"]);
+  }
+
   onDashboardButtonClicked(): void {
     this.router.navigate(["/dashboard"]);
   }

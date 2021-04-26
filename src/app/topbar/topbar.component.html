@@ -18,6 +18,9 @@
       ></ion-icon>
     </ng-container>
     <ion-buttons slot="end">
+      <ion-button (click)="onChatButtonClicked()">
+        <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+      </ion-button>
       <ion-button *ngIf="!admin" (click)="onCoursesButtonClicked()">
         <ion-icon name="book-outline"></ion-icon>
       </ion-button>

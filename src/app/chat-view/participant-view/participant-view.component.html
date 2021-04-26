@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Participants </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <ion-row *ngFor="let participant of conversation.participants">
+        <ion-col>
+          {{ participant.firstName }} {{ participant.lastName }}
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <ion-button
+            fill="clear"
+            color="danger"
+            (click)="onKickParticipantClicked(participant.id)"
+          >
+            <ion-icon name="ban-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="ion-text-end">
+          <ion-button
+            color="success"
+            *ngIf="!addingPersons"
+            (click)="onAddPersonsClicked()"
+          >
+            <ion-icon name="add-outline" class="button-icon"></ion-icon>
+            Add Persons
+          </ion-button>
+          <ion-button
+            color="danger"
+            *ngIf="addingPersons"
+            (click)="onCancelClicked()"
+          >
+            <ion-icon name="close-outline" class="button-icon"></ion-icon>
+            Cancel
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ng-container *ngIf="addingPersons">
+        <ion-row>
+          <ion-col>
+            <tag-input
+              [(ngModel)]="personsToInvite"
+              [identifyBy]="'id'"
+              [displayBy]="'fullName'"
+              theme="bootstrap"
+              [onlyFromAutocomplete]="true"
+              class="ion-margin"
+            >
+              <tag-input-dropdown
+                [showDropdownIfEmpty]="true"
+                [autocompleteItems]="persons"
+                [displayBy]="'fullName'"
+                [identifyBy]="'id'"
+              >
+              </tag-input-dropdown>
+            </tag-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="ion-text-end">
+            <ion-button
+              color="success"
+              [disabled]="personsToInvite.length === 0"
+              (click)="onAddPersonsClickedSecondTime()"
+            >
+              <ion-icon name="add-outline" class="button-icon"></ion-icon>
+              Add Persons
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

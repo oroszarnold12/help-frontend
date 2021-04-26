@@ -18,6 +18,7 @@ import { QuizTakingViewComponent } from "./quiz-taking-view/quiz-taking-view.com
 import { ParticipationsViewComponent } from "./participations-view/participations-view.component";
 import { UserDetailsViewComponent } from "./user-details-view/user-details-view.component";
 import { NonAdminGuardService } from "./guards/non-admin-guard.service";
+import { ChatViewComponent } from "./chat-view/chat-view.component";
 
 const routes: Routes = [
   {
@@ -88,6 +89,11 @@ const routes: Routes = [
     path: "courses/:courseId/quizzes/:quizId/questions",
     component: QuizTakingViewComponent,
     canActivate: [AuthGuardService, NonAdminGuardService],
+  },
+  {
+    path: "chat",
+    component: ChatViewComponent,
+    canActivate: [AuthGuardService],
   },
 ];
 

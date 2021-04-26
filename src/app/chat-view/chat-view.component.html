@@ -1,0 +1,187 @@
+<ion-content *ngIf="!!user">
+  <ion-grid class="grid">
+    <ion-row>
+      <ion-col>
+        <ion-card class="card ion-no-margin">
+          <ng-container *ngIf="!openConversationDetails">
+            <ion-card-header>
+              <ion-item>
+                <ion-avatar class="avatar header-avatar" slot="start">
+                  <img
+                    [src]="userImgUrl"
+                    onerror="this.src='assets/icon/account-icon.png'"
+                  />
+                </ion-avatar>
+                <ion-card-title class="dark-blue ion-padding-start card-title">
+                  Chat
+                </ion-card-title>
+                <ion-buttons slot="end">
+                  <ion-button
+                    color="success"
+                    (click)="presentConversationModal()"
+                  >
+                    <ion-icon name="add-outline"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid class="ion-no-padding">
+                <ion-row *ngIf="conversations.length === 0">
+                  <ion-col> No conversations to display </ion-col>
+                </ion-row>
+                <ion-row
+                  *ngFor="let conversation of conversations"
+                  (click)="onConversationClicked(conversation.id)"
+                >
+                  <ion-item class="ion-no-padding" lines="none">
+                    <ion-avatar class="avatar" slot="start">
+                      <img
+                        [src]="conversationImageUrls[conversation.id]"
+                        onerror="this.src='assets/icon/account-icon.png'"
+                      />
+                    </ion-avatar>
+                  </ion-item>
+                  <ion-grid class="conversation-grid">
+                    <ion-row>
+                      <ion-col class="name-col">
+                        {{ getConversationName(conversation) }}
+                      </ion-col>
+                      <ion-col
+                        *ngIf="!!conversation.lastMessage"
+                        class="ion-text-end last-message-time-col"
+                      >
+                        {{ formatDate(conversation.lastMessage.creationDate) }}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col
+                        *ngIf="!!conversation.lastMessage"
+                        class="last-message-col"
+                      >
+                        {{ formatMessage(conversation.lastMessage) }}
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ng-container>
+          <ng-container
+            *ngIf="!!currentConversation && openConversationDetails"
+          >
+            <ion-card-header class="ion-no-padding">
+              <ion-item>
+                <ion-buttons slot="start" class="ion-no-margin">
+                  <ion-button color="tertiary" (click)="onBackButtonClicked()">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+                <ion-avatar class="avatar header-avatar" slot="start">
+                  <img
+                    [src]="conversationImageUrls[currentConversation.id]"
+                    onerror="this.src='assets/icon/account-icon.png'"
+                  />
+                </ion-avatar>
+                <ion-card-subtitle
+                  class="dark-blue ion-padding-start card-title"
+                >
+                  {{ getConversationName(currentConversation) }}
+                </ion-card-subtitle>
+                <ion-buttons
+                  *ngIf="
+                    !!currentConversation.name &&
+                    currentConversation.creator.id === user.id
+                  "
+                  slot="end"
+                >
+                  <ion-button (click)="presentParticipantModal()">
+                    <ion-icon name="person-outline"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-card-header>
+            <ion-card-content class="conversation-details">
+              <ion-grid>
+                <ion-row *ngIf="currentConversation.messages.length === 0">
+                  <ion-col> No messages to display </ion-col>
+                </ion-row>
+                <ion-row *ngFor="let message of currentConversation.messages">
+                  <ion-col>
+                    <ion-grid class="ion-no-padding">
+                      <ion-row
+                        [ngClass]="
+                          message.creator.id === user.id ? 'my-message-row' : ''
+                        "
+                      >
+                        <ion-col
+                          *ngIf="
+                            message.creator.id === user.id && !message.deleted
+                          "
+                          class="ion-text-end"
+                        >
+                          <ion-button
+                            fill="clear"
+                            color="danger"
+                            (click)="onDeleteMessageClicked(message.id)"
+                          >
+                            <ion-icon name="trash-outline"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                        <ion-col
+                          size="9"
+                          class="message"
+                          [ngClass]="{
+                            'my-message': message.creator.id === user.id,
+                            'other-message': message.creator.id !== user.id,
+                            'removed-message': message.deleted
+                          }"
+                        >
+                          <b>
+                            {{ message.creator.firstName }}
+                            {{ message.creator.lastName }}
+                          </b>
+                          <br />
+                          <span>{{ message.content }} </span>
+                          <div class="time ion-text-right">
+                            <br />{{ message.creationDate | date: "short" }}
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ng-container>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer *ngIf="openConversationDetails">
+  <ion-toolbar color="light">
+    <ion-row class="ion-align-items-center">
+      <ion-col>
+        <ion-textarea
+          class="message-input"
+          rows="1"
+          maxLength="4096"
+          [(ngModel)]="newConversationMessage"
+        >
+        </ion-textarea>
+      </ion-col>
+      <ion-col class="send-button-col">
+        <ion-button
+          fill="clear"
+          color="primary"
+          [disabled]="newConversationMessage.length === 0"
+          (click)="onSendMessageClicked()"
+        >
+          <ion-icon name="send-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

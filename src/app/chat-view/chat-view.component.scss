@@ -1,0 +1,85 @@
+.grid {
+  padding-top: 60px;
+  text-align: -webkit-center;
+}
+
+.card {
+  max-width: 1000px;
+  text-align: start;
+}
+
+.name-col {
+  padding-bottom: 0px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.last-message-col {
+  padding-top: 0px;
+  font-size: 13px;
+}
+
+.avatar {
+  display: inline-block;
+  margin-right: 0px;
+}
+
+.conversation-grid {
+  padding-left: 0px;
+}
+
+.last-message-time-col {
+  font-size: 13px;
+}
+
+.card-title {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.message {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.my-message {
+  background: var(--ion-color-tertiary);
+  color: white;
+}
+
+.other-message {
+  background: var(--ion-color-secondary);
+  color: white;
+}
+
+.removed-message {
+  background-color: var(--ion-color-medium);
+}
+
+.message-input {
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 6px;
+  margin-top: 0px;
+}
+
+.time {
+  float: right;
+  font-size: small;
+}
+
+.conversation-details {
+  padding: 5px;
+}
+
+.send-button-col {
+  max-width: 70px;
+}
+
+.my-message-row {
+  place-content: flex-end;
+}
+
+.header-avatar {
+  max-width: 30px;
+  max-height: 30px;
+}

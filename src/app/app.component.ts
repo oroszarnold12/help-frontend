@@ -25,10 +25,11 @@ export class AppComponent {
       this.authService.pingBackend().subscribe(
         () => {},
         () => {
-          this.authService.logout();
+          this.authService.logout().subscribe(() => {});
         }
       );
     }
+
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
