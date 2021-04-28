@@ -1,8 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Varela+Round&display=swap");
+
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
 /** Ionic CSS Variables **/
 :root {
+  --ion-font-family: "Varela Round";
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;

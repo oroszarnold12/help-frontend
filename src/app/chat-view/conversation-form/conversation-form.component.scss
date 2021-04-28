@@ -1,0 +1,15 @@
+::ng-deep tag-input .ng2-tag-input.bootstrap input {
+  border-radius: 6px;
+  font-family: "Varela Round";
+}
+
+::ng-deep ng2-dropdown-menu div div {
+  background: var(--ion-color-light) !important;
+  color: var(--ion-text-color) !important;
+  font-family: "Varela Round" !important;
+}
+
+::ng-deep ng2-dropdown-menu .ng2-dropdown-menu {
+  background: var(--ion-color-light) !important;
+  border-radius: 6px !important;
+}

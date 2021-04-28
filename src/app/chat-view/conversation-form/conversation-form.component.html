@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Create conversation </ion-title>
+    <ion-title> Add Conversation </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -9,9 +9,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-item class="ion-margin">
-    <ion-label>Conversation Type</ion-label>
+<ion-content>
+  <ion-item class="ion-margin item-radius">
+    <ion-label>Type</ion-label>
     <ion-select
       interface="popover"
       value="simple"
@@ -22,7 +22,7 @@
     </ion-select>
   </ion-item>
   <form [formGroup]="conversationFrom">
-    <ion-item class="ion-margin" *ngIf="groupConversation">
+    <ion-item class="ion-margin item-radius" *ngIf="groupConversation">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input
         type="text"
@@ -54,8 +54,10 @@
     [displayBy]="'fullName'"
     theme="bootstrap"
     [onlyFromAutocomplete]="true"
-    class="ion-margin"
+    class="ion-margin item-radius"
     [maxItems]="groupConversation ? undefined : 1"
+    placeholder="+ People"
+    secondaryPlaceholder="+ People"
   >
     <tag-input-dropdown
       [showDropdownIfEmpty]="true"

@@ -67,11 +67,11 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
           this.conversations.sort((conv1, conv2) => {
             if (!!!conv1.lastMessage) {
-              return 0;
+              return 1;
             }
 
             if (!!!conv2.lastMessage) {
-              return 1;
+              return -1;
             }
 
             return (
