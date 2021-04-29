@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { ConversationMessage } from "../model/conversation-message.model";
 import { Conversation } from "../model/conversation.model";
 import { url } from "./api-config";
@@ -9,6 +9,9 @@ import { url } from "./api-config";
   providedIn: "root",
 })
 export class ConversationService {
+  private newMessage = new Subject<void>();
+  newMessage$ = this.newMessage.asObservable();
+
   constructor(private httpClient: HttpClient) {}
 
   getConversations(): Observable<Conversation[]> {
@@ -72,5 +75,9 @@ export class ConversationService {
         content: content,
       }
     );
+  }
+
+  onNewMessageReceived(): void {
+    this.newMessage.next();
   }
 }

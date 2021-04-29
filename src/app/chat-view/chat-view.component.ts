@@ -1,14 +1,21 @@
 import { DatePipe } from "@angular/common";
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { AlertController, ModalController } from "@ionic/angular";
+import {
+  Component,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+} from "@angular/core";
+import { NavigationEnd, Router } from "@angular/router";
+import { AlertController, IonContent, ModalController } from "@ionic/angular";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, timeInterval } from "rxjs/operators";
 import { ConversationMessage } from "../model/conversation-message.model";
 import { Conversation } from "../model/conversation.model";
 import { Person } from "../model/person.model";
 import { ThinPerson } from "../model/thin.person.model";
 import { url } from "../shared/api-config";
-import { BackButtonService } from "../shared/back-button.service";
 import { ConversationService } from "../shared/conversation.service";
 import { PersonService } from "../shared/person.service";
 import { ToasterService } from "../shared/toaster.service";
@@ -33,22 +40,45 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
   openConversationDetails: boolean;
 
+  @ViewChild("content", { static: false }) content: IonContent;
+
   constructor(
-    private backButtonService: BackButtonService,
     private conversationService: ConversationService,
     private toasterService: ToasterService,
     private datePipe: DatePipe,
     private personService: PersonService,
     private alertController: AlertController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private ngZone: NgZone,
+    private router: Router
   ) {
     this.openConversationDetails = false;
     this.newConversationMessage = "";
+
+    this.conversationService.newMessage$.subscribe(() => {
+      this.ngZone.run(() => {
+        this.loadConversations();
+
+        if (!!this.currentConversation) {
+          this.loadConversation(this.currentConversation.id);
+        }
+      });
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (event.url === "/chat") {
+          this.loadConversations();
+
+          if (!!this.currentConversation) {
+            this.loadConversation(this.currentConversation.id);
+          }
+        }
+      }
+    });
   }
 
   ngOnInit(): void {
-    this.backButtonService.turnOn();
-
     this.loadConversations();
   }
 
@@ -123,6 +153,10 @@ export class ChatViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (conversation) => {
           this.currentConversation = conversation;
+
+          setTimeout(() => {
+            this.content.scrollToBottom(0);
+          }, 100);
         },
         () => {
           this.toasterService.error(

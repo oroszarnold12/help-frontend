@@ -1,7 +1,7 @@
-<ion-content *ngIf="!!user">
-  <ion-grid class="grid">
+<ion-header *ngIf="!!user" class="header">
+  <ion-grid class="header-grid">
     <ion-row>
-      <ion-col>
+      <ion-col class="header-col">
         <ion-card class="card ion-no-margin">
           <ng-container *ngIf="!openConversationDetails">
             <ion-card-header>
@@ -25,6 +25,54 @@
                 </ion-buttons>
               </ion-item>
             </ion-card-header>
+          </ng-container>
+          <ng-container
+            *ngIf="!!currentConversation && openConversationDetails"
+          >
+            <ion-card-header class="ion-no-padding">
+              <ion-item>
+                <ion-buttons slot="start" class="ion-no-margin">
+                  <ion-button color="tertiary" (click)="onBackButtonClicked()">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+                <ion-avatar class="avatar header-avatar" slot="start">
+                  <img
+                    [src]="conversationImageUrls[currentConversation.id]"
+                    onerror="this.src='assets/icon/account-icon.png'"
+                  />
+                </ion-avatar>
+                <ion-card-subtitle
+                  class="dark-blue ion-padding-start card-title"
+                >
+                  {{ getConversationName(currentConversation) }}
+                </ion-card-subtitle>
+                <ion-buttons
+                  *ngIf="
+                    !!currentConversation.name &&
+                    currentConversation.creator.id === user.id
+                  "
+                  slot="end"
+                >
+                  <ion-button (click)="presentParticipantModal()">
+                    <ion-icon name="person-outline"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-card-header>
+          </ng-container>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-header>
+
+<ion-content *ngIf="!!user" #content>
+  <ion-grid class="grid">
+    <ion-row>
+      <ion-col class="content-col">
+        <ion-card class="card ion-no-margin">
+          <ng-container *ngIf="!openConversationDetails">
             <ion-card-content>
               <ion-grid class="ion-no-padding">
                 <ion-row *ngIf="conversations.length === 0">
@@ -70,37 +118,6 @@
           <ng-container
             *ngIf="!!currentConversation && openConversationDetails"
           >
-            <ion-card-header class="ion-no-padding">
-              <ion-item>
-                <ion-buttons slot="start" class="ion-no-margin">
-                  <ion-button color="tertiary" (click)="onBackButtonClicked()">
-                    <ion-icon name="arrow-back-outline"></ion-icon>
-                  </ion-button>
-                </ion-buttons>
-                <ion-avatar class="avatar header-avatar" slot="start">
-                  <img
-                    [src]="conversationImageUrls[currentConversation.id]"
-                    onerror="this.src='assets/icon/account-icon.png'"
-                  />
-                </ion-avatar>
-                <ion-card-subtitle
-                  class="dark-blue ion-padding-start card-title"
-                >
-                  {{ getConversationName(currentConversation) }}
-                </ion-card-subtitle>
-                <ion-buttons
-                  *ngIf="
-                    !!currentConversation.name &&
-                    currentConversation.creator.id === user.id
-                  "
-                  slot="end"
-                >
-                  <ion-button (click)="presentParticipantModal()">
-                    <ion-icon name="person-outline"></ion-icon>
-                  </ion-button>
-                </ion-buttons>
-              </ion-item>
-            </ion-card-header>
             <ion-card-content class="conversation-details">
               <ion-grid>
                 <ion-row *ngIf="currentConversation.messages.length === 0">

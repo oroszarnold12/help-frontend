@@ -4,6 +4,8 @@ import { Platform } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { AuthService } from "./shared/auth.service";
+import { LocalNotificationService } from "./shared/local-notification.service";
+import { FcmService } from "./shared/fcm.service";
 
 @Component({
   selector: "app-root",
@@ -15,7 +17,9 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private authService: AuthService
+    private authService: AuthService,
+    private localNotificationService: LocalNotificationService,
+    private fcmService: FcmService
   ) {
     this.initializeApp();
   }
@@ -29,6 +33,9 @@ export class AppComponent {
         }
       );
     }
+
+    this.fcmService.addListeners();
+    this.localNotificationService.initLocal();
 
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
