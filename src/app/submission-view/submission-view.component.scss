@@ -2,6 +2,22 @@
   color: red;
 }
 
+::ng-deep ion-select-popover ion-list ion-radio-group .not-graded {
+  color: var(--ion-color-warning);
+}
+
+::ng-deep ion-select-popover ion-list ion-radio-group .graded {
+  color: var(--ion-color-success);
+}
+
+::ng-deep ion-item .graded {
+  color: var(--ion-color-success);
+}
+
+::ng-deep ion-item .not-graded {
+  color: var(--ion-color-warning);
+}
+
 .dc {
   display: contents;
 }
@@ -21,10 +37,6 @@
 
 .student-selector {
   max-width: 400px;
-}
-
-ion-select::part(text) {
-  color: #1e6bb8;
 }
 
 .grid {

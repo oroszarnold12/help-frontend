@@ -28,10 +28,22 @@
                         interface="popover"
                         #student
                         [value]="participants[0]"
+                        [ngClass]="{
+                          'not-graded':
+                            getSubmissionsBySubmitterId(student.value.id)
+                              .length > 0 && !!!grades[student.value.id],
+                          'graded': !!grades[student.value.id]
+                        }"
                       >
                         <ion-select-option
                           *ngFor="let participant of participants"
                           [value]="participant"
+                          [ngClass]="{
+                            'not-graded':
+                              getSubmissionsBySubmitterId(participant.id)
+                                .length > 0 && !!!grades[participant.id],
+                            'graded': !!grades[participant.id]
+                          }"
                         >
                           {{
                             participant.firstName + " " + participant.lastName
