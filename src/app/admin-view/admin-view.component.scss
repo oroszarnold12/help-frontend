@@ -3,6 +3,22 @@
 }
 
 .grid {
-  padding-top: 75px;
+  padding-top: 60px;
   text-align: -webkit-center;
+}
+
+::ng-deep a .bi-trash {
+  color: var(--ion-color-danger);
+  margin-left: 10px;
+}
+
+::ng-deep a .bi-x {
+  margin-left: 10px;
+  color: var(--ion-color-danger);
+  font-size: 18px;
+}
+
+::ng-deep a .bi-check2 {
+  color: var(--ion-color-success);
+  font-size: 18px;
 }

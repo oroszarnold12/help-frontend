@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Create course </ion-title>
+    <ion-title> {{ !!course ? "Edit Course" : "Add Course" }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="courseForm" (ngSubmit)="submitForm()">
-    <ion-item class="form-group">
+    <ion-item class="form-group item-radius">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input
         type="text"
@@ -32,7 +32,7 @@
     >
       Name is too long.
     </span>
-    <ion-item class="form-group my-input-padding">
+    <ion-item class="form-group my-input-margin item-radius">
       <ion-label position="floating" for="longName">Long name</ion-label>
       <ion-input
         type="text"
@@ -55,11 +55,12 @@
     >
       Long name is too long.
     </span>
-    <ion-item class="my-input-padding">
+    <ion-item class="my-input-margin item-radius no-bottom-radius" lines="none">
       <ion-label>Description</ion-label>
     </ion-item>
-    <ion-item class="form-group">
+    <ion-item class="form-group item-radius no-top-radius" lines="none">
       <quill-editor
+        class="ion-padding-bottom"
         [styles]="editorStyle"
         formControlName="description"
         [modules]="editorConfig"
@@ -81,14 +82,21 @@
       Description is required.
     </span>
     <ion-row>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-button
           type="submit"
           color="success"
-          expand="block"
+          class="button-width"
           [disabled]="courseForm.invalid"
         >
-          Submit
+          <ng-container *ngIf="!!course; else elseTemplate">
+            <ion-icon name="save-outline" class="button-icon"></ion-icon>
+            Save
+          </ng-container>
+          <ng-template #elseTemplate>
+            <ion-icon name="add-outline" class="button-icon"></ion-icon>
+            Add
+          </ng-template>
         </ion-button>
       </ion-col>
     </ion-row>

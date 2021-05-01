@@ -2,7 +2,7 @@
   <ion-grid class="grid">
     <ion-row>
       <ion-col>
-        <ion-card class="ion-text-start">
+        <ion-card class="ion-text-start ion-no-margin">
           <ion-card-header>
             <ion-card-title class="dark-blue ion-text-center">
               Account
@@ -230,7 +230,11 @@
                           expand="block"
                           [disabled]="passwordForm.invalid"
                         >
-                          Submit
+                          <ion-icon
+                            name="lock-closed-outline"
+                            class="button-icon"
+                          ></ion-icon>
+                          Change
                         </ion-button>
                       </ion-col>
                     </ion-row>

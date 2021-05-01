@@ -19,14 +19,14 @@
           Publish
         </ion-button>
         <ion-button color="primary" (click)="presentAssignmentModal()">
-          <ion-icon name="pencil-outline" class="button-icon"></ion-icon>
+          <ion-icon name="create-outline" class="button-icon"></ion-icon>
           Edit
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="card">
+        <ion-card class="card ion-no-margin">
           <ion-card-header>
             <ion-card-title>
               <div class="inline-block">
@@ -135,7 +135,7 @@
       <ion-row class="comment-row bold"> Comments: </ion-row>
       <ion-row *ngFor="let comment of assignment.comments">
         <ion-col>
-          <ion-card class="comment-card">
+          <ion-card class="comment-card ion-no-margin">
             <ion-card-header class="ion-no-padding">
               <ion-card-title>
                 <ion-item>
@@ -199,10 +199,10 @@
                       [disabled]="!!!updateCommentContent"
                     >
                       <ion-icon
-                        name="sync-outline"
+                        name="save-outline"
                         class="button-icon"
                       ></ion-icon>
-                      Update comment
+                      Save
                     </ion-button>
                   </ion-col>
                   <ion-col class="ion-text-end">
@@ -226,7 +226,7 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-card class="comment-card">
+          <ion-card class="comment-card ion-no-margin">
             <ion-card-content>
               <ion-grid>
                 <ion-row>

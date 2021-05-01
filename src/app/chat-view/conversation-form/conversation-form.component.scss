@@ -13,3 +13,7 @@
   background: var(--ion-color-light) !important;
   border-radius: 6px !important;
 }
+
+::ng-deep tag-input .ng2-tag-input.bootstrap div tag {
+  font-family: "Varela Round";
+}

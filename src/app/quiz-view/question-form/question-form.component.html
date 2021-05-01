@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Create question </ion-title>
+    <ion-title> {{ !!question ? "Edit Question" : "Add Question" }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="questionForm" (ngSubmit)="submitForm()">
-    <ion-item lines="full" class="form-group">
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="points">Points</ion-label>
       <ion-input
         type="number"
@@ -34,7 +34,7 @@
     >
       Points should be positive number.
     </span>
-    <ion-item lines="full" class="form-group my-input-padding">
+    <ion-item lines="full" class="form-group my-input-margin item-radius">
       <ion-label position="floating" for="content">Question</ion-label>
       <ion-textarea
         type="text"
@@ -58,13 +58,13 @@
     >
       Question is too long.
     </span>
-    <p>Answers (Check the correct ones!):</p>
+    <p class="ion-padding-top">Answers (Check the correct ones!):</p>
     <div
       formArrayName="answers"
       *ngFor="let answer of answers.controls; let i = index"
     >
       <div [formGroupName]="i">
-        <ion-item lines="full" class="form-group my-input-padding">
+        <ion-item lines="full" class="form-group my-input-margin item-radius">
           <ion-checkbox formControlName="correct"></ion-checkbox>
           <ion-textarea
             type="text"
@@ -101,14 +101,21 @@
       Add answer
     </ion-button>
     <ion-row>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-button
           type="submit"
           color="success"
-          expand="block"
+          class="button-width"
           [disabled]="questionForm.invalid"
         >
-          Submit
+          <ng-container *ngIf="!!question; else elseTemplate">
+            <ion-icon name="save-outline" class="button-icon"></ion-icon>
+            Save
+          </ng-container>
+          <ng-template #elseTemplate>
+            <ion-icon name="add-outline" class="button-icon"></ion-icon>
+            Add
+          </ng-template>
         </ion-button>
       </ion-col>
     </ion-row>

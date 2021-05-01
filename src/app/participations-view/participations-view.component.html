@@ -2,7 +2,7 @@
   <ion-grid class="grid">
     <ion-row>
       <ion-col>
-        <ion-card class="courses-card">
+        <ion-card class="courses-card ion-no-margin">
           <ion-card-header>
             <ion-card-title class="dark-blue"> Courses </ion-card-title>
           </ion-card-header>
@@ -28,8 +28,12 @@
       </ion-col>
     </ion-row>
     <ion-row class="save-button-row">
-      <ion-col>
-        <ion-button color="success" (click)="onSaveClicked()">
+      <ion-col class="ion-text-center">
+        <ion-button
+          color="success"
+          (click)="onSaveClicked()"
+          class="button-width"
+        >
           <ion-icon name="save-outline" class="button-icon"></ion-icon>
           Save
         </ion-button>

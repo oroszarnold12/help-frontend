@@ -4,13 +4,13 @@
       <ion-col>
         <ion-button color="primary" (click)="presentAnnouncementModal()">
           <ion-icon name="create-outline" class="button-icon"></ion-icon>
-          Edit announcement
+          Edit
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="card">
+        <ion-card class="card ion-no-margin">
           <ion-card-header>
             <ion-card-title>
               <ion-avatar class="avatar">
@@ -51,7 +51,7 @@
     </ion-row>
     <ion-row *ngFor="let comment of announcement.comments">
       <ion-col>
-        <ion-card class="card">
+        <ion-card class="card ion-no-margin">
           <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-item>

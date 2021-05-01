@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Create quiz </ion-title>
+    <ion-title> {{ !!quiz ? "Edit Quiz" : "Add Quiz" }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="quizForm" (ngSubmit)="submitForm()">
-    <ion-item lines="full" class="form-group">
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input
         type="text"
@@ -32,14 +32,15 @@
     >
       Name is too long.
     </span>
-    <ion-item class="my-input-padding">
+    <ion-item class="my-input-margin item-radius no-bottom-radius">
       <ion-label>Description</ion-label>
     </ion-item>
-    <ion-item class="form-group">
+    <ion-item class="form-group item-radius no-top-radius">
       <quill-editor
         [styles]="editorStyle"
         formControlName="description"
         [modules]="editorConfig"
+        class="ion-padding-bottom"
       ></quill-editor>
     </ion-item>
     <span
@@ -57,7 +58,7 @@
     >
       Description is required.
     </span>
-    <ion-item lines="full" class="form-group my-input-padding">
+    <ion-item lines="full" class="form-group my-input-margin item-radius">
       <ion-label position="stacked" for="dueDate">Due date</ion-label>
       <ion-input
         type="datetime-local"
@@ -74,7 +75,7 @@
     >
       Due Date is required.
     </span>
-    <ion-item lines="full" class="form-group my-input-padding">
+    <ion-item lines="full" class="form-group my-input-margin item-radius">
       <ion-label position="stacked" for="dueDate">Time limit</ion-label>
       <ion-input
         type="time"
@@ -93,7 +94,7 @@
     >
       Time limit is required.
     </span>
-    <ion-item lines="full" class="form-group my-input-padding">
+    <ion-item lines="full" class="form-group my-input-margin item-radius">
       <ion-checkbox
         slot="start"
         id="published"
@@ -102,7 +103,7 @@
       ></ion-checkbox>
       <ion-label for="published"> Published </ion-label>
     </ion-item>
-    <ion-item lines="full" class="form-group my-input-padding">
+    <ion-item lines="full" class="form-group my-input-margin item-radius">
       <ion-checkbox
         slot="start"
         id="showCorrectAnswers"
@@ -111,7 +112,7 @@
       ></ion-checkbox>
       <ion-label for="showCorrectAnswers"> Show correct answers </ion-label>
     </ion-item>
-    <ion-item lines="full" class="form-group my-input-padding">
+    <ion-item lines="full" class="form-group my-input-margin item-radius">
       <ion-checkbox
         slot="start"
         id="multipleAttempts"
@@ -121,14 +122,21 @@
       <ion-label for="multipleAttempts"> Allow multiple attempts </ion-label>
     </ion-item>
     <ion-row>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-button
           type="submit"
           color="success"
-          expand="block"
+          class="button-width"
           [disabled]="quizForm.invalid"
         >
-          Submit
+          <ng-container *ngIf="!!quiz; else elseTemplate">
+            <ion-icon name="save-outline" class="button-icon"></ion-icon>
+            Save
+          </ng-container>
+          <ng-template #elseTemplate>
+            <ion-icon name="add-outline" class="button-icon"></ion-icon>
+            Add
+          </ng-template>
         </ion-button>
       </ion-col>
     </ion-row>

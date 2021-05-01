@@ -11,7 +11,7 @@
           <ion-col>
             <ion-button color="success" (click)="presentAnnouncementModal()">
               <ion-icon name="add-outline" class="button-icon"></ion-icon>
-              Add announcement
+              Add Announcement
             </ion-button>
           </ion-col>
         </ion-row>
@@ -33,7 +33,7 @@
           <ion-col>
             <ion-button color="success" (click)="presentAssignmentModal()">
               <ion-icon name="add-outline" class="button-icon"></ion-icon>
-              Add assignment
+              Add Assignment
             </ion-button>
           </ion-col>
         </ion-row>
@@ -55,7 +55,7 @@
           <ion-col>
             <ion-button color="success" (click)="presentQuizModal()">
               <ion-icon name="add-outline" class="button-icon"></ion-icon>
-              Add quiz
+              Add Quiz
             </ion-button>
           </ion-col>
         </ion-row>
@@ -83,7 +83,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card class="card ion-text-center">
+            <ion-card class="card ion-text-center ion-no-margin">
               <ion-card-header>
                 <ion-card-title class="dark-blue"> Grades </ion-card-title>
               </ion-card-header>
@@ -92,6 +92,7 @@
                   [settings]="gradeTableSettings"
                   [source]="gradeOverviews"
                   (editConfirm)="onEditConfirmed($event)"
+                  class="grade-table"
                 ></ng2-smart-table>
                 <ion-item class="pl-25">
                   <ion-grid>
@@ -116,7 +117,7 @@
           <ion-col>
             <ion-button color="success" (click)="presentDiscussionModal()">
               <ion-icon name="add-outline" class="button-icon"></ion-icon>
-              Add discussion
+              Add Discussion
             </ion-button>
           </ion-col>
         </ion-row>
@@ -136,7 +137,7 @@
       <ion-grid class="grid">
         <ion-row class="title-row">
           <ion-col>
-            <ion-item class="dark-blue title">
+            <ion-item class="dark-blue title item-radius">
               <ng-container *ngIf="!!courseFilesToDownload; else elseTemplate">
                 {{ courseFilesToDownload.length }} files selected
               </ng-container>
@@ -160,7 +161,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card class="card ion-text-center">
+            <ion-card class="card ion-text-center ion-no-margin">
               <ion-card-header>
                 <ion-card-title class="dark-blue">Files</ion-card-title>
               </ion-card-header>
@@ -197,7 +198,7 @@
         </ion-row>
         <ion-row *ngIf="uploadingCourseFile">
           <ion-col>
-            <ion-card class="card">
+            <ion-card class="card ion-no-margin">
               <ion-card-content>
                 <ion-item
                   *ngFor="
@@ -230,7 +231,7 @@
                           name="add-outline"
                           class="button-icon"
                         ></ion-icon>
-                        Add another file
+                        Add Another File
                       </ion-button>
                     </ion-col>
                     <ion-col>
@@ -262,7 +263,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card class="card">
+            <ion-card class="card ion-no-margin">
               <ion-card-header>
                 <ion-card-title class="dark-blue">Description</ion-card-title>
               </ion-card-header>
@@ -281,7 +282,7 @@
       <ion-grid class="grid">
         <ion-row>
           <ion-col>
-            <ion-card class="card smart-table-card">
+            <ion-card class="card smart-table-card ion-no-margin">
               <ion-card-header>
                 <ion-card-title class="dark-blue">
                   Participants
@@ -299,10 +300,10 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card class="card smart-table-card">
+            <ion-card class="card smart-table-card ion-no-margin">
               <ion-card-header>
                 <ion-card-title class="dark-blue">
-                  Available persons
+                  Available Persons
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
@@ -334,7 +335,7 @@
           <ion-col>
             <ion-button color="danger" (click)="deleteCourse()">
               <ion-icon name="trash-outline" class="button-icon"></ion-icon>
-              Delete course
+              Delete Course
             </ion-button>
           </ion-col>
         </ion-row>

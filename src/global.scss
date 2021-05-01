@@ -33,8 +33,8 @@
 
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
-.my-input-padding {
-  padding-top: 10px;
+.my-input-margin {
+  margin-top: 10px;
 }
 
 .dark-blue {
@@ -51,4 +51,22 @@
 
 .item-radius {
   border-radius: 8px;
+}
+
+.no-bottom-radius {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.no-top-radius {
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+}
+
+.button-width {
+  width: 270px;
+}
+
+.button-icon {
+  padding-right: 5px;
 }

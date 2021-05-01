@@ -4,7 +4,7 @@
     [formGroup]="registrationForm"
     (ngSubmit)="submitForm()"
   >
-    <ion-item lines="full" class="form-group">
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="firstName">First name</ion-label>
       <ion-input
         type="text"
@@ -28,7 +28,7 @@
     >
       First name is too long.
     </span>
-    <ion-item lines="full" class="form-group">
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="lastName">Last name</ion-label>
       <ion-input
         type="text"
@@ -51,7 +51,7 @@
     >
       Last name is too long.
     </span>
-    <ion-item lines="full" class="form-group">
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="email">Email address</ion-label>
       <ion-input
         type="email"
@@ -78,7 +78,7 @@
     >
       Email address is not valid.
     </span>
-    <ion-item lines="full" class="form-group">
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="password">Password</ion-label>
       <ion-input
         type="password"
@@ -140,7 +140,7 @@
     >
       Password doesn't contain uppercase.
     </span>
-    <ion-item lines="full" class="form-group">
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="confirmPassword"
         >Confirm password</ion-label
       >
@@ -174,6 +174,7 @@
           expand="block"
           [disabled]="registrationForm.invalid"
         >
+          <ion-icon name="reader-outline" class="button-icon"></ion-icon>
           Register
         </ion-button>
       </ion-col>

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Create/update comment </ion-title>
+    <ion-title> {{ !!comment ? "Edit Comment" : "Add Comment" }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -11,14 +11,15 @@
 
 <ion-content class="ion-padding">
   <form [formGroup]="commentForm" (ngSubmit)="submitForm()">
-    <ion-item class="my-input-padding">
+    <ion-item class="my-input-margin item-radius no-bottom-radius">
       <ion-label>Content</ion-label>
     </ion-item>
-    <ion-item class="form-group">
+    <ion-item class="form-group item-radius no-top-radius">
       <quill-editor
         [styles]="editorStyle"
         formControlName="content"
         [modules]="editorConfig"
+        class="ion-padding-bottom"
       ></quill-editor>
     </ion-item>
     <span
@@ -36,14 +37,21 @@
       Comment is required.
     </span>
     <ion-row>
-      <ion-col>
+      <ion-col class="ion-text-center">
         <ion-button
           type="submit"
           color="success"
-          expand="block"
+          class="button-width"
           [disabled]="commentForm.invalid"
         >
-          Submit
+          <ng-container *ngIf="!!comment; else elseTemplate">
+            <ion-icon name="save-outline" class="button-icon"></ion-icon>
+            Save
+          </ng-container>
+          <ng-template #elseTemplate>
+            <ion-icon name="add-outline" class="button-icon"></ion-icon>
+            Add
+          </ng-template>
         </ion-button>
       </ion-col>
     </ion-row>

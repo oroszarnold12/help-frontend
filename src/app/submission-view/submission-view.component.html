@@ -15,7 +15,7 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="card">
+        <ion-card class="card ion-no-margin">
           <ion-card-header>
             <ion-card-title>
               <ion-grid class="ion-text-center">
@@ -32,7 +32,7 @@
                           'not-graded':
                             getSubmissionsBySubmitterId(student.value.id)
                               .length > 0 && !!!grades[student.value.id],
-                          'graded': !!grades[student.value.id]
+                          graded: !!grades[student.value.id]
                         }"
                       >
                         <ion-select-option
@@ -42,7 +42,7 @@
                             'not-graded':
                               getSubmissionsBySubmitterId(participant.id)
                                 .length > 0 && !!!grades[participant.id],
-                            'graded': !!grades[participant.id]
+                            graded: !!grades[participant.id]
                           }"
                         >
                           {{
@@ -177,7 +177,7 @@
     <ion-row class="comment-row"> Comments: </ion-row>
     <ion-row *ngFor="let comment of getComments(student.value.id)">
       <ion-col>
-        <ion-card class="comment-card">
+        <ion-card class="comment-card ion-no-margin">
           <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-item>
@@ -238,10 +238,10 @@
                     [disabled]="!!!updateCommentContent"
                   >
                     <ion-icon
-                      name="sync-outline"
+                      name="save-outline"
                       class="button-icon"
                     ></ion-icon>
-                    Update comment
+                    Save
                   </ion-button>
                 </ion-col>
                 <ion-col class="ion-text-end">
@@ -265,7 +265,7 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="comment-card">
+        <ion-card class="comment-card ion-no-margin">
           <ion-card-content>
             <ion-grid>
               <ion-row>

@@ -7,14 +7,14 @@
     >
       <ion-col>
         <ion-button color="primary" (click)="presentDiscussionModal()">
-          <ion-icon name="pencil-outline" class="button-icon"></ion-icon>
-          Edit discussion
+          <ion-icon name="create-outline" class="button-icon"></ion-icon>
+          Edit
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="card">
+        <ion-card class="card ion-no-margin">
           <ion-card-header>
             <ion-card-title>
               <ion-avatar class="avatar">
@@ -55,7 +55,7 @@
     </ion-row>
     <ion-row *ngFor="let comment of discussion.comments">
       <ion-col>
-        <ion-card class="card">
+        <ion-card class="card ion-no-margin">
           <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-item>

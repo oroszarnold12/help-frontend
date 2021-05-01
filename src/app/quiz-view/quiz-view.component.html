@@ -20,13 +20,13 @@
         </ion-button>
         <ion-button color="primary" (click)="presentQuizModal()">
           <ion-icon name="create-outline" class="button-icon"></ion-icon>
-          Edit quiz
+          Edit
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-card class="card">
+        <ion-card class="card ion-no-margin">
           <ion-card-header>
             <ion-card-title>
               <div class="inline-block">
@@ -84,7 +84,7 @@
     <ng-container *ngIf="isTeacher">
       <ion-row *ngFor="let question of questions; let i = index">
         <ion-col>
-          <ion-card class="card">
+          <ion-card class="card ion-no-margin">
             <ion-card-header>
               <ion-card-title>
                 <ion-item>
