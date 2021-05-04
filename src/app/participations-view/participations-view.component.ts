@@ -15,6 +15,7 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
 
   participaions: Participation[];
+  filteredParticipaions: Participation[];
 
   constructor(
     private participationService: ParticipationService,
@@ -31,6 +32,7 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (parrticipations) => {
           this.participaions = parrticipations;
+          this.filteredParticipaions = parrticipations;
         },
         (error) => {
           this.toasterService.error(error.error.message, "Please try again!");
@@ -65,5 +67,24 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
           this.toasterService.error(error.error.message, "Please try again!");
         }
       );
+  }
+
+  onFilterParticipations(event: CustomEvent): void {
+    if (event.detail.value !== "") {
+      this.filteredParticipaions = this.participaions.filter(
+        (participation) => {
+          return (
+            participation.course.name
+              .toLowerCase()
+              .includes(String(event.detail.value).toLowerCase()) ||
+            participation.course.name
+              .toLowerCase()
+              .includes(String(event.detail.value).toLowerCase())
+          );
+        }
+      );
+    } else {
+      this.filteredParticipaions = this.participaions;
+    }
   }
 }

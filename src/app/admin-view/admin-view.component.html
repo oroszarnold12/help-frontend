@@ -7,9 +7,17 @@
             <ion-card-title> Registered users </ion-card-title>
           </ion-card-header>
           <ion-card-content>
+            <ion-item>
+              <ion-input
+                placeholder="Name"
+                (ionChange)="onFilterPersons($event)"
+              >
+                <ion-icon name="search-outline" class="button-icon"></ion-icon>
+              </ion-input>
+            </ion-item>
             <ng2-smart-table
               [settings]="personsSettings"
-              [source]="persons"
+              [source]="filteredPersons"
               (deleteConfirm)="onDeleteConfirm($event)"
               (editConfirm)="onEditConfirm($event)"
             ></ng2-smart-table>

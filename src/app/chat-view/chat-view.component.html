@@ -74,12 +74,23 @@
         <ion-card class="card ion-no-margin">
           <ng-container *ngIf="!openConversationDetails">
             <ion-card-content>
+              <ion-item>
+                <ion-input
+                  placeholder="Name"
+                  (ionChange)="onFilterChat($event)"
+                >
+                  <ion-icon
+                    name="search-outline"
+                    class="button-icon"
+                  ></ion-icon>
+                </ion-input>
+              </ion-item>
               <ion-grid class="ion-no-padding">
                 <ion-row *ngIf="conversations.length === 0">
                   <ion-col> No conversations to display </ion-col>
                 </ion-row>
                 <ion-row
-                  *ngFor="let conversation of conversations"
+                  *ngFor="let conversation of filteredConversations"
                   (click)="onConversationClicked(conversation.id)"
                 >
                   <ion-item class="ion-no-padding" lines="none">

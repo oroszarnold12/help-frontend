@@ -65,7 +65,9 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   originalGradeOverviews: any[];
 
   thinPersons: ThinPerson[];
+  filteredThinPersons: ThinPerson[];
   participants: ThinPerson[];
+  filteredParticipants: ThinPerson[];
   personsToInvite: ThinPerson[];
   gradeTableSettings: any;
   availablePersonsTableSettings: any;
@@ -116,7 +118,6 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       columns: {
         name: {
           title: "Name",
-          filter: false,
           editable: false,
         },
         grade: {
@@ -159,7 +160,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         name: {
           title: "Name",
           editable: false,
-          valuePrepareFunction: (cell, row) => {
+          filter: false,
+          valuePrepareFunction: (_cell, row) => {
             return row.firstName + " " + row.lastName;
           },
         },
@@ -186,7 +188,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           title: "Name",
           editable: false,
           type: "string",
-          valuePrepareFunction: (cell, row) => {
+          filter: false,
+          valuePrepareFunction: (_cell, row) => {
             return row.firstName + " " + row.lastName;
           },
         },
@@ -270,6 +273,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
               }).length === 0
             );
           });
+
+          this.filteredThinPersons = this.thinPersons;
         },
         (error) => {
           this.toasterService.error(
@@ -332,6 +337,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (participants) => {
           this.participants = participants;
+          this.filteredParticipants = participants;
           if (this.isTeacher) {
             this.loadPersons();
           }
@@ -855,7 +861,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         .saveCourseFile(this.course.id, formData)
         .pipe(takeUntil(this.stop))
         .subscribe(
-          (courseFiles) => {
+          () => {
             this.toasterService.success(
               "Files uploaded successfully!",
               "Congratulations!"
@@ -1035,6 +1041,40 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       });
 
       await alert.present();
+    }
+  }
+
+  onFilterParticipants(event: CustomEvent): void {
+    if (event.detail.value !== "") {
+      this.filteredParticipants = this.participants.filter((participant) => {
+        return (
+          participant.firstName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase()) ||
+          participant.lastName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase())
+        );
+      });
+    } else {
+      this.filteredParticipants = this.participants;
+    }
+  }
+
+  onFilterAvailablePersons(event: CustomEvent): void {
+    if (event.detail.value !== "") {
+      this.filteredThinPersons = this.thinPersons.filter((person) => {
+        return (
+          person.firstName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase()) ||
+          person.lastName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase())
+        );
+      });
+    } else {
+      this.filteredThinPersons = this.thinPersons;
     }
   }
 }

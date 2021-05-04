@@ -5,7 +5,7 @@
     (ionSlideDidChange)="ionSlideDidChange()"
     class="slides"
   >
-    <ion-slide class="slide">
+    <ion-slide *ngIf="!!announcementOverviews" class="slide">
       <ion-grid class="grid">
         <ion-row *ngIf="isTeacher" fixed class="button-row">
           <ion-col>
@@ -27,7 +27,7 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
-    <ion-slide class="slide">
+    <ion-slide *ngIf="!!assignmentOverviews" class="slide">
       <ion-grid class="grid">
         <ion-row *ngIf="isTeacher" fixed class="button-row">
           <ion-col>
@@ -49,7 +49,7 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
-    <ion-slide class="slide">
+    <ion-slide *ngIf="!!quizOverviews" class="slide">
       <ion-grid class="grid">
         <ion-row *ngIf="isTeacher" fixed class="button-row">
           <ion-col>
@@ -71,7 +71,7 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
-    <ion-slide class="slide">
+    <ion-slide *ngIf="!!gradeOverviews" class="slide">
       <ion-grid class="grid">
         <ion-row *ngIf="editedGrade" class="button-row">
           <ion-col>
@@ -111,7 +111,7 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
-    <ion-slide class="slide">
+    <ion-slide *ngIf="!!discussionOverviews" class="slide">
       <ion-grid class="grid">
         <ion-row fixed class="button-row">
           <ion-col>
@@ -289,9 +289,20 @@
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
+                <ion-item>
+                  <ion-input
+                    placeholder="Name"
+                    (ionChange)="onFilterParticipants($event)"
+                  >
+                    <ion-icon
+                      name="search-outline"
+                      class="button-icon"
+                    ></ion-icon>
+                  </ion-input>
+                </ion-item>
                 <ng2-smart-table
                   [settings]="participantsTableSettings"
-                  [source]="participants"
+                  [source]="filteredParticipants"
                   (deleteConfirm)="onKickParticipantClicked($event)"
                 ></ng2-smart-table>
               </ion-card-content>
@@ -307,9 +318,20 @@
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
+                <ion-item>
+                  <ion-input
+                    placeholder="Name"
+                    (ionChange)="onFilterAvailablePersons($event)"
+                  >
+                    <ion-icon
+                      name="search-outline"
+                      class="button-icon"
+                    ></ion-icon>
+                  </ion-input>
+                </ion-item>
                 <ng2-smart-table
                   [settings]="availablePersonsTableSettings"
-                  [source]="thinPersons"
+                  [source]="filteredThinPersons"
                   (userRowSelect)="onUserRowSelected($event)"
                 ></ng2-smart-table>
               </ion-card-content>

@@ -31,6 +31,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
 
   conversations: Conversation[];
+  filteredConversations: Conversation[];
   conversationImageUrls: string[];
   currentConversation: Conversation;
   newConversationMessage: string;
@@ -109,6 +110,8 @@ export class ChatViewComponent implements OnInit, OnDestroy {
               new Date(conv1.lastMessage.creationDate).getTime()
             );
           });
+
+          this.filteredConversations = this.conversations;
 
           this.loadUser();
         },
@@ -339,5 +342,22 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     });
 
     await modal.present();
+  }
+
+  onFilterChat(event: CustomEvent): void {
+    if (event.detail.value !== "") {
+      this.filteredConversations = this.conversations.filter((conversation) => {
+        return (
+          this.getConversationName(conversation)
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase()) ||
+          this.getConversationName(conversation)
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase())
+        );
+      });
+    } else {
+      this.filteredConversations = this.conversations;
+    }
   }
 }

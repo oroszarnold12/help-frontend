@@ -16,6 +16,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
 
   persons: Person[];
+  filteredPersons: Person[];
   personsSettings: any;
 
   constructor(
@@ -44,6 +45,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         name: {
           title: "Name",
           editable: false,
+          filter: false,
           valuePrepareFunction: (_cell, row) => {
             return row.firstName + " " + row.lastName;
           },
@@ -81,6 +83,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       .subscribe(
         ({ persons }) => {
           this.persons = persons.filter((person) => person.role !== Role.ADMIN);
+          this.filteredPersons = this.persons;
         },
         () => {
           this.toasterService.error(
@@ -147,5 +150,22 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           this.toasterService.error(error.error.message, "Please try again!");
         }
       );
+  }
+
+  onFilterPersons(event: CustomEvent): void {
+    if (event.detail.value !== "") {
+      this.filteredPersons = this.persons.filter((person) => {
+        return (
+          person.firstName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase()) ||
+          person.lastName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase())
+        );
+      });
+    } else {
+      this.filteredPersons = this.persons;
+    }
   }
 }

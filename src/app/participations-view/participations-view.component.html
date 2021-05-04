@@ -7,12 +7,20 @@
             <ion-card-title class="dark-blue"> Courses </ion-card-title>
           </ion-card-header>
           <ion-card-content>
+            <ion-item>
+              <ion-input
+                placeholder="Course"
+                (ionChange)="onFilterParticipations($event)"
+              >
+                <ion-icon name="search-outline" class="button-icon"></ion-icon>
+              </ion-input>
+            </ion-item>
             <ion-grid>
               <ion-row class="table-header">
                 <ion-col> Course </ion-col>
                 <ion-col> Show on dashboard </ion-col>
               </ion-row>
-              <ion-row *ngFor="let participation of participaions">
+              <ion-row *ngFor="let participation of filteredParticipaions">
                 <ion-col>
                   {{ participation.course.name }}
                 </ion-col>

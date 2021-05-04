@@ -2,7 +2,14 @@
   <ion-grid fixed="true" class="grid">
     <ion-row>
       <ion-col>
-        <ion-item class="dark-blue title item-radius"> Courses </ion-item>
+        <ion-item class="dark-blue title item-radius no-bottom-radius">
+          Courses
+        </ion-item>
+        <ion-item class="item-radius no-top-radius">
+          <ion-input placeholder="Course" (ionChange)="onFilterCourses($event)">
+            <ion-icon name="search-outline" class="button-icon"></ion-icon>
+          </ion-input>
+        </ion-item>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="!!invitations && invitations.length">
@@ -16,20 +23,23 @@
       </ion-col>
     </ion-row>
     <ion-row *ngIf="teacher" class="add-button-row">
-      <ion-col>
+      <ion-col class="ion-no-padding">
         <ion-button color="success" (click)="presentModal()">
           <ion-icon class="add-icon" name="add-outline"></ion-icon>
           Add course
         </ion-button>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="courses.length === 0">
+    <ion-row *ngIf="filteredCourses.length === 0">
       <ion-col>
         <ion-text color="warning"> Didn't found courses to display. </ion-text>
       </ion-col>
     </ion-row>
     <ion-row wrap>
-      <ion-col *ngFor="let course of courses" class="course-card-col">
+      <ion-col
+        *ngFor="let course of filteredCourses"
+        class="course-card-col ion-no-padding"
+      >
         <app-course-card [course]="course"></app-course-card>
       </ion-col>
     </ion-row>

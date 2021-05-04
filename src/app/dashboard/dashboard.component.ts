@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
 
   courses: Course[];
+  filteredCourses: Course[];
 
   teacher: boolean;
 
@@ -79,6 +80,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 (participation) => participation.course.id === course.id
               ).showOnDashboard;
             });
+
+            this.filteredCourses = this.courses;
           });
       });
   }
@@ -189,5 +192,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     modal.onDidDismiss().then(() => this.ngOnInit());
 
     await modal.present();
+  }
+
+  onFilterCourses(event: CustomEvent): void {
+    if (event.detail.value !== "") {
+      this.filteredCourses = this.courses.filter((course) => {
+        return (
+          course.name
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase()) ||
+          course.name
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase())
+        );
+      });
+    } else {
+      this.filteredCourses = this.courses;
+    }
   }
 }

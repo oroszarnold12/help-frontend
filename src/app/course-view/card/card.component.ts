@@ -18,6 +18,8 @@ export class CardComponent implements OnInit {
   isTeacher: boolean;
   username: string;
 
+  filteredData: GeneralOverview[];
+
   constructor(private authService: AuthService) {}
 
   deleteClicked(index: number): void {
@@ -31,5 +33,24 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
     this.isTeacher = this.authService.isTeacher();
     this.username = this.authService.getUsername();
+
+    this.filteredData = this.data;
+  }
+
+  onFilterItems(event: CustomEvent): void {
+    if (event.detail.value !== "") {
+      this.filteredData = this.data.filter((data) => {
+        return (
+          data.name
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase()) ||
+          data.name
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase())
+        );
+      });
+    } else {
+      this.filteredData = this.data;
+    }
   }
 }
