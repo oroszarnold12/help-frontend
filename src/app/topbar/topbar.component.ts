@@ -83,14 +83,17 @@ export class TopbarComponent implements OnInit {
 
   onChatButtonClicked(): void {
     this.router.navigate(["/chat"]);
+    this.menuController.close();
   }
 
   onDashboardButtonClicked(): void {
     this.router.navigate(["/dashboard"]);
+    this.menuController.close();
   }
 
   onCoursesButtonClicked(): void {
     this.router.navigate(["/participations"]);
+    this.menuController.close();
   }
 
   onProfileSettingsClicked(): void {
@@ -100,5 +103,9 @@ export class TopbarComponent implements OnInit {
 
   getPath(): string[] {
     return this.path.split("/");
+  }
+
+  showExtendedMenu(): boolean {
+    return window.screen.width <= 600;
   }
 }

@@ -28,3 +28,9 @@
   max-height: 35px;
   margin-right: 5px;
 }
+
+@media screen and (max-width: 600px) {
+  .hidden-buttons {
+    visibility: hidden;
+  }
+}

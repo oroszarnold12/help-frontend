@@ -1,6 +1,7 @@
 import { DatePipe, formatNumber } from "@angular/common";
 import {
   Component,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -83,6 +84,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   numOfCourseFiles: number = 1;
   private courseFiles: Blob[];
   courseFilesTableSettings: any;
+  richCourseFilesTableSettings: any;
+  thinCourseFilesTableSettings: any;
   courseFilesToDownload: CourseFile[];
 
   constructor(
@@ -202,7 +205,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
     this.isTeacher = this.authService.isTeacher();
 
-    this.courseFilesTableSettings = {
+    this.richCourseFilesTableSettings = {
       selectMode: "multi",
       actions: {
         add: false,
@@ -241,6 +244,30 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         },
       },
     };
+
+    this.thinCourseFilesTableSettings = {
+      selectMode: "multi",
+      actions: {
+        add: false,
+        edit: false,
+        delete: this.isTeacher,
+        columnTitle: "",
+      },
+      delete: {
+        confirmDelete: true,
+        deleteButtonContent: '<i class="bi bi-trash danger"></i>',
+      },
+      columns: {
+        fileName: {
+          title: "Name",
+        },
+      },
+    };
+
+    this.courseFilesTableSettings =
+      window.screen.width <= 600
+        ? this.thinCourseFilesTableSettings
+        : this.richCourseFilesTableSettings;
 
     this.defaultSlide = defaultSlideService.getDefaultSlide();
     this.personsToInvite = [];
@@ -388,7 +415,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.announcementOverviews = announcements.map((announcement) => ({
       id: announcement.id,
       name: announcement.name,
-      description: `${this.stripHtml(announcement.content).slice(0, 30)}... | 
+      description: `${this.stripHtml(announcement.content).slice(0, 20)}... | 
       Date: ${this.datePite.transform(new Date(announcement.date), "medium")} `,
     }));
   }
@@ -1075,6 +1102,22 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       });
     } else {
       this.filteredThinPersons = this.thinPersons;
+    }
+  }
+
+  @HostListener("window:resize", ["$event"])
+  onResize(event) {
+    if (
+      event.target.innerWidth <= 600 &&
+      this.courseFilesTableSettings !== this.thinCourseFilesTableSettings
+    ) {
+      this.courseFilesTableSettings = this.thinCourseFilesTableSettings;
+    }
+    if (
+      event.target.innerWidth > 600 &&
+      this.courseFilesTableSettings !== this.richCourseFilesTableSettings
+    ) {
+      this.courseFilesTableSettings = this.richCourseFilesTableSettings;
     }
   }
 }

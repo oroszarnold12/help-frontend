@@ -18,13 +18,17 @@
       ></ion-icon>
     </ng-container>
     <ion-buttons slot="end">
-      <ion-button (click)="onChatButtonClicked()">
+      <ion-button (click)="onChatButtonClicked()" class="hidden-buttons">
         <ion-icon name="chatbox-ellipses-outline"></ion-icon>
       </ion-button>
-      <ion-button *ngIf="!admin" (click)="onCoursesButtonClicked()">
+      <ion-button
+        *ngIf="!admin"
+        (click)="onCoursesButtonClicked()"
+        class="hidden-buttons"
+      >
         <ion-icon name="book-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="onDashboardButtonClicked()">
+      <ion-button (click)="onDashboardButtonClicked()" class="hidden-buttons">
         <ion-icon name="speedometer-outline"></ion-icon>
       </ion-button>
       <ion-menu-button auto-hide="false"></ion-menu-button>
@@ -52,11 +56,44 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item button (click)="onProfileSettingsClicked()"
-        >Profile settings</ion-item
+      <ion-item button (click)="onProfileSettingsClicked()">
+        <ion-icon name="person-circle-outline" class="button-icon"></ion-icon>
+        Profile Settings
+      </ion-item>
+      <ion-item
+        button
+        *ngIf="showExtendedMenu()"
+        (click)="onDashboardButtonClicked()"
       >
-      <ion-item button (click)="onLogOutClicked()">Log out</ion-item>
-      <ion-item button (click)="closeMenu()"> Close </ion-item>
+        <ion-icon name="speedometer-outline" class="button-icon"></ion-icon>
+        Dashboard
+      </ion-item>
+      <ion-item
+        button
+        *ngIf="showExtendedMenu()"
+        (click)="onCoursesButtonClicked()"
+      >
+        <ion-icon name="book-outline" class="button-icon"></ion-icon>
+        Courses
+      </ion-item>
+      <ion-item button (click)="onLogOutClicked()">
+        <ion-icon name="exit-outline" class="button-icon"></ion-icon>
+        Logout
+      </ion-item>
+      <ion-item
+        button
+        *ngIf="showExtendedMenu()"
+        (click)="onChatButtonClicked()"
+      >
+        <ion-icon
+          name="chatbox-ellipses-outline"
+          class="button-icon"
+        ></ion-icon>
+        Chat
+      </ion-item>
+      <ion-item button (click)="closeMenu()">
+        <ion-icon name="close-outline" class="button-icon"></ion-icon>Close
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
