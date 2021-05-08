@@ -1,18 +1,18 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Course } from "../model/course.model";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Course } from '../model/course.model';
 
-import { Observable } from "rxjs";
-import { CourseCreation } from "../model/course-creation.model";
-import { Announcement } from "../model/announcement.model";
-import { Assignment } from "../model/assignment.model";
-import { Discussion } from "../model/discussion.model";
-import { url } from "./api-config";
-import { ThinPerson } from "../model/thin.person.model";
-import { CourseFile } from "../model/course-file.model";
+import { Observable } from 'rxjs';
+import { CourseCreation } from '../model/course-creation.model';
+import { Announcement } from '../model/announcement.model';
+import { Assignment } from '../model/assignment.model';
+import { Discussion } from '../model/discussion.model';
+import { url } from './api-config';
+import { ThinPerson } from '../model/thin.person.model';
+import { CourseFile } from '../model/course-file.model';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class CourseService {
   constructor(private http: HttpClient) {}
@@ -60,13 +60,13 @@ export class CourseService {
 
   getCourseFile(courseId: number, fileId: number): Observable<Blob> {
     return this.http.get(`${url}/courses/${courseId}/files/${fileId}`, {
-      responseType: "blob",
+      responseType: 'blob',
     });
   }
 
   getAllCourseFiles(courseId: number): Observable<Blob> {
     return this.http.get(`${url}/courses/${courseId}/files`, {
-      responseType: "blob",
+      responseType: 'blob',
     });
   }
 
@@ -74,11 +74,11 @@ export class CourseService {
     courseId: number,
     courseFilesIds: string[]
   ): Observable<Blob> {
-    let headers = new HttpHeaders().set("courseFilesIds", courseFilesIds);
+    const headers = new HttpHeaders().set('courseFilesIds', courseFilesIds);
 
     return this.http.get(`${url}/courses/${courseId}/files`, {
-      responseType: "blob",
-      headers: headers,
+      responseType: 'blob',
+      headers,
     });
   }
 

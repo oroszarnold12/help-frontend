@@ -1,22 +1,22 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   Validators,
-} from "@angular/forms";
-import { ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { CourseCreation } from "src/app/model/course-creation.model";
-import { Course } from "src/app/model/course.model";
-import { CourseService } from "src/app/shared/course.service";
-import { ToasterService } from "src/app/shared/toaster.service";
+} from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { CourseCreation } from 'src/app/model/course-creation.model';
+import { Course } from 'src/app/model/course.model';
+import { CourseService } from 'src/app/shared/course.service';
+import { ToasterService } from 'src/app/shared/toaster.service';
 
 @Component({
-  selector: "app-course-form",
-  templateUrl: "./course-form.component.html",
-  styleUrls: ["./course-form.component.scss"],
+  selector: 'app-course-form',
+  templateUrl: './course-form.component.html',
+  styleUrls: ['./course-form.component.scss'],
 })
 export class CourseFormComponent implements OnInit, OnDestroy {
   private stop: Subject<void> = new Subject();
@@ -36,26 +36,26 @@ export class CourseFormComponent implements OnInit, OnDestroy {
   ) {
     this.editorMaxLength = 65536;
     this.editorStyle = {
-      height: "300px",
+      height: '300px',
     };
     this.editorConfig = {
       toolbar: [
-        ["bold", "italic", "underline", "strike"],
-        ["blockquote", "code-block"],
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
 
         [{ header: 1 }, { header: 2 }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ script: "sub" }, { script: "super" }],
-        [{ indent: "-1" }, { indent: "+1" }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ script: 'sub' }, { script: 'super' }],
+        [{ indent: '-1' }, { indent: '+1' }],
 
-        [{ size: ["small", false, "large", "huge"] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
         [{ color: [] }, { background: [] }],
         [{ font: [] }],
         [{ align: [] }],
 
-        ["link"],
+        ['link'],
       ],
     };
   }
@@ -75,15 +75,15 @@ export class CourseFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     return new FormGroup({
-      name: new FormControl("", [
+      name: new FormControl('', [
         Validators.required,
         Validators.maxLength(255),
       ]),
-      longName: new FormControl("", [
+      longName: new FormControl('', [
         Validators.required,
         Validators.maxLength(255),
       ]),
-      description: new FormControl("", [
+      description: new FormControl('', [
         Validators.required,
         Validators.maxLength(this.editorMaxLength),
       ]),
@@ -107,8 +107,8 @@ export class CourseFormComponent implements OnInit, OnDestroy {
               this.courseForm.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Course updated!"
+                'Congratulations!',
+                'Course updated!'
               );
 
               this.modalController.dismiss();
@@ -116,7 +116,7 @@ export class CourseFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
@@ -131,8 +131,8 @@ export class CourseFormComponent implements OnInit, OnDestroy {
               this.courseForm.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Course created!"
+                'Congratulations!',
+                'Course created!'
               );
 
               this.modalController.dismiss();
@@ -140,15 +140,15 @@ export class CourseFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
       }
     } else {
       this.toasterService.error(
-        "All fields are required!",
-        "Course creation failed!"
+        'All fields are required!',
+        'Course creation failed!'
       );
     }
   }

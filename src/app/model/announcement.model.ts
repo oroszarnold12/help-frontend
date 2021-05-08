@@ -1,5 +1,5 @@
-import { AnnouncementComment } from "./announcement-comment.model";
-import { Person } from "./person.model";
+import { AnnouncementComment } from './announcement-comment.model';
+import { Person } from './person.model';
 
 export interface Announcement {
   id?: number;

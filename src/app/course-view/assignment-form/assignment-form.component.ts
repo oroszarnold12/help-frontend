@@ -1,21 +1,21 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   AbstractControl,
-} from "@angular/forms";
-import { ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Assignment } from "src/app/model/assignment.model";
-import { CourseService } from "src/app/shared/course.service";
-import { ToasterService } from "src/app/shared/toaster.service";
+} from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Assignment } from 'src/app/model/assignment.model';
+import { CourseService } from 'src/app/shared/course.service';
+import { ToasterService } from 'src/app/shared/toaster.service';
 
 @Component({
-  selector: "app-assignment-form",
-  templateUrl: "./assignment-form.component.html",
-  styleUrls: ["./assignment-form.component.scss"],
+  selector: 'app-assignment-form',
+  templateUrl: './assignment-form.component.html',
+  styleUrls: ['./assignment-form.component.scss'],
 })
 export class AssignmentFormComponent implements OnInit, OnDestroy {
   private stop: Subject<void> = new Subject();
@@ -37,26 +37,26 @@ export class AssignmentFormComponent implements OnInit, OnDestroy {
   ) {
     this.editorMaxLength = 16384;
     this.editorStyle = {
-      height: "300px",
+      height: '300px',
     };
     this.editorConfig = {
       toolbar: [
-        ["bold", "italic", "underline", "strike"],
-        ["blockquote", "code-block"],
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
 
         [{ header: 1 }, { header: 2 }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ script: "sub" }, { script: "super" }],
-        [{ indent: "-1" }, { indent: "+1" }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ script: 'sub' }, { script: 'super' }],
+        [{ indent: '-1' }, { indent: '+1' }],
 
-        [{ size: ["small", false, "large", "huge"] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
         [{ color: [] }, { background: [] }],
         [{ font: [] }],
         [{ align: [] }],
 
-        ["link"],
+        ['link'],
       ],
     };
   }
@@ -76,13 +76,13 @@ export class AssignmentFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     return new FormGroup({
-      name: new FormControl("", [
+      name: new FormControl('', [
         Validators.required,
         Validators.maxLength(255),
       ]),
-      dueDate: new FormControl("", Validators.required),
-      points: new FormControl("", [Validators.required, Validators.min(0)]),
-      description: new FormControl("", [
+      dueDate: new FormControl('', Validators.required),
+      points: new FormControl('', [Validators.required, Validators.min(0)]),
+      description: new FormControl('', [
         Validators.required,
         Validators.maxLength(this.editorMaxLength),
       ]),
@@ -117,8 +117,8 @@ export class AssignmentFormComponent implements OnInit, OnDestroy {
               this.assignmentFrom.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Assignment updated!"
+                'Congratulations!',
+                'Assignment updated!'
               );
 
               this.modalController.dismiss();
@@ -126,7 +126,7 @@ export class AssignmentFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
@@ -141,8 +141,8 @@ export class AssignmentFormComponent implements OnInit, OnDestroy {
               this.assignmentFrom.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Assignment created!"
+                'Congratulations!',
+                'Assignment created!'
               );
 
               this.modalController.dismiss();
@@ -150,15 +150,15 @@ export class AssignmentFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
       }
     } else {
       this.toasterService.error(
-        "All fields are required!",
-        "Assignment creation failed!"
+        'All fields are required!',
+        'Assignment creation failed!'
       );
     }
   }

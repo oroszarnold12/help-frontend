@@ -1,12 +1,12 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { Person } from "../model/person.model";
-import { ThinPerson } from "../model/thin.person.model";
-import { url } from "./api-config";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { Person } from '../model/person.model';
+import { ThinPerson } from '../model/thin.person.model';
+import { url } from './api-config';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class PersonService {
   imageChanged: Subject<string> = new Subject();
@@ -35,7 +35,7 @@ export class PersonService {
   }
 
   changePassword(password: string): Observable<Person> {
-    return this.httpClient.put<Person>(`${url}/user`, { password: password });
+    return this.httpClient.put<Person>(`${url}/user`, { password });
   }
 
   saveImage(data: FormData): Observable<Person> {
@@ -46,8 +46,8 @@ export class PersonService {
     return this.httpClient.delete<void>(`${url}/user/image`);
   }
 
-  setImageUrl(url: string): void {
-    this.imageChanged.next(url);
+  setImageUrl(imageUrl: string): void {
+    this.imageChanged.next(imageUrl);
   }
 
   saveNotificationToken(token: string): Observable<void> {

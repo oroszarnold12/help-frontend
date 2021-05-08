@@ -1,27 +1,27 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AlertController, ModalController } from "@ionic/angular";
-import { FileSaverService } from "ngx-filesaver";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { AssignmentFormComponent } from "../course-view/assignment-form/assignment-form.component";
-import { Assignment } from "../model/assignment.model";
-import { AssignmentGrade } from "../model/assignment-grade.model";
-import { Submission } from "../model/submission.model";
-import { AuthService } from "../shared/auth.service";
-import { BackButtonService } from "../shared/back-button.service";
-import { CourseService } from "../shared/course.service";
-import { GradeService } from "../shared/grade.service";
-import { SubmissionService } from "../shared/submission.service";
-import { ToasterService } from "../shared/toaster.service";
-import { CommentService } from "../shared/comment.service";
-import { url } from "../shared/api-config";
-import { AssignmentComment } from "../model/assignment-comment.model";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, ModalController } from '@ionic/angular';
+import { FileSaverService } from 'ngx-filesaver';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AssignmentFormComponent } from '../course-view/assignment-form/assignment-form.component';
+import { Assignment } from '../model/assignment.model';
+import { AssignmentGrade } from '../model/assignment-grade.model';
+import { Submission } from '../model/submission.model';
+import { AuthService } from '../shared/auth.service';
+import { BackButtonService } from '../shared/back-button.service';
+import { CourseService } from '../shared/course.service';
+import { GradeService } from '../shared/grade.service';
+import { SubmissionService } from '../shared/submission.service';
+import { ToasterService } from '../shared/toaster.service';
+import { CommentService } from '../shared/comment.service';
+import { url } from '../shared/api-config';
+import { AssignmentComment } from '../model/assignment-comment.model';
 
 @Component({
-  selector: "app-assignment-view",
-  templateUrl: "./assignment-view.component.html",
-  styleUrls: ["./assignment-view.component.scss"],
+  selector: 'app-assignment-view',
+  templateUrl: './assignment-view.component.html',
+  styleUrls: ['./assignment-view.component.scss'],
 })
 export class AssignmentViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -107,8 +107,8 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
           },
           () => {
             this.toasterService.error(
-              "Could not get assignment!",
-              "Something went wrong!"
+              'Could not get assignment!',
+              'Something went wrong!'
             );
           }
         );
@@ -126,7 +126,7 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -147,7 +147,7 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -156,7 +156,7 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
   async presentAssignmentModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.courseId,
         assignment: this.assignment,
@@ -187,8 +187,8 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
       this.numOfFiles++;
     } else {
       this.toasterService.error(
-        "The maximum number of files is 5!",
-        "Something went wrong!"
+        'The maximum number of files is 5!',
+        'Something went wrong!'
       );
     }
   }
@@ -209,7 +209,7 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
     if (!!this.files) {
       const formData = new FormData();
       this.files.forEach((file) => {
-        formData.append("files", file);
+        formData.append('files', file);
       });
 
       this.submissionService
@@ -229,8 +229,8 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
                 .subscribe(
                   () => {
                     this.toasterService.success(
-                      "File with comment uploaded successfully!",
-                      "Congratulations!"
+                      'File with comment uploaded successfully!',
+                      'Congratulations!'
                     );
 
                     this.isSubmitting = false;
@@ -246,14 +246,14 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
                   (error) => {
                     this.toasterService.error(
                       error.error.message,
-                      "Please try again!"
+                      'Please try again!'
                     );
                   }
                 );
             } else {
               this.toasterService.success(
-                "File uploaded successfully!",
-                "Congratulations!"
+                'File uploaded successfully!',
+                'Congratulations!'
               );
 
               this.isSubmitting = false;
@@ -268,11 +268,11 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
             }
           },
           (error) => {
-            this.toasterService.error(error.error.message, "Please try again!");
+            this.toasterService.error(error.error.message, 'Please try again!');
           }
         );
     } else {
-      this.toasterService.error("File is required!", "Please try again!");
+      this.toasterService.error('File is required!', 'Please try again!');
     }
   }
 
@@ -299,12 +299,12 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.toasterService.success(
-            "Congratulations!",
-            published ? "Assignment published!" : "Assignemnt is hidden!"
+            'Congratulations!',
+            published ? 'Assignment published!' : 'Assignemnt is hidden!'
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -317,15 +317,15 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
 
   async onDeleteClicked(commentId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this comment?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this comment?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.commentService
               .deleteAssingmentComment(
@@ -337,8 +337,8 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Comment deletion successful!",
-                    "Congratulations!"
+                    'Comment deletion successful!',
+                    'Congratulations!'
                   );
 
                   this.loadGrades();
@@ -346,7 +346,7 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -370,15 +370,15 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.toasterService.success(
-            "Comment saved successfully!",
-            "Congratulations!"
+            'Comment saved successfully!',
+            'Congratulations!'
           );
 
           this.loadAssignment();
           this.leavedCommentContent = undefined;
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -408,8 +408,8 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.toasterService.success(
-            "Comment updated successfully!",
-            "Congratulations!"
+            'Comment updated successfully!',
+            'Congratulations!'
           );
 
           this.loadAssignment();
@@ -418,12 +418,12 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
           this.editingComment[commentId] = false;
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
 
   getImageUrlById(id: number): string {
-    return url + "/user/" + id + "/image/?" + new Date().getTime();
+    return url + '/user/' + id + '/image/?' + new Date().getTime();
   }
 }

@@ -1,5 +1,5 @@
-import { ConversationMessage } from "./conversation-message.model";
-import { ThinPerson } from "./thin.person.model";
+import { ConversationMessage } from './conversation-message.model';
+import { ThinPerson } from './thin.person.model';
 
 export interface Conversation {
   id?: number;

@@ -1,5 +1,5 @@
-import { Assignment } from "./assignment.model";
-import { ThinPerson } from "./thin.person.model";
+import { Assignment } from './assignment.model';
+import { ThinPerson } from './thin.person.model';
 
 export class AssignmentGrade {
   id?: number;

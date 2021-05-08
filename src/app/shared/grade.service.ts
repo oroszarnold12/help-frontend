@@ -1,13 +1,13 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { AssignmentGrade } from "../model/assignment-grade.model";
-import { Grades } from "../model/grades.model";
-import { QuizGrade } from "../model/quiz-grade.model";
-import { url } from "./api-config";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AssignmentGrade } from '../model/assignment-grade.model';
+import { Grades } from '../model/grades.model';
+import { QuizGrade } from '../model/quiz-grade.model';
+import { url } from './api-config';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class GradeService {
   constructor(private httpClient: HttpClient) {}
@@ -33,7 +33,7 @@ export class GradeService {
   ): Observable<AssignmentGrade> {
     return this.httpClient.post<AssignmentGrade>(
       `${url}/courses/${courseId}/assignments/${assignmentId}/grades`,
-      { grade: grade, personId: personId }
+      { grade, personId }
     );
   }
 

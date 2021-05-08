@@ -1,22 +1,22 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   FormArray,
   AbstractControl,
-} from "@angular/forms";
-import { ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Question } from "src/app/model/question.model";
-import { QuestionService } from "src/app/shared/question.service";
-import { ToasterService } from "src/app/shared/toaster.service";
+} from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Question } from 'src/app/model/question.model';
+import { QuestionService } from 'src/app/shared/question.service';
+import { ToasterService } from 'src/app/shared/toaster.service';
 
 @Component({
-  selector: "app-question-form",
-  templateUrl: "./question-form.component.html",
-  styleUrls: ["./question-form.component.scss"],
+  selector: 'app-question-form',
+  templateUrl: './question-form.component.html',
+  styleUrls: ['./question-form.component.scss'],
 })
 export class QuestionFormComponent implements OnInit, OnDestroy {
   private stop: Subject<void> = new Subject();
@@ -50,35 +50,35 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     return new FormGroup({
-      content: new FormControl("", [
+      content: new FormControl('', [
         Validators.required,
         Validators.maxLength(2048),
       ]),
-      points: new FormControl("", [Validators.required, Validators.min(0)]),
+      points: new FormControl('', [Validators.required, Validators.min(0)]),
       answers: new FormArray([
         new FormGroup({
-          content: new FormControl("", [
+          content: new FormControl('', [
             Validators.required,
             Validators.maxLength(2048),
           ]),
           correct: new FormControl(false),
         }),
         new FormGroup({
-          content: new FormControl("", [
+          content: new FormControl('', [
             Validators.required,
             Validators.maxLength(2048),
           ]),
           correct: new FormControl(false),
         }),
         new FormGroup({
-          content: new FormControl("", [
+          content: new FormControl('', [
             Validators.required,
             Validators.maxLength(2048),
           ]),
           correct: new FormControl(false),
         }),
         new FormGroup({
-          content: new FormControl("", [
+          content: new FormControl('', [
             Validators.required,
             Validators.maxLength(2048),
           ]),
@@ -92,7 +92,7 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
     let currentNumberOfAnswers = this.answers.length;
     const targetNumberOfAnswers = this.question.answers.length;
 
-    while (currentNumberOfAnswers != targetNumberOfAnswers) {
+    while (currentNumberOfAnswers !== targetNumberOfAnswers) {
       if (currentNumberOfAnswers < targetNumberOfAnswers) {
         this.addAnswer();
         currentNumberOfAnswers++;
@@ -120,8 +120,8 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
   removeAnswer(index: number): void {
     if (this.answers.length <= 2) {
       this.toasterService.error(
-        "A question should have atleast 2 answers!",
-        "Can't remove answer!"
+        'A question should have atleast 2 answers!',
+        'Can\'t remove answer!'
       );
     } else {
       this.answers.removeAt(index);
@@ -131,7 +131,7 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
   addAnswer(): void {
     this.answers.push(
       new FormGroup({
-        content: new FormControl("", [
+        content: new FormControl('', [
           Validators.required,
           Validators.maxLength(2048),
         ]),
@@ -166,8 +166,8 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
               this.questionForm.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Question updated!"
+                'Congratulations!',
+                'Question updated!'
               );
 
               this.modalController.dismiss();
@@ -175,7 +175,7 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
@@ -190,8 +190,8 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
               this.questionForm.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Question created!"
+                'Congratulations!',
+                'Question created!'
               );
 
               this.clearAnswers();
@@ -199,15 +199,15 @@ export class QuestionFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
       }
     } else {
       this.toasterService.error(
-        "All fields are required!",
-        "Question creation failed!"
+        'All fields are required!',
+        'Question creation failed!'
       );
     }
   }

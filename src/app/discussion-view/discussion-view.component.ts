@@ -1,22 +1,22 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { AlertController, ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { DiscussionFormComponent } from "../course-view/discussion-form/discussion-form.component";
-import { Discussion } from "../model/discussion.model";
-import { url } from "../shared/api-config";
-import { AuthService } from "../shared/auth.service";
-import { BackButtonService } from "../shared/back-button.service";
-import { CommentService } from "../shared/comment.service";
-import { CourseService } from "../shared/course.service";
-import { ToasterService } from "../shared/toaster.service";
-import { DiscussionCommentFormComponent } from "./discussion-comment-form/discussion-comment-form.component";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AlertController, ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { DiscussionFormComponent } from '../course-view/discussion-form/discussion-form.component';
+import { Discussion } from '../model/discussion.model';
+import { url } from '../shared/api-config';
+import { AuthService } from '../shared/auth.service';
+import { BackButtonService } from '../shared/back-button.service';
+import { CommentService } from '../shared/comment.service';
+import { CourseService } from '../shared/course.service';
+import { ToasterService } from '../shared/toaster.service';
+import { DiscussionCommentFormComponent } from './discussion-comment-form/discussion-comment-form.component';
 
 @Component({
-  selector: "app-discussion-view",
-  templateUrl: "./discussion-view.component.html",
-  styleUrls: ["./discussion-view.component.scss"],
+  selector: 'app-discussion-view',
+  templateUrl: './discussion-view.component.html',
+  styleUrls: ['./discussion-view.component.scss'],
 })
 export class DiscussionViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -77,8 +77,8 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
           },
           () => {
             this.toasterService.error(
-              "Could not get discussion!",
-              "Something went wrong!"
+              'Could not get discussion!',
+              'Something went wrong!'
             );
           }
         );
@@ -88,7 +88,7 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
   async presentDiscussionModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: DiscussionFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.courseId,
         discussion: this.discussion,
@@ -103,11 +103,11 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
   async presentCommentModal(comment?: Comment): Promise<void> {
     const modal = await this.modalController.create({
       component: DiscussionCommentFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.courseId,
         discussionId: this.discussion.id,
-        comment: comment,
+        comment,
       },
     });
 
@@ -122,15 +122,15 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
 
   async onDeleteClicked(commentId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this comment?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this comment?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.commentService
               .deleteDiscussionComment(
@@ -142,8 +142,8 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Comment deletion successful!",
-                    "Congratulations!"
+                    'Comment deletion successful!',
+                    'Congratulations!'
                   );
 
                   this.loadDiscussion();
@@ -151,7 +151,7 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -164,6 +164,6 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
   }
 
   getImageUrlById(id: number): string {
-    return url + "/user/" + id + "/image/?" + new Date().getTime();
+    return url + '/user/' + id + '/image/?' + new Date().getTime();
   }
 }

@@ -1,4 +1,4 @@
-import { DatePipe, formatNumber } from "@angular/common";
+import { DatePipe, formatNumber } from '@angular/common';
 import {
   Component,
   HostListener,
@@ -6,42 +6,42 @@ import {
   OnInit,
   ViewChild,
   ViewEncapsulation,
-} from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertController,
   IonSegment,
   IonSlides,
   ModalController,
-} from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { CourseFormComponent } from "../dashboard/course-form/course-form.component";
-import { Course } from "../model/course.model";
-import { GeneralOverview } from "../model/general-overview.model";
-import { InvitationCreation } from "../model/invitation.creation.model";
-import { ThinPerson } from "../model/thin.person.model";
-import { AuthService } from "../shared/auth.service";
-import { BackButtonService } from "../shared/back-button.service";
-import { CourseService } from "../shared/course.service";
-import { DefaultSlideService } from "../shared/default-slide.service";
-import { GradeService } from "../shared/grade.service";
-import { InvitationService } from "../shared/invitation.service";
-import { PersonService } from "../shared/person.service";
-import { QuizService } from "../shared/quiz.service";
-import { ToasterService } from "../shared/toaster.service";
-import { AnnouncementFormComponent } from "./announcement-form/announcement-form.component";
-import { AssignmentFormComponent } from "./assignment-form/assignment-form.component";
-import { DiscussionFormComponent } from "./discussion-form/discussion-form.component";
-import { QuizFormComponent } from "./quiz-form/quiz-form.component";
-import { Grades } from "../model/grades.model";
-import { CourseFile } from "../model/course-file.model";
-import { FileSaverService } from "ngx-filesaver";
+} from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { CourseFormComponent } from '../dashboard/course-form/course-form.component';
+import { Course } from '../model/course.model';
+import { GeneralOverview } from '../model/general-overview.model';
+import { InvitationCreation } from '../model/invitation.creation.model';
+import { ThinPerson } from '../model/thin.person.model';
+import { AuthService } from '../shared/auth.service';
+import { BackButtonService } from '../shared/back-button.service';
+import { CourseService } from '../shared/course.service';
+import { DefaultSlideService } from '../shared/default-slide.service';
+import { GradeService } from '../shared/grade.service';
+import { InvitationService } from '../shared/invitation.service';
+import { PersonService } from '../shared/person.service';
+import { QuizService } from '../shared/quiz.service';
+import { ToasterService } from '../shared/toaster.service';
+import { AnnouncementFormComponent } from './announcement-form/announcement-form.component';
+import { AssignmentFormComponent } from './assignment-form/assignment-form.component';
+import { DiscussionFormComponent } from './discussion-form/discussion-form.component';
+import { QuizFormComponent } from './quiz-form/quiz-form.component';
+import { Grades } from '../model/grades.model';
+import { CourseFile } from '../model/course-file.model';
+import { FileSaverService } from 'ngx-filesaver';
 
 @Component({
-  selector: "app-course-view",
-  templateUrl: "./course-view.component.html",
-  styleUrls: ["./course-view.component.scss"],
+  selector: 'app-course-view',
+  templateUrl: './course-view.component.html',
+  styleUrls: ['./course-view.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class CourseViewComponent implements OnInit, OnDestroy {
@@ -50,8 +50,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   canDelete: boolean;
   isTeacher: boolean;
 
-  @ViewChild("slides") slides: IonSlides;
-  @ViewChild("segments") segments: IonSegment;
+  @ViewChild('slides') slides: IonSlides;
+  @ViewChild('segments') segments: IonSegment;
   options = {
     speed: 400,
     initialSlide: this.defaultSlideService.getDefaultSlide(),
@@ -81,7 +81,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   editedGrade: boolean;
 
   uploadingCourseFile: boolean;
-  numOfCourseFiles: number = 1;
+  numOfCourseFiles = 1;
   private courseFiles: Blob[];
   courseFilesTableSettings: any;
   richCourseFilesTableSettings: any;
@@ -110,7 +110,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         add: false,
         edit: true,
         delete: false,
-        columnTitle: "",
+        columnTitle: '',
       },
       edit: {
         confirmSave: true,
@@ -120,13 +120,13 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       columns: {
         name: {
-          title: "Name",
+          title: 'Name',
           editable: false,
         },
         grade: {
-          title: "Grade",
+          title: 'Grade',
           filter: false,
-          type: "html",
+          type: 'html',
           editable: true,
           valuePrepareFunction: (value, row) => {
             if (!!row.assignmentId) {
@@ -145,7 +145,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           },
         },
         points: {
-          title: "Points",
+          title: 'Points',
           filter: false,
           editable: false,
         },
@@ -153,7 +153,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     };
 
     this.availablePersonsTableSettings = {
-      selectMode: "multi",
+      selectMode: 'multi',
       actions: {
         add: false,
         edit: false,
@@ -161,15 +161,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       columns: {
         name: {
-          title: "Name",
+          title: 'Name',
           editable: false,
           filter: false,
-          valuePrepareFunction: (_cell, row) => {
-            return row.firstName + " " + row.lastName;
+          valuePrepareFunction: (cell, row) => {
+            return row.firstName + ' ' + row.lastName;
           },
         },
         email: {
-          title: "Email address",
+          title: 'Email address',
           filter: false,
         },
       },
@@ -180,7 +180,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         add: false,
         edit: false,
         delete: this.isTeacher,
-        columnTitle: "",
+        columnTitle: '',
       },
       delete: {
         confirmDelete: true,
@@ -188,16 +188,16 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       columns: {
         name: {
-          title: "Name",
+          title: 'Name',
           editable: false,
-          type: "string",
+          type: 'string',
           filter: false,
-          valuePrepareFunction: (_cell, row) => {
-            return row.firstName + " " + row.lastName;
+          valuePrepareFunction: (cell, row) => {
+            return row.firstName + ' ' + row.lastName;
           },
         },
         email: {
-          title: "Email address",
+          title: 'Email address',
           filter: false,
         },
       },
@@ -206,12 +206,12 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.isTeacher = this.authService.isTeacher();
 
     this.richCourseFilesTableSettings = {
-      selectMode: "multi",
+      selectMode: 'multi',
       actions: {
         add: false,
         edit: false,
         delete: this.isTeacher,
-        columnTitle: "",
+        columnTitle: '',
       },
       delete: {
         confirmDelete: true,
@@ -219,39 +219,39 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       columns: {
         fileName: {
-          title: "Name",
+          title: 'Name',
         },
         creationDate: {
-          title: "Creation Date",
+          title: 'Creation Date',
           filter: false,
           valuePrepareFunction: (cell, row) => {
-            return datePite.transform(cell, "medium");
+            return datePite.transform(cell, 'medium');
           },
         },
         size: {
-          title: "Size",
+          title: 'Size',
           filter: false,
           valuePrepareFunction: (cell, row) => {
-            return formatNumber(cell / 1000000, "en-EN") + " Mb";
+            return formatNumber(cell / 1000000, 'en-EN') + ' Mb';
           },
         },
         uploader: {
-          title: "Creator",
+          title: 'Creator',
           filter: false,
           valuePrepareFunction: (cell, row) => {
-            return cell.firstName + " " + cell.lastName;
+            return cell.firstName + ' ' + cell.lastName;
           },
         },
       },
     };
 
     this.thinCourseFilesTableSettings = {
-      selectMode: "multi",
+      selectMode: 'multi',
       actions: {
         add: false,
         edit: false,
         delete: this.isTeacher,
-        columnTitle: "",
+        columnTitle: '',
       },
       delete: {
         confirmDelete: true,
@@ -259,7 +259,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       columns: {
         fileName: {
-          title: "Name",
+          title: 'Name',
         },
       },
     };
@@ -306,7 +306,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -331,7 +331,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           (error) => {
             this.toasterService.error(
               error.error.message,
-              "Something went wrong!"
+              'Something went wrong!'
             );
           }
         );
@@ -351,7 +351,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -372,7 +372,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -382,30 +382,30 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     const { assignments } = this.course;
     this.assignmentOverviews = assignments.map((assignment) => ({
       id: assignment.id,
-      name: assignment.name + (assignment.published ? "" : " - Unpublished"),
+      name: assignment.name + (assignment.published ? '' : ' - Unpublished'),
       description: `Due: ${this.datePite.transform(
         new Date(assignment.dueDate),
-        "medium"
-      )} | 
+        'medium'
+      )} |
         ${this.createAssingmentDescription(assignment.id, assignment.points)}`,
     }));
   }
 
   createAssingmentDescription(id: number, points: number): string {
     const grade = this.grades.assignmentGrades.find(
-      (grade) => grade.assignment.id === id
+      (currentGrade) => currentGrade.assignment.id === id
     );
-    return !!grade ? `Grade: ${grade.grade}/${points}` : "Not yet graded!";
+    return !!grade ? `Grade: ${grade.grade}/${points}` : 'Not yet graded!';
   }
 
   createQuizOverviews(): void {
     const { quizzes } = this.course;
     this.quizOverviews = quizzes.map((quiz) => ({
       id: quiz.id,
-      name: quiz.name + (quiz.published ? "" : " - Unpublished"),
+      name: quiz.name + (quiz.published ? '' : ' - Unpublished'),
       description: `Due: ${this.datePite.transform(
         new Date(quiz.dueDate),
-        "medium"
+        'medium'
       )} | Points: ${quiz.points}`,
     }));
   }
@@ -415,15 +415,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.announcementOverviews = announcements.map((announcement) => ({
       id: announcement.id,
       name: announcement.name,
-      description: `${this.stripHtml(announcement.content).slice(0, 20)}... | 
-      Date: ${this.datePite.transform(new Date(announcement.date), "medium")} `,
+      description: `${this.stripHtml(announcement.content).slice(0, 20)}... |
+      Date: ${this.datePite.transform(new Date(announcement.date), 'medium')} `,
     }));
   }
 
   private stripHtml(text: string): string {
-    var div = document.createElement("div");
+    const div = document.createElement('div');
     div.innerHTML = text;
-    return div.textContent || div.innerText || "";
+    return div.textContent || div.innerText || '';
   }
 
   createGradeOverviews(): void {
@@ -454,7 +454,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.gradeOverviews.forEach((gradeOverview) => {
       this.sumOfPoints += gradeOverview.points;
       const grade = gradeOverview.grade;
-      if (grade !== "-") {
+      if (grade !== '-') {
         this.sumOfGrades += grade;
       }
     });
@@ -464,16 +464,16 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
   getGrade(assignmentId: number): number | string {
     const grade = this.grades.assignmentGrades.find(
-      (grade) => grade.assignment.id === assignmentId
+      (currentGrade) => currentGrade.assignment.id === assignmentId
     );
-    return !!grade ? grade.grade : "-";
+    return !!grade ? grade.grade : '-';
   }
 
   getQuizGrade(quizId: number): number | string {
     const grade = this.grades.quizGrades.find(
-      (grade) => grade.quiz.id === quizId
+      (currentGrade) => currentGrade.quiz.id === quizId
     );
-    return !!grade ? grade.grade : "-";
+    return !!grade ? grade.grade : '-';
   }
 
   createDiscussionOverviews(): void {
@@ -483,7 +483,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       name: discussion.name,
       description: `Date: ${this.datePite.transform(
         new Date(discussion.date),
-        "medium"
+        'medium'
       )}`,
       creatorUsername: discussion.creator.email,
     }));
@@ -496,10 +496,10 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   ionSlideDidChange(): void {
     this.slides.getActiveIndex().then((index) => {
       this.segments.value = index.toString();
-      document.getElementById("segment-" + index).scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "center",
+      document.getElementById('segment-' + index).scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'center',
       });
     });
   }
@@ -528,15 +528,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
   async deleteAnnouncement(announcementId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this announcement?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this announcement?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.courseService
               .deleteAnnouncement(this.course.id, announcementId)
@@ -544,15 +544,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Announcement deletion successful!",
-                    "Congratulations!"
+                    'Announcement deletion successful!',
+                    'Congratulations!'
                   );
                   this.loadCourse();
                 },
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -566,15 +566,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
   async deleteAssignment(assignmentId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this assignment?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this assignment?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.courseService
               .deleteAssignment(this.course.id, assignmentId)
@@ -582,15 +582,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Assignment deletion successful!",
-                    "Congratulations!"
+                    'Assignment deletion successful!',
+                    'Congratulations!'
                   );
                   this.loadCourse();
                 },
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -604,15 +604,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
   async deleteQuiz(quizId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this quiz?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this quiz?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.quizService
               .deleteQuiz(this.course.id, quizId)
@@ -620,15 +620,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Quiz deletion successful!",
-                    "Congratulations!"
+                    'Quiz deletion successful!',
+                    'Congratulations!'
                   );
                   this.loadCourse();
                 },
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -642,15 +642,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
   async deleteDiscussion(discussionId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this discussion?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this discussion?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.courseService
               .deleteDiscussions(this.course.id, discussionId)
@@ -658,15 +658,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Discussion deletion successful!",
-                    "Congratulations!"
+                    'Discussion deletion successful!',
+                    'Congratulations!'
                   );
                   this.loadCourse();
                 },
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -680,15 +680,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
   async deleteCourse(): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this course?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this course?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.courseService
               .deleteCourse(this.course.id)
@@ -696,16 +696,16 @@ export class CourseViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Course deletion successful!",
-                    "Congratulations!"
+                    'Course deletion successful!',
+                    'Congratulations!'
                   );
-                  this.router.navigate(["/dashboard"]);
+                  this.router.navigate(['/dashboard']);
                 },
 
                 (error) => {
                   this.toasterService.error(
-                    "Course deletion failed!",
-                    "Please try again!"
+                    'Course deletion failed!',
+                    'Please try again!'
                   );
                 }
               );
@@ -720,7 +720,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentAnnouncementModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.course.id,
       },
@@ -734,7 +734,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentAssignmentModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AssignmentFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.course.id,
       },
@@ -748,7 +748,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentQuizModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: QuizFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.course.id,
       },
@@ -762,7 +762,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentDiscussionModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: DiscussionFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.course.id,
       },
@@ -776,7 +776,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async presentCourseModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: CourseFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         course: this.course,
       },
@@ -805,22 +805,22 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.toasterService.success(
-              "Invitations sent!",
-              "Congratulations!"
+              'Invitations sent!',
+              'Congratulations!'
             );
           },
           (error) => {
             console.log(error);
             this.toasterService.error(
               error.error,
-              "Sending invitations failed!"
+              'Sending invitations failed!'
             );
           }
         );
     } else {
       this.toasterService.error(
-        "The invitation list must contain atleast one person!",
-        "Sending invitations failed!"
+        'The invitation list must contain atleast one person!',
+        'Sending invitations failed!'
       );
     }
   }
@@ -831,7 +831,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     event.newData.grade = Number.parseFloat(event.newData.grade);
     event.confirm.resolve(event.newData);
 
-    const oldGrade = event.data.grade === "-" ? 0 : event.data.grade;
+    const oldGrade = event.data.grade === '-' ? 0 : event.data.grade;
 
     this.sumOfGrades = this.sumOfGrades - (oldGrade - event.newData.grade);
     this.precentage = (this.sumOfGrades * 100) / this.sumOfPoints;
@@ -871,8 +871,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       this.numOfCourseFiles++;
     } else {
       this.toasterService.error(
-        "The maximum number of files is 5!",
-        "Something went wrong!"
+        'The maximum number of files is 5!',
+        'Something went wrong!'
       );
     }
   }
@@ -881,7 +881,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     if (!!this.courseFiles) {
       const formData = new FormData();
       this.courseFiles.forEach((file) => {
-        formData.append("files", file);
+        formData.append('files', file);
       });
 
       this.courseService
@@ -890,8 +890,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.toasterService.success(
-              "Files uploaded successfully!",
-              "Congratulations!"
+              'Files uploaded successfully!',
+              'Congratulations!'
             );
 
             this.uploadingCourseFile = false;
@@ -899,11 +899,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
             this.loadCourse();
           },
           (error) => {
-            this.toasterService.error(error.error.message, "Please try again!");
+            this.toasterService.error(error.error.message, 'Please try again!');
           }
         );
     } else {
-      this.toasterService.error("File is required!", "Please try again!");
+      this.toasterService.error('File is required!', 'Please try again!');
     }
   }
 
@@ -934,7 +934,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      this.toasterService.error("No files selected!", "Please try again!");
+      this.toasterService.error('No files selected!', 'Please try again!');
     }
   }
 
@@ -947,7 +947,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           this.fileSaverService.save(blob, fileName);
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -960,11 +960,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         (blob) => {
           this.fileSaverService.save(
             blob,
-            (this.course.name + "_files.zip").replace("/ +/g", "_")
+            (this.course.name + '_files.zip').replace('/ +/g', '_')
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -977,26 +977,26 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         (blob) => {
           this.fileSaverService.save(
             blob,
-            (this.course.name + "_files.zip").replace("/ +/g", "_")
+            (this.course.name + '_files.zip').replace('/ +/g', '_')
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
 
   async onCourseFileDeleteClicked(event: any): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this file?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this file?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.courseService
               .deleteCourseFile(this.course.id, event.data.id)
@@ -1004,15 +1004,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Course file deletion successful!",
-                    "Congratulations!"
+                    'Course file deletion successful!',
+                    'Congratulations!'
                   );
                   event.confirm.resolve();
                 },
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -1027,20 +1027,20 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async onKickParticipantClicked(event: any): Promise<void> {
     if (event.data.email === this.authService.getUsername()) {
       this.toasterService.error(
-        "You can't kick yourself!",
-        "Choose another participant!"
+        'You can not kick yourself!',
+        'Choose another participant!'
       );
     } else {
       const alert = await this.alertController.create({
-        header: "Confirm!",
-        message: "Are you sure that you want to kick this student?",
+        header: 'Confirm!',
+        message: 'Are you sure that you want to kick this student?',
         buttons: [
           {
-            text: "Cancel",
-            role: "cancel",
+            text: 'Cancel',
+            role: 'cancel',
           },
           {
-            text: "Yes",
+            text: 'Yes',
             handler: () => {
               this.courseService
                 .deleteParticipant(this.course.id, event.data.id)
@@ -1048,8 +1048,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
                 .subscribe(
                   () => {
                     this.toasterService.success(
-                      "Participant kicked successfuly!",
-                      "Congratulations!"
+                      'Participant kicked successfuly!',
+                      'Congratulations!'
                     );
 
                     event.confirm.resolve();
@@ -1058,7 +1058,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
                   (error) => {
                     this.toasterService.error(
                       error.error.message,
-                      "Please try again!"
+                      'Please try again!'
                     );
                   }
                 );
@@ -1072,7 +1072,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   }
 
   onFilterParticipants(event: CustomEvent): void {
-    if (event.detail.value !== "") {
+    if (event.detail.value !== '') {
       this.filteredParticipants = this.participants.filter((participant) => {
         return (
           participant.firstName
@@ -1089,7 +1089,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   }
 
   onFilterAvailablePersons(event: CustomEvent): void {
-    if (event.detail.value !== "") {
+    if (event.detail.value !== '') {
       this.filteredThinPersons = this.thinPersons.filter((person) => {
         return (
           person.firstName
@@ -1105,7 +1105,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   onResize(event) {
     if (
       event.target.innerWidth <= 600 &&

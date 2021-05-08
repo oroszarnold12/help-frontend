@@ -15,13 +15,13 @@
           <p>{{ item.description }}</p>
         </ion-label>
         <ion-buttons slot="end">
-          <ion-button color="success" (click)="viewClicked(item.id)">
+          <ion-button color="success" (click)="onViewClicked(item.id)">
             <ion-icon name="eye-outline"></ion-icon>
           </ion-button>
           <ion-button
             *ngIf="isTeacher || item.creatorUsername === username"
             color="danger"
-            (click)="deleteClicked(item.id)"
+            (click)="onDeleteClicked(item.id)"
           >
             <ion-icon name="trash-outline"></ion-icon>
           </ion-button>

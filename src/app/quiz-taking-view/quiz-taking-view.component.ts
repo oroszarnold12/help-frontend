@@ -1,22 +1,22 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { FormArray, FormControl } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { IonSlides } from "@ionic/angular";
-import { Subject, Subscription } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Question } from "../model/question.model";
-import { Quiz } from "../model/quiz.model";
-import { BackButtonService } from "../shared/back-button.service";
-import { QuestionService } from "../shared/question.service";
-import { QuizSubmissionService } from "../shared/quiz-submission.service";
-import { QuizTimerService } from "../shared/quiz-timer.service";
-import { QuizService } from "../shared/quiz.service";
-import { ToasterService } from "../shared/toaster.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonSlides } from '@ionic/angular';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Question } from '../model/question.model';
+import { Quiz } from '../model/quiz.model';
+import { BackButtonService } from '../shared/back-button.service';
+import { QuestionService } from '../shared/question.service';
+import { QuizSubmissionService } from '../shared/quiz-submission.service';
+import { QuizTimerService } from '../shared/quiz-timer.service';
+import { QuizService } from '../shared/quiz.service';
+import { ToasterService } from '../shared/toaster.service';
 
 @Component({
-  selector: "app-quiz-taking-view",
-  templateUrl: "./quiz-taking-view.component.html",
-  styleUrls: ["./quiz-taking-view.component.scss"],
+  selector: 'app-quiz-taking-view',
+  templateUrl: './quiz-taking-view.component.html',
+  styleUrls: ['./quiz-taking-view.component.scss'],
 })
 export class QuizTakingViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -25,7 +25,7 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
   questionsForm: FormArray;
 
   timeLeft: number;
-  oneThirdReached: boolean = false;
+  oneThirdReached = false;
   secondPassedSubscription: Subscription;
   timeOutSubscription: Subscription;
   oneThirdReachedSubscription: Subscription;
@@ -34,7 +34,7 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
   quizId: number;
   quiz: Quiz;
 
-  @ViewChild("slides") slides: IonSlides;
+  @ViewChild('slides') slides: IonSlides;
 
   constructor(
     private backButtonService: BackButtonService,
@@ -84,8 +84,8 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
           },
           () => {
             this.toasterService.error(
-              "Could not get questions!",
-              "Something went wrong!"
+              'Could not get questions!',
+              'Something went wrong!'
             );
           }
         );
@@ -100,7 +100,7 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
         .subscribe(
           (quiz) => {
             this.quiz = quiz;
-            const timeArray = quiz.timeLimit.split(":");
+            const timeArray = quiz.timeLimit.split(':');
 
             if (!this.quizTimerService.isTimerSet()) {
               this.timeLeft =
@@ -114,8 +114,8 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
           },
           () => {
             this.toasterService.error(
-              "Could not get quiz!",
-              "Something went wrong!"
+              'Could not get quiz!',
+              'Something went wrong!'
             );
           }
         );
@@ -168,8 +168,8 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
   }
 
   playAudio(): void {
-    let audio = new Audio();
-    audio.src = "../../../assets/sounds/time-low.mp3";
+    const audio = new Audio();
+    audio.src = '../../../assets/sounds/time-low.mp3';
     audio.load();
     audio.play();
   }
@@ -193,8 +193,8 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.toasterService.success(
-            "Answers saved successfuly!",
-            "Congratulations!"
+            'Answers saved successfuly!',
+            'Congratulations!'
           );
 
           this.router.navigate(
@@ -203,7 +203,7 @@ export class QuizTakingViewComponent implements OnInit, OnDestroy {
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }

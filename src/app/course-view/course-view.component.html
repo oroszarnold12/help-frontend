@@ -20,8 +20,8 @@
             <app-card
               [data]="announcementOverviews"
               [title]="'Announcements'"
-              (onDeleteClicked)="deleteAnnouncement($event)"
-              (onViewClicked)="viewAnnouncement($event)"
+              (deleteClicked)="deleteAnnouncement($event)"
+              (viewClicked)="viewAnnouncement($event)"
             ></app-card>
           </ion-col>
         </ion-row>
@@ -42,8 +42,8 @@
             <app-card
               [data]="assignmentOverviews"
               [title]="'Assignments'"
-              (onDeleteClicked)="deleteAssignment($event)"
-              (onViewClicked)="viewAssignment($event)"
+              (deleteClicked)="deleteAssignment($event)"
+              (viewClicked)="viewAssignment($event)"
             ></app-card>
           </ion-col>
         </ion-row>
@@ -64,8 +64,8 @@
             <app-card
               [data]="quizOverviews"
               [title]="'Quizzes'"
-              (onDeleteClicked)="deleteQuiz($event)"
-              (onViewClicked)="viewQuiz($event)"
+              (deleteClicked)="deleteQuiz($event)"
+              (viewClicked)="viewQuiz($event)"
             ></app-card>
           </ion-col>
         </ion-row>
@@ -126,8 +126,8 @@
             <app-card
               [data]="discussionOverviews"
               [title]="'Discussions'"
-              (onDeleteClicked)="deleteDiscussion($event)"
-              (onViewClicked)="viewDiscussion($event)"
+              (deleteClicked)="deleteDiscussion($event)"
+              (viewClicked)="viewDiscussion($event)"
             ></app-card>
           </ion-col>
         </ion-row>
@@ -192,7 +192,7 @@
                 name="push-outline"
                 class="button-icon"
               ></ion-icon>
-              {{ uploadingCourseFile ? "Cancel" : "Upload file" }}
+              {{ uploadingCourseFile ? 'Cancel' : 'Upload file' }}
             </ion-button>
           </ion-col>
         </ion-row>

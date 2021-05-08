@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
-import { BehaviorSubject } from "rxjs";
-import { Course } from "../model/course.model";
-import { CourseService } from "./course.service";
+import { Injectable } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { Course } from '../model/course.model';
+import { CourseService } from './course.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class PathService {
-  private path = new BehaviorSubject<string>("");
+  private path = new BehaviorSubject<string>('');
   private course: Course;
 
   path$ = this.path.asObservable();
@@ -23,29 +23,29 @@ export class PathService {
 
   convertUrlToPath(url: string): void {
     switch (true) {
-      case "/chat" === url: {
-        this.path.next("Chat");
+      case '/chat' === url: {
+        this.path.next('Chat');
         break;
       }
-      case "/dashboard" === url: {
-        this.path.next("Dashboard");
+      case '/dashboard' === url: {
+        this.path.next('Dashboard');
         break;
       }
-      case "/participations" === url: {
-        this.path.next("Courses");
+      case '/participations' === url: {
+        this.path.next('Courses');
         break;
       }
-      case "/user" === url: {
-        this.path.next("Account Settings");
+      case '/user' === url: {
+        this.path.next('Account Settings');
         break;
       }
-      case "/admin" === url: {
-        this.path.next("Admin");
+      case '/admin' === url: {
+        this.path.next('Admin');
         break;
       }
       case /^\/courses\/[0-9]+$/.test(url): {
         this.loadCourse(
-          Number(url.replace(/\/courses\//g, "")),
+          Number(url.replace(/\/courses\//g, '')),
           this.setCurrentCourseName
         );
         break;
@@ -53,7 +53,7 @@ export class PathService {
       case /^\/courses\/[0-9]+\/assignments/.test(url): {
         this.loadCourse(
           Number(
-            url.replace(/\/courses\//g, "").replace(/\/assignments.*/g, "")
+            url.replace(/\/courses\//g, '').replace(/\/assignments.*/g, '')
           ),
           this.setCurrentCourseNameWithAssignments
         );
@@ -62,7 +62,7 @@ export class PathService {
       case /^\/courses\/[0-9]+\/announcements/.test(url): {
         this.loadCourse(
           Number(
-            url.replace(/\/courses\//g, "").replace(/\/announcements.*/g, "")
+            url.replace(/\/courses\//g, '').replace(/\/announcements.*/g, '')
           ),
           this.setCurrentCourseNameWithAnnouncements
         );
@@ -70,7 +70,7 @@ export class PathService {
       }
       case /^\/courses\/[0-9]+\/quizzes/.test(url): {
         this.loadCourse(
-          Number(url.replace(/\/courses\//g, "").replace(/\/quizzes.*/g, "")),
+          Number(url.replace(/\/courses\//g, '').replace(/\/quizzes.*/g, '')),
           this.setCurrentCourseNameWithQuizzes
         );
         break;
@@ -78,7 +78,7 @@ export class PathService {
       case /^\/courses\/[0-9]+\/discussions/.test(url): {
         this.loadCourse(
           Number(
-            url.replace(/\/courses\//g, "").replace(/\/discussions.*/g, "")
+            url.replace(/\/courses\//g, '').replace(/\/discussions.*/g, '')
           ),
           this.setCurrentCourseNameWithDiscussions
         );
@@ -112,27 +112,27 @@ export class PathService {
     course: Course,
     path: BehaviorSubject<string>
   ): void {
-    path.next(course.name + "/Assignments");
+    path.next(course.name + '/Assignments');
   }
 
   setCurrentCourseNameWithAnnouncements(
     course: Course,
     path: BehaviorSubject<string>
   ): void {
-    path.next(course.name + "/Announcements");
+    path.next(course.name + '/Announcements');
   }
 
   setCurrentCourseNameWithQuizzes(
     course: Course,
     path: BehaviorSubject<string>
   ): void {
-    path.next(course.name + "/Quizzes");
+    path.next(course.name + '/Quizzes');
   }
 
   setCurrentCourseNameWithDiscussions(
     course: Course,
     path: BehaviorSubject<string>
   ): void {
-    path.next(course.name + "/Discussions");
+    path.next(course.name + '/Discussions');
   }
 }

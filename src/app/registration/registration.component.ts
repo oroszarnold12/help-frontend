@@ -1,20 +1,20 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   Validators,
-} from "@angular/forms";
-import { PersonSignup } from "../model/person-signup.model";
-import { AuthService } from "../shared/auth.service";
-import { BackButtonService } from "../shared/back-button.service";
-import { passwordMatchValidator } from "../shared/passwordUtils";
-import { ToasterService } from "../shared/toaster.service";
+} from '@angular/forms';
+import { PersonSignup } from '../model/person-signup.model';
+import { AuthService } from '../shared/auth.service';
+import { BackButtonService } from '../shared/back-button.service';
+import { passwordMatchValidator } from '../shared/passwordUtils';
+import { ToasterService } from '../shared/toaster.service';
 
 @Component({
-  selector: "app-registration",
-  templateUrl: "./registration.component.html",
-  styleUrls: ["./registration.component.scss"],
+  selector: 'app-registration',
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
   registrationForm: FormGroup;
@@ -34,29 +34,29 @@ export class RegistrationComponent implements OnInit {
   createFormGroup(): FormGroup {
     return new FormGroup(
       {
-        firstName: new FormControl("", [
+        firstName: new FormControl('', [
           Validators.required,
           Validators.maxLength(255),
         ]),
-        lastName: new FormControl("", [
+        lastName: new FormControl('', [
           Validators.required,
           Validators.maxLength(255),
         ]),
-        email: new FormControl("", [
+        email: new FormControl('', [
           Validators.required,
           Validators.maxLength(255),
-          Validators.pattern("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"),
+          Validators.pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'),
         ]),
-        password: new FormControl("", [
+        password: new FormControl('', [
           Validators.required,
           Validators.maxLength(255),
           Validators.minLength(8),
-          Validators.pattern(".*[0-9].*"),
-          Validators.pattern(".*[a-z].*"),
-          Validators.pattern(".*[A-Z].*"),
-          Validators.pattern(".*[^A-Za-z0-9].*"),
+          Validators.pattern('.*[0-9].*'),
+          Validators.pattern('.*[a-z].*'),
+          Validators.pattern('.*[A-Z].*'),
+          Validators.pattern('.*[^A-Za-z0-9].*'),
         ]),
-        confirmPassword: new FormControl("", [Validators.required]),
+        confirmPassword: new FormControl('', [Validators.required]),
       },
       {
         validators: passwordMatchValidator,
@@ -78,18 +78,18 @@ export class RegistrationComponent implements OnInit {
         () => {
           this.registrationForm.reset();
           this.toasterService.success(
-            "Congratulations!",
-            "Registration successful!"
+            'Congratulations!',
+            'Registration successful!'
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
     } else {
       this.toasterService.error(
-        "All fields are required!",
-        "Registration failed!"
+        'All fields are required!',
+        'Registration failed!'
       );
     }
   }

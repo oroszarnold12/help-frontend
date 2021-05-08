@@ -1,16 +1,16 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { AlertController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Person } from "../model/person.model";
-import { Role } from "../model/role.enum";
-import { PersonService } from "../shared/person.service";
-import { ToasterService } from "../shared/toaster.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Person } from '../model/person.model';
+import { Role } from '../model/role.enum';
+import { PersonService } from '../shared/person.service';
+import { ToasterService } from '../shared/toaster.service';
 
 @Component({
-  selector: "app-admin-view",
-  templateUrl: "./admin-view.component.html",
-  styleUrls: ["./admin-view.component.scss"],
+  selector: 'app-admin-view',
+  templateUrl: './admin-view.component.html',
+  styleUrls: ['./admin-view.component.scss'],
 })
 export class AdminViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -29,7 +29,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         add: false,
         edit: true,
         delete: true,
-        columnTitle: "",
+        columnTitle: '',
       },
       delete: {
         confirmDelete: true,
@@ -43,22 +43,22 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       },
       columns: {
         name: {
-          title: "Name",
+          title: 'Name',
           editable: false,
           filter: false,
-          valuePrepareFunction: (_cell, row) => {
-            return row.firstName + " " + row.lastName;
+          valuePrepareFunction: (cell, row) => {
+            return row.firstName + ' ' + row.lastName;
           },
         },
         role: {
-          title: "Role",
+          title: 'Role',
           filter: false,
           editor: {
-            type: "list",
+            type: 'list',
             config: {
               list: [
-                { value: "ROLE_TEACHER", title: "ROLE_TEACHER" },
-                { value: "ROLE_STUDENT", title: "ROLE_STUDENT" },
+                { value: 'ROLE_TEACHER', title: 'ROLE_TEACHER' },
+                { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
               ],
             },
           },
@@ -87,8 +87,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         },
         () => {
           this.toasterService.error(
-            "Could not load persons!",
-            "Something went wrong!"
+            'Could not load persons!',
+            'Something went wrong!'
           );
         }
       );
@@ -96,15 +96,15 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   async onDeleteConfirm(event: any): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this user?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this user?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.personService
               .deletePerson(event.data.id)
@@ -112,8 +112,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Person deletion successful!",
-                    "Congratulations!"
+                    'Person deletion successful!',
+                    'Congratulations!'
                   );
 
                   event.confirm.resolve();
@@ -121,7 +121,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -140,20 +140,20 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.toasterService.success(
-            "Person update successful!",
-            "Congratulations!"
+            'Person update successful!',
+            'Congratulations!'
           );
 
           event.confirm.resolve();
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
 
   onFilterPersons(event: CustomEvent): void {
-    if (event.detail.value !== "") {
+    if (event.detail.value !== '') {
       this.filteredPersons = this.persons.filter((person) => {
         return (
           person.firstName

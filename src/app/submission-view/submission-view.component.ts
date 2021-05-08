@@ -1,27 +1,27 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { AlertController, IonSelect } from "@ionic/angular";
-import { FileSaverService } from "ngx-filesaver";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { AssignmentGrade } from "../model/assignment-grade.model";
-import { Assignment } from "../model/assignment.model";
-import { Submission } from "../model/submission.model";
-import { ThinPerson } from "../model/thin.person.model";
-import { AuthService } from "../shared/auth.service";
-import { BackButtonService } from "../shared/back-button.service";
-import { CommentService } from "../shared/comment.service";
-import { CourseService } from "../shared/course.service";
-import { GradeService } from "../shared/grade.service";
-import { SubmissionService } from "../shared/submission.service";
-import { ToasterService } from "../shared/toaster.service";
-import { url } from "../shared/api-config";
-import { AssignmentComment } from "../model/assignment-comment.model";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AlertController, IonSelect } from '@ionic/angular';
+import { FileSaverService } from 'ngx-filesaver';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AssignmentGrade } from '../model/assignment-grade.model';
+import { Assignment } from '../model/assignment.model';
+import { Submission } from '../model/submission.model';
+import { ThinPerson } from '../model/thin.person.model';
+import { AuthService } from '../shared/auth.service';
+import { BackButtonService } from '../shared/back-button.service';
+import { CommentService } from '../shared/comment.service';
+import { CourseService } from '../shared/course.service';
+import { GradeService } from '../shared/grade.service';
+import { SubmissionService } from '../shared/submission.service';
+import { ToasterService } from '../shared/toaster.service';
+import { url } from '../shared/api-config';
+import { AssignmentComment } from '../model/assignment-comment.model';
 
 @Component({
-  selector: "app-submission-view",
-  templateUrl: "./submission-view.component.html",
-  styleUrls: ["./submission-view.component.scss"],
+  selector: 'app-submission-view',
+  templateUrl: './submission-view.component.html',
+  styleUrls: ['./submission-view.component.scss'],
 })
 export class SubmissionViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -43,7 +43,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
 
   username: string;
 
-  @ViewChild("student") studentSelector: IonSelect;
+  @ViewChild('student') studentSelector: IonSelect;
 
   constructor(
     private submissionService: SubmissionService,
@@ -88,7 +88,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           (error) => {
             this.toasterService.error(
               error.error.message,
-              "Something went wrong!"
+              'Something went wrong!'
             );
           }
         );
@@ -106,7 +106,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -129,8 +129,8 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.toasterService.error(
-            "Could not get assignment!",
-            "Something went wrong!"
+            'Could not get assignment!',
+            'Something went wrong!'
           );
         }
       );
@@ -150,7 +150,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -189,8 +189,8 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 (comment) => {
                   this.toasterService.success(
-                    "Grade with comment saved successfully!",
-                    "Congratulations!"
+                    'Grade with comment saved successfully!',
+                    'Congratulations!'
                   );
 
                   this.loadAssingment();
@@ -199,19 +199,19 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
           } else {
             this.toasterService.success(
-              "Grade saved successfully!",
-              "Congratulations!"
+              'Grade saved successfully!',
+              'Congratulations!'
             );
           }
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -229,7 +229,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           this.fileSaverService.save(blob, fileName);
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -258,7 +258,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   }
 
   getDifferenceInDays(date1: Date, date2: Date): string {
-    let difference = "";
+    let difference = '';
     const diffInMs = Math.abs(
       new Date(date2).getTime() - new Date(date1).getTime()
     );
@@ -269,19 +269,19 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     const diffInSeconds = Math.floor(diffInMs / 1000);
 
     if (diffInDays > 0) {
-      difference += diffInDays + "d ";
+      difference += diffInDays + 'd ';
     }
 
     if (diffInHours - 24 * diffInDays > 0) {
-      difference += diffInHours - 24 * diffInDays + "h ";
+      difference += diffInHours - 24 * diffInDays + 'h ';
     }
 
     if (diffInMinutes - 60 * diffInHours > 0) {
-      difference += diffInMinutes - 60 * diffInHours + "m ";
+      difference += diffInMinutes - 60 * diffInHours + 'm ';
     }
 
     if (diffInSeconds - 60 * diffInMinutes > 0) {
-      difference += diffInSeconds - 60 * diffInMinutes + "s";
+      difference += diffInSeconds - 60 * diffInMinutes + 's';
     }
 
     return difference;
@@ -289,15 +289,15 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
 
   async onDeleteClicked(id: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this comment?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this comment?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.commentService
               .deleteAssingmentComment(this.courseId, this.assingmentId, id)
@@ -305,8 +305,8 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Comment deletion successful!",
-                    "Congratulations!"
+                    'Comment deletion successful!',
+                    'Congratulations!'
                   );
                   this.loadAssingment();
                 },
@@ -314,7 +314,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
                   console.log(error);
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -338,15 +338,15 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (comment) => {
           this.toasterService.success(
-            "Comment saved successfully!",
-            "Congratulations!"
+            'Comment saved successfully!',
+            'Congratulations!'
           );
 
           this.loadAssingment();
           this.simpleCommentContent = undefined;
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -375,8 +375,8 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (comment) => {
           this.toasterService.success(
-            "Comment updated successfully!",
-            "Congratulations!"
+            'Comment updated successfully!',
+            'Congratulations!'
           );
 
           this.loadAssingment();
@@ -384,7 +384,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
           this.editingComment[commentId] = false;
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -397,17 +397,17 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
         (blob) => {
           this.fileSaverService.save(
             blob,
-            (this.assignment.name + "_submissions.zip").replace(/ +/g, "_")
+            (this.assignment.name + '_submissions.zip').replace(/ +/g, '_')
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
 
   getImageUrlById(id: number): string {
-    return url + "/user/" + id + "/image/?" + new Date().getTime();
+    return url + '/user/' + id + '/image/?' + new Date().getTime();
   }
 
   getComments(submitterId: number): AssignmentComment[] {

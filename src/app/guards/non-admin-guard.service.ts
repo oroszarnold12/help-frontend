@@ -1,16 +1,16 @@
-import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { AuthService } from "../shared/auth.service";
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../shared/auth.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class NonAdminGuardService {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
     if (this.authService.isAdmin()) {
-      this.router.navigate(["/admin"]);
+      this.router.navigate(['/admin']);
     }
 
     return !this.authService.isAdmin();

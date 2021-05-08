@@ -1,21 +1,21 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   AbstractControl,
-} from "@angular/forms";
-import { ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { ConversationService } from "src/app/shared/conversation.service";
-import { PersonService } from "src/app/shared/person.service";
-import { ToasterService } from "src/app/shared/toaster.service";
+} from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ConversationService } from 'src/app/shared/conversation.service';
+import { PersonService } from 'src/app/shared/person.service';
+import { ToasterService } from 'src/app/shared/toaster.service';
 
 @Component({
-  selector: "app-conversation-form",
-  templateUrl: "./conversation-form.component.html",
-  styleUrls: ["./conversation-form.component.scss"],
+  selector: 'app-conversation-form',
+  templateUrl: './conversation-form.component.html',
+  styleUrls: ['./conversation-form.component.scss'],
 })
 export class ConversationFormComponent implements OnInit, OnDestroy {
   private stop: Subject<void> = new Subject();
@@ -50,7 +50,7 @@ export class ConversationFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     return new FormGroup({
-      name: new FormControl("", [
+      name: new FormControl('', [
         Validators.required,
         Validators.maxLength(32),
       ]),
@@ -72,13 +72,13 @@ export class ConversationFormComponent implements OnInit, OnDestroy {
           this.persons = data.persons;
 
           this.persons.forEach((person) => {
-            person.fullName = person.firstName + " " + person.lastName;
+            person.fullName = person.firstName + ' ' + person.lastName;
           });
         },
         () => {
           this.toasterService.error(
-            "Could not load persons!",
-            "Something went wrong!"
+            'Could not load persons!',
+            'Something went wrong!'
           );
         }
       );
@@ -89,9 +89,9 @@ export class ConversationFormComponent implements OnInit, OnDestroy {
   }
 
   onConversationTypeChanged(event: CustomEvent): void {
-    if (event.detail.value === "simple") {
+    if (event.detail.value === 'simple') {
       this.groupConversation = false;
-    } else if (event.detail.value === "group") {
+    } else if (event.detail.value === 'group') {
       this.groupConversation = true;
     }
   }
@@ -107,22 +107,22 @@ export class ConversationFormComponent implements OnInit, OnDestroy {
   }
 
   onCreateButtonClicked(): void {
-    let emails: string[] = this.personsToInvite.map((person) => person.email);
+    const emails: string[] = this.personsToInvite.map((person) => person.email);
 
     this.conversationService
-      .saveConversation(emails, this.conversationFrom.get("name").value)
+      .saveConversation(emails, this.conversationFrom.get('name').value)
       .pipe(takeUntil(this.stop))
       .subscribe(
         () => {
           this.toasterService.success(
-            "Conversation created successfully!",
-            "Congratulations!"
+            'Conversation created successfully!',
+            'Congratulations!'
           );
 
           this.dismissModal();
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }

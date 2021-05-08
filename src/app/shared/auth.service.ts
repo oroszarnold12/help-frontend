@@ -1,18 +1,18 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { Observable, Subject } from "rxjs";
-import { tap } from "rxjs/operators";
-import { LoginRequest } from "../model/login-request.model";
-import { PersonSignup } from "../model/person-signup.model";
-import { Person } from "../model/person.model";
-import { Role } from "../model/role.enum";
-import { url } from "./api-config";
-import { FcmService } from "./fcm.service";
-import { LoginStatusService } from "./login-status.service";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { LoginRequest } from '../model/login-request.model';
+import { PersonSignup } from '../model/person-signup.model';
+import { Person } from '../model/person.model';
+import { Role } from '../model/role.enum';
+import { url } from './api-config';
+import { FcmService } from './fcm.service';
+import { LoginStatusService } from './login-status.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AuthService {
   public loginStatus = new Subject<any>();
@@ -28,14 +28,14 @@ export class AuthService {
     return this.httpClient
       .post<LoginRequest>(`${url}/auth/login`, loginRequest, {
         withCredentials: true,
-        observe: "response",
+        observe: 'response',
       })
       .pipe(
         tap((res) => {
           this.fcmService.initPush();
 
-          localStorage.setItem("role", res.body.role);
-          localStorage.setItem("username", loginRequest.username);
+          localStorage.setItem('role', res.body.role);
+          localStorage.setItem('username', loginRequest.username);
 
           this.loginStatus.next({
             username: this.getUsername(),
@@ -53,10 +53,10 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
-          localStorage.setItem("username", "");
-          localStorage.setItem("role", "");
+          localStorage.setItem('username', '');
+          localStorage.setItem('role', '');
 
-          this.router.navigate([""]);
+          this.router.navigate(['']);
 
           this.loginStatus.next({
             username: this.getUsername(),
@@ -78,22 +78,22 @@ export class AuthService {
   }
 
   getUsername(): string {
-    return localStorage.getItem("username");
+    return localStorage.getItem('username');
   }
 
   getRole(): string {
-    return localStorage.getItem("role");
+    return localStorage.getItem('role');
   }
 
   isTeacher(): boolean {
-    return localStorage.getItem("role") === Role.TEACHER;
+    return localStorage.getItem('role') === Role.TEACHER;
   }
 
   isAdmin(): boolean {
-    return localStorage.getItem("role") === Role.ADMIN;
+    return localStorage.getItem('role') === Role.ADMIN;
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem("username");
+    return !!localStorage.getItem('username');
   }
 }

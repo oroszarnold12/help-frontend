@@ -1,11 +1,11 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { Quiz } from "../model/quiz.model";
-import { url } from "./api-config";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Quiz } from '../model/quiz.model';
+import { url } from './api-config';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class QuizService {
   constructor(private http: HttpClient) {}

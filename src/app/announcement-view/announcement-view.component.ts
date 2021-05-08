@@ -1,23 +1,23 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { AlertController, ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { AnnouncementFormComponent } from "../course-view/announcement-form/announcement-form.component";
-import { AnnouncementComment } from "../model/announcement-comment.model";
-import { Announcement } from "../model/announcement.model";
-import { url } from "../shared/api-config";
-import { AuthService } from "../shared/auth.service";
-import { BackButtonService } from "../shared/back-button.service";
-import { CommentService } from "../shared/comment.service";
-import { CourseService } from "../shared/course.service";
-import { ToasterService } from "../shared/toaster.service";
-import { AnnouncementCommentFormComponent } from "./announcement-comment-form/announcement-comment-form.component";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AlertController, ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AnnouncementFormComponent } from '../course-view/announcement-form/announcement-form.component';
+import { AnnouncementComment } from '../model/announcement-comment.model';
+import { Announcement } from '../model/announcement.model';
+import { url } from '../shared/api-config';
+import { AuthService } from '../shared/auth.service';
+import { BackButtonService } from '../shared/back-button.service';
+import { CommentService } from '../shared/comment.service';
+import { CourseService } from '../shared/course.service';
+import { ToasterService } from '../shared/toaster.service';
+import { AnnouncementCommentFormComponent } from './announcement-comment-form/announcement-comment-form.component';
 
 @Component({
-  selector: "app-announcement-view",
-  templateUrl: "./announcement-view.component.html",
-  styleUrls: ["./announcement-view.component.scss"],
+  selector: 'app-announcement-view',
+  templateUrl: './announcement-view.component.html',
+  styleUrls: ['./announcement-view.component.scss'],
 })
 export class AnnouncementViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -80,8 +80,8 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
           },
           () => {
             this.toasterService.error(
-              "Could not get announcement!",
-              "Something went wrong!"
+              'Could not get announcement!',
+              'Something went wrong!'
             );
           }
         );
@@ -91,7 +91,7 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
   async presentAnnouncementModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AnnouncementFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.courseId,
         announcement: this.announcement,
@@ -106,11 +106,11 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
   async presentCommentModal(comment?: AnnouncementComment): Promise<void> {
     const modal = await this.modalController.create({
       component: AnnouncementCommentFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.courseId,
         announcementId: this.announcement.id,
-        comment: comment,
+        comment,
       },
     });
 
@@ -125,15 +125,15 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
 
   async onDeleteClicked(commentId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this comment?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this comment?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.commentService
               .deleteAnnouncementComment(
@@ -145,17 +145,17 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Comment deletion successful!",
-                    "Congratulations!"
+                    'Comment deletion successful!',
+                    'Congratulations!'
                   );
-                  
+
                   this.loadAnnouncement();
                 },
                 (error) => {
                   console.log(error);
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -168,6 +168,6 @@ export class AnnouncementViewComponent implements OnInit, OnDestroy {
   }
 
   getImageUrlById(id: number): string {
-    return url + "/user/" + id + "/image/?" + new Date().getTime();
+    return url + '/user/' + id + '/image/?' + new Date().getTime();
   }
 }

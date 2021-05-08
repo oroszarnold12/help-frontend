@@ -1,20 +1,20 @@
-import { Component, OnInit } from "@angular/core";
-import { MenuController } from "@ionic/angular";
-import { Location } from "@angular/common";
-import { AuthService } from "../shared/auth.service";
-import { ToasterService } from "../shared/toaster.service";
-import { Subscription } from "rxjs";
-import { LoginStatusService } from "../shared/login-status.service";
-import { Router } from "@angular/router";
-import { BackButtonService } from "../shared/back-button.service";
-import { PathService } from "../shared/path.service";
-import { url } from "../shared/api-config";
-import { PersonService } from "../shared/person.service";
+import { Component, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
+import { Location } from '@angular/common';
+import { AuthService } from '../shared/auth.service';
+import { ToasterService } from '../shared/toaster.service';
+import { Subscription } from 'rxjs';
+import { LoginStatusService } from '../shared/login-status.service';
+import { Router } from '@angular/router';
+import { BackButtonService } from '../shared/back-button.service';
+import { PathService } from '../shared/path.service';
+import { url } from '../shared/api-config';
+import { PersonService } from '../shared/person.service';
 
 @Component({
-  selector: "app-topbar",
-  templateUrl: "./topbar.component.html",
-  styleUrls: ["./topbar.component.scss"],
+  selector: 'app-topbar',
+  templateUrl: './topbar.component.html',
+  styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent implements OnInit {
   username: string;
@@ -36,15 +36,15 @@ export class TopbarComponent implements OnInit {
     private personService: PersonService,
     public backButtonService: BackButtonService
   ) {
-    this.imageUrl = url + "/user/image";
-    this.path = "";
+    this.imageUrl = url + '/user/image';
+    this.path = '';
 
-    this.subscription = loginStatusService.loggedIn$.subscribe((log) => {
+    this.subscription = loginStatusService.loggedIn$.subscribe(() => {
       this.username = this.authService.getUsername();
     });
 
-    this.personService.imageChanged$.subscribe((url) => {
-      this.imageUrl = url;
+    this.personService.imageChanged$.subscribe((imageUrl) => {
+      this.imageUrl = imageUrl;
     });
   }
 
@@ -70,39 +70,39 @@ export class TopbarComponent implements OnInit {
       () => {
         this.menuController.close();
         this.loginStatusService.changeStatus(false);
-        this.toasterService.success("The log out was successful!");
+        this.toasterService.success('The log out was successful!');
       },
       () => {
         this.toasterService.error(
-          "The logout was unsuccessful!",
-          "Please try again!"
+          'The logout was unsuccessful!',
+          'Please try again!'
         );
       }
     );
   }
 
   onChatButtonClicked(): void {
-    this.router.navigate(["/chat"]);
+    this.router.navigate(['/chat']);
     this.menuController.close();
   }
 
   onDashboardButtonClicked(): void {
-    this.router.navigate(["/dashboard"]);
+    this.router.navigate(['/dashboard']);
     this.menuController.close();
   }
 
   onCoursesButtonClicked(): void {
-    this.router.navigate(["/participations"]);
+    this.router.navigate(['/participations']);
     this.menuController.close();
   }
 
   onProfileSettingsClicked(): void {
-    this.router.navigate(["user"]);
+    this.router.navigate(['user']);
     this.closeMenu();
   }
 
   getPath(): string[] {
-    return this.path.split("/");
+    return this.path.split('/');
   }
 
   showExtendedMenu(): boolean {

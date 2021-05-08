@@ -1,5 +1,5 @@
-import { DiscussionComment } from "./discussion-comment.model";
-import { Person } from "./person.model";
+import { DiscussionComment } from './discussion-comment.model';
+import { Person } from './person.model';
 
 export interface Discussion {
   id?: number;

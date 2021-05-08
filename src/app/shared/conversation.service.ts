@@ -1,12 +1,12 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { ConversationMessage } from "../model/conversation-message.model";
-import { Conversation } from "../model/conversation.model";
-import { url } from "./api-config";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { ConversationMessage } from '../model/conversation-message.model';
+import { Conversation } from '../model/conversation.model';
+import { url } from './api-config';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ConversationService {
   private newMessage = new Subject<void>();
@@ -26,8 +26,8 @@ export class ConversationService {
 
   saveConversation(emails: string[], name?: string): Observable<Conversation> {
     return this.httpClient.post<Conversation>(`${url}/conversations/`, {
-      emails: emails,
-      name: name,
+      emails,
+      name,
     });
   }
 
@@ -38,7 +38,7 @@ export class ConversationService {
     return this.httpClient.post<Conversation>(
       `${url}/conversations/${conversationId}/participants`,
       {
-        emails: emails,
+        emails,
       }
     );
   }
@@ -59,7 +59,7 @@ export class ConversationService {
     return this.httpClient.post<ConversationMessage>(
       `${url}/conversations/${conversationId}/messages`,
       {
-        content: content,
+        content,
       }
     );
   }
@@ -72,7 +72,7 @@ export class ConversationService {
     return this.httpClient.put<ConversationMessage>(
       `${url}/conversations/${conversationId}/messages/${messageId}`,
       {
-        content: content,
+        content,
       }
     );
   }

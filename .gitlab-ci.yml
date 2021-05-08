@@ -1,0 +1,18 @@
+image: node:12.18.3-alpine
+
+before_script:
+  - npm install
+
+stages:
+  - lint
+
+lint:
+  stage: lint
+
+  script:
+    - npm run lint
+
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/

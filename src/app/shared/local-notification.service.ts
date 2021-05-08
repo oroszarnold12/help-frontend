@@ -1,11 +1,11 @@
-import { Injectable, NgZone } from "@angular/core";
-import { Router } from "@angular/router";
-import { LocalNotificationActionPerformed, Plugins } from "@capacitor/core";
+import { Injectable, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
+import { LocalNotificationActionPerformed, Plugins } from '@capacitor/core';
 
 const { LocalNotifications } = Plugins;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class LocalNotificationService {
   constructor(private ngZone: NgZone, private router: Router) {}
@@ -14,7 +14,7 @@ export class LocalNotificationService {
     await LocalNotifications.requestPermission();
 
     LocalNotifications.addListener(
-      "localNotificationActionPerformed",
+      'localNotificationActionPerformed',
       async (notificationAction: LocalNotificationActionPerformed) => {
         const data = notificationAction.notification.extra;
 
@@ -82,8 +82,8 @@ export class LocalNotificationService {
       notifications: [
         {
           id: 1,
-          title: title,
-          body: body,
+          title,
+          body,
           extra: data,
         },
       ],

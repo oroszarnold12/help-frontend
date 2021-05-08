@@ -1,23 +1,23 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subject, Subscription } from "rxjs";
-import { CourseService } from "../shared/course.service";
-import { takeUntil } from "rxjs/operators";
-import { Course } from "../model/course.model";
-import { AlertController, ModalController } from "@ionic/angular";
-import { CourseFormComponent } from "./course-form/course-form.component";
-import { AuthService } from "../shared/auth.service";
-import { Invitation } from "../model/invitation.model";
-import { InvitationService } from "../shared/invitation.service";
-import { GeneralOverview } from "../model/general-overview.model";
-import { ToasterService } from "../shared/toaster.service";
-import { ParticipationService } from "../shared/participation.service";
-import { NavigationEnd, Router } from "@angular/router";
-import { BackButtonService } from "../shared/back-button.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { CourseService } from '../shared/course.service';
+import { takeUntil } from 'rxjs/operators';
+import { Course } from '../model/course.model';
+import { AlertController, ModalController } from '@ionic/angular';
+import { CourseFormComponent } from './course-form/course-form.component';
+import { AuthService } from '../shared/auth.service';
+import { Invitation } from '../model/invitation.model';
+import { InvitationService } from '../shared/invitation.service';
+import { GeneralOverview } from '../model/general-overview.model';
+import { ToasterService } from '../shared/toaster.service';
+import { ParticipationService } from '../shared/participation.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { BackButtonService } from '../shared/back-button.service';
 
 @Component({
-  selector: "app-dashboard",
-  templateUrl: "./dashboard.component.html",
-  styleUrls: ["./dashboard.component.scss"],
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (event.url === "/dashboard") {
+        if (event.url === '/dashboard') {
           this.ngOnInit();
         }
       }
@@ -107,15 +107,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async acceptClicked(invitationId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to accept this invitation?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to accept this invitation?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.invitationService
               .acceptInvitation(invitationId)
@@ -123,8 +123,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Invitation accepted!",
-                    "Congratulations!"
+                    'Invitation accepted!',
+                    'Congratulations!'
                   );
 
                   this.ngOnInit();
@@ -132,7 +132,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Accepting failed!"
+                    'Accepting failed!'
                   );
                 }
               );
@@ -146,15 +146,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async declineClicked(invitationId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to decline this invitation?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to decline this invitation?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.invitationService
               .declineInvitation(invitationId)
@@ -162,8 +162,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Invitation declined!",
-                    "Congratulations!"
+                    'Invitation declined!',
+                    'Congratulations!'
                   );
 
                   this.ngOnInit();
@@ -171,7 +171,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Declining failed!"
+                    'Declining failed!'
                   );
                 }
               );
@@ -186,7 +186,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async presentModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: CourseFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
     });
 
     modal.onDidDismiss().then(() => this.ngOnInit());
@@ -195,7 +195,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onFilterCourses(event: CustomEvent): void {
-    if (event.detail.value !== "") {
+    if (event.detail.value !== '') {
       this.filteredCourses = this.courses.filter((course) => {
         return (
           course.name

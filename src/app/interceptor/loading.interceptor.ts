@@ -3,11 +3,11 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-} from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { LoaderService } from "../shared/loader.service";
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { LoaderService } from '../shared/loader.service';
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {

@@ -1,4 +1,4 @@
-import { ThinPerson } from "./thin.person.model";
+import { ThinPerson } from './thin.person.model';
 
 export interface AssignmentComment {
   id?: number;

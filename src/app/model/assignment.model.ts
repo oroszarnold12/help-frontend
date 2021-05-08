@@ -1,4 +1,4 @@
-import { AssignmentComment } from "./assignment-comment.model";
+import { AssignmentComment } from './assignment-comment.model';
 
 export interface Assignment {
   id?: number;

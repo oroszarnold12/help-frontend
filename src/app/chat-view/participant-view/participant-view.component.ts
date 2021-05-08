@@ -1,18 +1,18 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { AlertController, ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Conversation } from "src/app/model/conversation.model";
-import { ConversationService } from "src/app/shared/conversation.service";
-import { PersonService } from "src/app/shared/person.service";
-import { ToasterService } from "src/app/shared/toaster.service";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AlertController, ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Conversation } from 'src/app/model/conversation.model';
+import { ConversationService } from 'src/app/shared/conversation.service';
+import { PersonService } from 'src/app/shared/person.service';
+import { ToasterService } from 'src/app/shared/toaster.service';
 
 @Component({
-  selector: "app-participant-view",
-  templateUrl: "./participant-view.component.html",
-  styleUrls: ["./participant-view.component.scss"],
+  selector: 'app-participant-view',
+  templateUrl: './participant-view.component.html',
+  styleUrls: ['./participant-view.component.scss'],
 })
-export class ParticipantViewComponent implements OnInit {
+export class ParticipantViewComponent implements OnInit, OnDestroy {
   private stop: Subject<void> = new Subject();
 
   @Input() conversation: Conversation;
@@ -56,8 +56,8 @@ export class ParticipantViewComponent implements OnInit {
         },
         () => {
           this.toasterService.error(
-            "Could not get conversation!",
-            "Something went wrong!"
+            'Could not get conversation!',
+            'Something went wrong!'
           );
         }
       );
@@ -72,15 +72,15 @@ export class ParticipantViewComponent implements OnInit {
           this.persons = data.persons;
 
           this.persons.forEach((person) => {
-            person.fullName = person.firstName + " " + person.lastName;
+            person.fullName = person.firstName + ' ' + person.lastName;
           });
 
           this.filterParticipantsFromPersons();
         },
         () => {
           this.toasterService.error(
-            "Could not load persons!",
-            "Something went wrong!"
+            'Could not load persons!',
+            'Something went wrong!'
           );
         }
       );
@@ -97,15 +97,15 @@ export class ParticipantViewComponent implements OnInit {
 
   async onKickParticipantClicked(participantId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to kick this person?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to kick this person?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.conversationService
               .kickConversationParticipant(this.conversation.id, participantId)
@@ -113,8 +113,8 @@ export class ParticipantViewComponent implements OnInit {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Participant kicked successfully!",
-                    "Congratulations!"
+                    'Participant kicked successfully!',
+                    'Congratulations!'
                   );
 
                   this.loadConversation(this.conversation.id);
@@ -123,7 +123,7 @@ export class ParticipantViewComponent implements OnInit {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -146,7 +146,7 @@ export class ParticipantViewComponent implements OnInit {
   }
 
   onAddPersonsClickedSecondTime(): void {
-    let emails: string[] = this.personsToInvite.map((person) => person.email);
+    const emails: string[] = this.personsToInvite.map((person) => person.email);
 
     this.conversationService
       .addConversationParticipants(this.conversation.id, emails)
@@ -154,8 +154,8 @@ export class ParticipantViewComponent implements OnInit {
       .subscribe(
         (conversation) => {
           this.toasterService.success(
-            "Persons added successfully!",
-            "Congratulations!"
+            'Persons added successfully!',
+            'Congratulations!'
           );
 
           this.conversation = conversation;
@@ -164,7 +164,7 @@ export class ParticipantViewComponent implements OnInit {
           this.filterParticipantsFromPersons();
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }

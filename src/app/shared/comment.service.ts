@@ -1,13 +1,13 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { AnnouncementComment } from "../model/announcement-comment.model";
-import { AssignmentComment } from "../model/assignment-comment.model";
-import { DiscussionComment } from "../model/discussion-comment.model";
-import { url } from "./api-config";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AnnouncementComment } from '../model/announcement-comment.model';
+import { AssignmentComment } from '../model/assignment-comment.model';
+import { DiscussionComment } from '../model/discussion-comment.model';
+import { url } from './api-config';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class CommentService {
   constructor(private httpClient: HttpClient) {}
@@ -44,7 +44,7 @@ export class CommentService {
       `${url}/courses/${courseId}/assignments/${assignmentId}/comments`,
       {
         content: comment,
-        recipientEmail: recipientEmail,
+        recipientEmail,
       }
     );
   }

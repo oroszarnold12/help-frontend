@@ -1,21 +1,21 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   AbstractControl,
-} from "@angular/forms";
-import { ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Quiz } from "src/app/model/quiz.model";
-import { QuizService } from "src/app/shared/quiz.service";
-import { ToasterService } from "src/app/shared/toaster.service";
+} from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Quiz } from 'src/app/model/quiz.model';
+import { QuizService } from 'src/app/shared/quiz.service';
+import { ToasterService } from 'src/app/shared/toaster.service';
 
 @Component({
-  selector: "app-quiz-form",
-  templateUrl: "./quiz-form.component.html",
-  styleUrls: ["./quiz-form.component.scss"],
+  selector: 'app-quiz-form',
+  templateUrl: './quiz-form.component.html',
+  styleUrls: ['./quiz-form.component.scss'],
 })
 export class QuizFormComponent implements OnInit, OnDestroy {
   private stop: Subject<void> = new Subject();
@@ -37,26 +37,26 @@ export class QuizFormComponent implements OnInit, OnDestroy {
   ) {
     this.editorMaxLength = 8192;
     this.editorStyle = {
-      height: "300px",
+      height: '300px',
     };
     this.editorConfig = {
       toolbar: [
-        ["bold", "italic", "underline", "strike"],
-        ["blockquote", "code-block"],
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
 
         [{ header: 1 }, { header: 2 }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ script: "sub" }, { script: "super" }],
-        [{ indent: "-1" }, { indent: "+1" }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ script: 'sub' }, { script: 'super' }],
+        [{ indent: '-1' }, { indent: '+1' }],
 
-        [{ size: ["small", false, "large", "huge"] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
         [{ color: [] }, { background: [] }],
         [{ font: [] }],
         [{ align: [] }],
 
-        ["link"],
+        ['link'],
       ],
     };
   }
@@ -76,16 +76,16 @@ export class QuizFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     return new FormGroup({
-      name: new FormControl("", [
+      name: new FormControl('', [
         Validators.required,
         Validators.maxLength(255),
       ]),
-      description: new FormControl("", [
+      description: new FormControl('', [
         Validators.required,
         Validators.maxLength(this.editorMaxLength),
       ]),
-      dueDate: new FormControl("", Validators.required),
-      timeLimit: new FormControl("", Validators.required),
+      dueDate: new FormControl('', Validators.required),
+      timeLimit: new FormControl('', Validators.required),
       showCorrectAnswers: new FormControl(false),
       multipleAttempts: new FormControl(false),
       published: new FormControl(false),
@@ -113,13 +113,13 @@ export class QuizFormComponent implements OnInit, OnDestroy {
           .subscribe(
             () => {
               this.quizForm.reset();
-              this.toasterService.success("Congratulations!", "Quiz updated!");
+              this.toasterService.success('Congratulations!', 'Quiz updated!');
               this.modalController.dismiss();
             },
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
@@ -132,21 +132,21 @@ export class QuizFormComponent implements OnInit, OnDestroy {
           .subscribe(
             () => {
               this.quizForm.reset();
-              this.toasterService.success("Congratulations!", "Quiz created!");
+              this.toasterService.success('Congratulations!', 'Quiz created!');
               this.modalController.dismiss();
             },
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
       }
     } else {
       this.toasterService.error(
-        "All fields are required!",
-        "Quiz creation failed!"
+        'All fields are required!',
+        'Quiz creation failed!'
       );
     }
   }

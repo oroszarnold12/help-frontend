@@ -1,26 +1,26 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AlertController, ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { QuizFormComponent } from "../course-view/quiz-form/quiz-form.component";
-import { Question } from "../model/question.model";
-import { QuizGrade } from "../model/quiz-grade.model";
-import { QuizSubmission } from "../model/quiz-submission.model";
-import { Quiz } from "../model/quiz.model";
-import { AuthService } from "../shared/auth.service";
-import { BackButtonService } from "../shared/back-button.service";
-import { GradeService } from "../shared/grade.service";
-import { QuestionService } from "../shared/question.service";
-import { QuizSubmissionService } from "../shared/quiz-submission.service";
-import { QuizService } from "../shared/quiz.service";
-import { ToasterService } from "../shared/toaster.service";
-import { QuestionFormComponent } from "./question-form/question-form.component";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { QuizFormComponent } from '../course-view/quiz-form/quiz-form.component';
+import { Question } from '../model/question.model';
+import { QuizGrade } from '../model/quiz-grade.model';
+import { QuizSubmission } from '../model/quiz-submission.model';
+import { Quiz } from '../model/quiz.model';
+import { AuthService } from '../shared/auth.service';
+import { BackButtonService } from '../shared/back-button.service';
+import { GradeService } from '../shared/grade.service';
+import { QuestionService } from '../shared/question.service';
+import { QuizSubmissionService } from '../shared/quiz-submission.service';
+import { QuizService } from '../shared/quiz.service';
+import { ToasterService } from '../shared/toaster.service';
+import { QuestionFormComponent } from './question-form/question-form.component';
 
 @Component({
-  selector: "app-quiz-view",
-  templateUrl: "./quiz-view.component.html",
-  styleUrls: ["./quiz-view.component.scss"],
+  selector: 'app-quiz-view',
+  templateUrl: './quiz-view.component.html',
+  styleUrls: ['./quiz-view.component.scss'],
 })
 export class QuizViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -80,8 +80,8 @@ export class QuizViewComponent implements OnInit, OnDestroy {
           },
           () => {
             this.toasterService.error(
-              "Could not get quiz!",
-              "Something went wrong!"
+              'Could not get quiz!',
+              'Something went wrong!'
             );
           }
         );
@@ -98,8 +98,8 @@ export class QuizViewComponent implements OnInit, OnDestroy {
         },
         () => {
           this.toasterService.error(
-            "Could not get questions!",
-            "Something went wrong!"
+            'Could not get questions!',
+            'Something went wrong!'
           );
         }
       );
@@ -133,14 +133,14 @@ export class QuizViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
   }
 
   checkIfPicked(answer, index): boolean {
-    let picked: boolean = false;
+    let picked = false;
     this.quizSubmissions[index].answerSubmissions.forEach((answer1) => {
       if (answer1.answer.id === answer.id) {
         picked = answer1.picked;
@@ -158,15 +158,15 @@ export class QuizViewComponent implements OnInit, OnDestroy {
 
   async deleteQuestion(questionId): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this question?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this question?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.questionService
               .deleteQuestion(this.courseId, this.quiz.id, questionId)
@@ -174,8 +174,8 @@ export class QuizViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Question deletion successful!",
-                    "Congratulations!"
+                    'Question deletion successful!',
+                    'Congratulations!'
                   );
 
                   this.loadQuiz();
@@ -184,7 +184,7 @@ export class QuizViewComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -199,7 +199,7 @@ export class QuizViewComponent implements OnInit, OnDestroy {
   async presentQuizModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: QuizFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.courseId,
         quiz: this.quiz,
@@ -214,11 +214,11 @@ export class QuizViewComponent implements OnInit, OnDestroy {
   async presentQuestionModal(question?: Question): Promise<void> {
     const modal = await this.modalController.create({
       component: QuestionFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         courseId: this.courseId,
         quizId: this.quiz.id,
-        question: question,
+        question,
       },
     });
 
@@ -241,12 +241,12 @@ export class QuizViewComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.toasterService.success(
-            "Congratulations!",
-            published ? "Quiz published!" : "Quiz is hidden"
+            'Congratulations!',
+            published ? 'Quiz published!' : 'Quiz is hidden'
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }

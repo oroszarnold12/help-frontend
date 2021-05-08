@@ -1,24 +1,24 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators,
   AbstractControl,
-} from "@angular/forms";
-import { AlertController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Person } from "../model/person.model";
-import { url } from "../shared/api-config";
-import { BackButtonService } from "../shared/back-button.service";
-import { passwordMatchValidator } from "../shared/passwordUtils";
-import { PersonService } from "../shared/person.service";
-import { ToasterService } from "../shared/toaster.service";
+} from '@angular/forms';
+import { AlertController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Person } from '../model/person.model';
+import { url } from '../shared/api-config';
+import { BackButtonService } from '../shared/back-button.service';
+import { passwordMatchValidator } from '../shared/passwordUtils';
+import { PersonService } from '../shared/person.service';
+import { ToasterService } from '../shared/toaster.service';
 
 @Component({
-  selector: "app-user-details-view",
-  templateUrl: "./user-details-view.component.html",
-  styleUrls: ["./user-details-view.component.scss"],
+  selector: 'app-user-details-view',
+  templateUrl: './user-details-view.component.html',
+  styleUrls: ['./user-details-view.component.scss'],
 })
 export class UserDetailsViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -67,7 +67,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -76,16 +76,16 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
   createFormGroup(): FormGroup {
     return new FormGroup(
       {
-        password: new FormControl("", [
+        password: new FormControl('', [
           Validators.required,
           Validators.maxLength(255),
           Validators.minLength(8),
-          Validators.pattern(".*[0-9].*"),
-          Validators.pattern(".*[a-z].*"),
-          Validators.pattern(".*[A-Z].*"),
-          Validators.pattern(".*[^A-Za-z0-9].*"),
+          Validators.pattern('.*[0-9].*'),
+          Validators.pattern('.*[a-z].*'),
+          Validators.pattern('.*[A-Z].*'),
+          Validators.pattern('.*[^A-Za-z0-9].*'),
         ]),
-        confirmPassword: new FormControl("", [Validators.required]),
+        confirmPassword: new FormControl('', [Validators.required]),
       },
       {
         validators: passwordMatchValidator,
@@ -98,7 +98,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
   }
 
   getRoleString(role: string): string {
-    return role.replace("ROLE_", "");
+    return role.replace('ROLE_', '');
   }
 
   submitForm(): void {
@@ -111,18 +111,18 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.toasterService.success(
-              "Password changed successfuly!",
-              "Congratulations!"
+              'Password changed successfuly!',
+              'Congratulations!'
             );
             this.changignPassword = false;
             this.passwordForm.reset();
           },
           (error) => {
-            this.toasterService.error(error.error.message, "Please try again!");
+            this.toasterService.error(error.error.message, 'Please try again!');
           }
         );
     } else {
-      this.toasterService.error("Passwords don't match!", "Please try again!");
+      this.toasterService.error('Passwords don\'t match!', 'Please try again!');
     }
   }
 
@@ -150,7 +150,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
 
   uploadFile(): void {
     const formData = new FormData();
-    formData.append("image", this.image);
+    formData.append('image', this.image);
 
     if (!!this.image) {
       this.personService
@@ -159,8 +159,8 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.toasterService.success(
-              "Image uploaded successfully!",
-              "Congratulations!"
+              'Image uploaded successfully!',
+              'Congratulations!'
             );
 
             this.changingImage = false;
@@ -168,25 +168,25 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
             this.imageUrl = this.getImageUrl();
           },
           (error) => {
-            this.toasterService.error(error.error.message, "Please try again!");
+            this.toasterService.error(error.error.message, 'Please try again!');
           }
         );
     } else {
-      this.toasterService.error("Image is required!", "Please try again!");
+      this.toasterService.error('Image is required!', 'Please try again!');
     }
   }
 
   async onRemoveClicked(): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this image?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this image?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.personService
               .removeImage()
@@ -194,8 +194,8 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Image removed successfuly!",
-                    "Congratulations!"
+                    'Image removed successfuly!',
+                    'Congratulations!'
                   );
 
                   this.imageUrl = this.getImageUrl();
@@ -203,7 +203,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -216,7 +216,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
   }
 
   getImageUrl(): string {
-    const newUrl = url + "/user/image" + "?" + new Date().getTime();
+    const newUrl = url + '/user/image' + '?' + new Date().getTime();
     this.personService.setImageUrl(newUrl);
     return newUrl;
   }

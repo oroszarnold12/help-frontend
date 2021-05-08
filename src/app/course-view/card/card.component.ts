@@ -1,19 +1,19 @@
-import { Component, Input, OnInit, Output } from "@angular/core";
-import { EventEmitter } from "@angular/core";
-import { GeneralOverview } from "src/app/model/general-overview.model";
-import { AuthService } from "src/app/shared/auth.service";
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { GeneralOverview } from 'src/app/model/general-overview.model';
+import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
-  selector: "app-card",
-  templateUrl: "./card.component.html",
-  styleUrls: ["./card.component.scss"],
+  selector: 'app-card',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.scss'],
 })
 export class CardComponent implements OnInit {
   @Input() data: GeneralOverview[];
   @Input() title: string;
 
-  @Output() onDeleteClicked = new EventEmitter<number>();
-  @Output() onViewClicked = new EventEmitter<number>();
+  @Output() deleteClicked = new EventEmitter<number>();
+  @Output() viewClicked = new EventEmitter<number>();
 
   isTeacher: boolean;
   username: string;
@@ -22,12 +22,12 @@ export class CardComponent implements OnInit {
 
   constructor(private authService: AuthService) {}
 
-  deleteClicked(index: number): void {
-    this.onDeleteClicked.emit(index);
+  onDeleteClicked(index: number): void {
+    this.deleteClicked.emit(index);
   }
 
-  viewClicked(index: number): void {
-    this.onViewClicked.emit(index);
+  onViewClicked(index: number): void {
+    this.viewClicked.emit(index);
   }
 
   ngOnInit(): void {
@@ -38,7 +38,7 @@ export class CardComponent implements OnInit {
   }
 
   onFilterItems(event: CustomEvent): void {
-    if (event.detail.value !== "") {
+    if (event.detail.value !== '') {
       this.filteredData = this.data.filter((data) => {
         return (
           data.name

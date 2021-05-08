@@ -1,4 +1,4 @@
-import { DatePipe } from "@angular/common";
+import { DatePipe } from '@angular/common';
 import {
   Component,
   NgZone,
@@ -6,26 +6,26 @@ import {
   OnInit,
   ViewChild,
   ViewChildren,
-} from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
-import { AlertController, IonContent, ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil, timeInterval } from "rxjs/operators";
-import { ConversationMessage } from "../model/conversation-message.model";
-import { Conversation } from "../model/conversation.model";
-import { Person } from "../model/person.model";
-import { ThinPerson } from "../model/thin.person.model";
-import { url } from "../shared/api-config";
-import { ConversationService } from "../shared/conversation.service";
-import { PersonService } from "../shared/person.service";
-import { ToasterService } from "../shared/toaster.service";
-import { ConversationFormComponent } from "./conversation-form/conversation-form.component";
-import { ParticipantViewComponent } from "./participant-view/participant-view.component";
+} from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { AlertController, IonContent, ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil, timeInterval } from 'rxjs/operators';
+import { ConversationMessage } from '../model/conversation-message.model';
+import { Conversation } from '../model/conversation.model';
+import { Person } from '../model/person.model';
+import { ThinPerson } from '../model/thin.person.model';
+import { url } from '../shared/api-config';
+import { ConversationService } from '../shared/conversation.service';
+import { PersonService } from '../shared/person.service';
+import { ToasterService } from '../shared/toaster.service';
+import { ConversationFormComponent } from './conversation-form/conversation-form.component';
+import { ParticipantViewComponent } from './participant-view/participant-view.component';
 
 @Component({
-  selector: "app-chat-view",
-  templateUrl: "./chat-view.component.html",
-  styleUrls: ["./chat-view.component.scss"],
+  selector: 'app-chat-view',
+  templateUrl: './chat-view.component.html',
+  styleUrls: ['./chat-view.component.scss'],
 })
 export class ChatViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -41,7 +41,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
   openConversationDetails: boolean;
 
-  @ViewChild("content", { static: false }) content: IonContent;
+  @ViewChild('content', { static: false }) content: IonContent;
 
   constructor(
     private conversationService: ConversationService,
@@ -54,7 +54,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.openConversationDetails = false;
-    this.newConversationMessage = "";
+    this.newConversationMessage = '';
 
     this.conversationService.newMessage$.subscribe(() => {
       this.ngZone.run(() => {
@@ -68,7 +68,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (event.url === "/chat") {
+        if (event.url === '/chat') {
           this.loadConversations();
 
           if (!!this.currentConversation) {
@@ -117,8 +117,8 @@ export class ChatViewComponent implements OnInit, OnDestroy {
         },
         () => {
           this.toasterService.error(
-            "Could not load conversations!",
-            "Something went wrong!"
+            'Could not load conversations!',
+            'Something went wrong!'
           );
         }
       );
@@ -143,7 +143,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
         (error) => {
           this.toasterService.error(
             error.error.message,
-            "Something went wrong!"
+            'Something went wrong!'
           );
         }
       );
@@ -163,25 +163,26 @@ export class ChatViewComponent implements OnInit, OnDestroy {
         },
         () => {
           this.toasterService.error(
-            "Could not get conversation!",
-            "Something went wrong!"
+            'Could not get conversation!',
+            'Something went wrong!'
           );
         }
       );
   }
 
   getImageUrlById(id: number): string {
-    return url + "/user/" + id + "/image/?" + new Date().getTime();
+    return url + '/user/' + id + '/image/?' + new Date().getTime();
   }
 
   formatDate(date: Date): string {
-    let today = new Date();
-    let yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
+    const today = new Date();
+    const yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
 
-    if (this.isSameDate(today, date))
-      return this.datePipe.transform(date, "HH:mm");
-    else if (this.isSameDate(yesterday, date)) return "Yesterday";
-    else return this.datePipe.transform(date, "MMMM d");
+    if (this.isSameDate(today, date)) {
+      return this.datePipe.transform(date, 'HH:mm');
+    }
+    else if (this.isSameDate(yesterday, date)) { return 'Yesterday'; }
+    else { return this.datePipe.transform(date, 'MMMM d'); }
   }
 
   isSameDate(d1: Date, d2: Date): boolean {
@@ -198,16 +199,16 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     let content: string;
 
     if (message.creator.id === this.user.id) {
-      content = "You: ";
+      content = 'You: ';
     } else {
       content =
-        message.creator.firstName + " " + message.creator.lastName + ": ";
+        message.creator.firstName + ' ' + message.creator.lastName + ': ';
     }
 
     content = content + message.content;
 
     if (content.length > 33) {
-      return content.substring(0, 30) + "...";
+      return content.substring(0, 30) + '...';
     } else {
       return content;
     }
@@ -234,46 +235,46 @@ export class ChatViewComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.toasterService.success(
-              "Message sent successfully!",
-              "Congratulations!"
+              'Message sent successfully!',
+              'Congratulations!'
             );
 
             this.loadConversation(this.currentConversation.id);
-            this.newConversationMessage = "";
+            this.newConversationMessage = '';
           },
           (error) => {
-            this.toasterService.error(error.error.message, "Please try again!");
+            this.toasterService.error(error.error.message, 'Please try again!');
           }
         );
     } else {
-      this.toasterService.error("Message can't be empty!", "Please try again!");
+      this.toasterService.error('Message can\'t be empty!', 'Please try again!');
     }
   }
 
   async onDeleteMessageClicked(messageId: number): Promise<void> {
     const alert = await this.alertController.create({
-      header: "Confirm!",
-      message: "Are you sure that you want to delete this message?",
+      header: 'Confirm!',
+      message: 'Are you sure that you want to delete this message?',
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text: 'Cancel',
+          role: 'cancel',
         },
         {
-          text: "Yes",
+          text: 'Yes',
           handler: () => {
             this.conversationService
               .updateConversationMessage(
                 this.currentConversation.id,
                 messageId,
-                "Message removed!"
+                'Message removed!'
               )
               .pipe(takeUntil(this.stop))
               .subscribe(
                 () => {
                   this.toasterService.success(
-                    "Message deleted successfully!",
-                    "Congratulations!"
+                    'Message deleted successfully!',
+                    'Congratulations!'
                   );
 
                   this.loadConversation(this.currentConversation.id);
@@ -281,7 +282,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
                 (error) => {
                   this.toasterService.error(
                     error.error.message,
-                    "Please try again!"
+                    'Please try again!'
                   );
                 }
               );
@@ -303,13 +304,13 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
       recipient = recipient ? recipient : this.user;
 
-      return recipient.firstName + " " + recipient.lastName;
+      return recipient.firstName + ' ' + recipient.lastName;
     }
   }
 
   getConversationImgUrl(conversation: Conversation): string {
     if (!!conversation.name) {
-      return "";
+      return '';
     } else {
       let recipient: ThinPerson = conversation.participants.filter(
         (particpant) => particpant.id !== this.user.id
@@ -324,7 +325,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   async presentConversationModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: ConversationFormComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
     });
 
     modal.onDidDismiss().then(() => this.loadConversations());
@@ -335,7 +336,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   async presentParticipantModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: ParticipantViewComponent,
-      cssClass: "my-custom-modal-css",
+      cssClass: 'my-custom-modal-css',
       componentProps: {
         conversation: this.currentConversation,
       },
@@ -345,7 +346,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   }
 
   onFilterChat(event: CustomEvent): void {
-    if (event.detail.value !== "") {
+    if (event.detail.value !== '') {
       this.filteredConversations = this.conversations.filter((conversation) => {
         return (
           this.getConversationName(conversation)

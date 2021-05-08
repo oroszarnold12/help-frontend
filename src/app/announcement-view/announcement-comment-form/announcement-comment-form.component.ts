@@ -1,21 +1,21 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   Validators,
-} from "@angular/forms";
-import { ModalController } from "@ionic/angular";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { AnnouncementComment } from "src/app/model/announcement-comment.model";
-import { CommentService } from "src/app/shared/comment.service";
-import { ToasterService } from "src/app/shared/toaster.service";
+} from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AnnouncementComment } from 'src/app/model/announcement-comment.model';
+import { CommentService } from 'src/app/shared/comment.service';
+import { ToasterService } from 'src/app/shared/toaster.service';
 
 @Component({
-  selector: "app-announcement-comment-form",
-  templateUrl: "./announcement-comment-form.component.html",
-  styleUrls: ["./announcement-comment-form.component.scss"],
+  selector: 'app-announcement-comment-form',
+  templateUrl: './announcement-comment-form.component.html',
+  styleUrls: ['./announcement-comment-form.component.scss'],
 })
 export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
   private stop: Subject<void> = new Subject();
@@ -38,27 +38,27 @@ export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
   ) {
     this.editorMaxLength = 2048;
     this.editorStyle = {
-      height: "300px",
+      height: '300px',
     };
 
     this.editorConfig = {
       toolbar: [
-        ["bold", "italic", "underline", "strike"],
-        ["blockquote", "code-block"],
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
 
         [{ header: 1 }, { header: 2 }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ script: "sub" }, { script: "super" }],
-        [{ indent: "-1" }, { indent: "+1" }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ script: 'sub' }, { script: 'super' }],
+        [{ indent: '-1' }, { indent: '+1' }],
 
-        [{ size: ["small", false, "large", "huge"] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
         [{ color: [] }, { background: [] }],
         [{ font: [] }],
         [{ align: [] }],
 
-        ["link"],
+        ['link'],
       ],
     };
   }
@@ -78,7 +78,7 @@ export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     return new FormGroup({
-      content: new FormControl("", [
+      content: new FormControl('', [
         Validators.required,
         Validators.maxLength(this.editorMaxLength),
       ]),
@@ -103,8 +103,8 @@ export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
               this.commentForm.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Comment updated!"
+                'Congratulations!',
+                'Comment updated!'
               );
 
               this.modalController.dismiss();
@@ -112,7 +112,7 @@ export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
@@ -131,8 +131,8 @@ export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
               this.commentForm.reset();
 
               this.toasterService.success(
-                "Congratulations!",
-                "Comment created!"
+                'Congratulations!',
+                'Comment created!'
               );
 
               this.modalController.dismiss();
@@ -140,15 +140,15 @@ export class AnnouncementCommentFormComponent implements OnInit, OnDestroy {
             (error) => {
               this.toasterService.error(
                 error.error.message,
-                "Please try again!"
+                'Please try again!'
               );
             }
           );
       }
     } else {
       this.toasterService.error(
-        "All fields are required!",
-        "Comment creation failed!"
+        'All fields are required!',
+        'Comment creation failed!'
       );
     }
   }

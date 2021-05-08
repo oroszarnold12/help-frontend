@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Participation } from "../model/participation.model";
-import { BackButtonService } from "../shared/back-button.service";
-import { ParticipationService } from "../shared/participation.service";
-import { ToasterService } from "../shared/toaster.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Participation } from '../model/participation.model';
+import { BackButtonService } from '../shared/back-button.service';
+import { ParticipationService } from '../shared/participation.service';
+import { ToasterService } from '../shared/toaster.service';
 
 @Component({
-  selector: "app-participations-view",
-  templateUrl: "./participations-view.component.html",
-  styleUrls: ["./participations-view.component.scss"],
+  selector: 'app-participations-view',
+  templateUrl: './participations-view.component.html',
+  styleUrls: ['./participations-view.component.scss'],
 })
 export class ParticipationsViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
@@ -35,7 +35,7 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
           this.filteredParticipaions = parrticipations;
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
@@ -59,18 +59,18 @@ export class ParticipationsViewComponent implements OnInit, OnDestroy {
           this.participaions = participations;
 
           this.toasterService.success(
-            "Participations updated successfuly!",
-            "Congratulations!"
+            'Participations updated successfuly!',
+            'Congratulations!'
           );
         },
         (error) => {
-          this.toasterService.error(error.error.message, "Please try again!");
+          this.toasterService.error(error.error.message, 'Please try again!');
         }
       );
   }
 
   onFilterParticipations(event: CustomEvent): void {
-    if (event.detail.value !== "") {
+    if (event.detail.value !== '') {
       this.filteredParticipaions = this.participaions.filter(
         (participation) => {
           return (
