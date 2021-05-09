@@ -1,3 +1,24 @@
+ng2-dropdown-menu .ng2-dropdown-menu {
+  background: var(--ion-color-light) !important;
+  border-radius: 6px !important;
+  div {
+    div {
+      background: var(--ion-color-light) !important;
+      color: var(--ion-text-color) !important;
+      font-family: 'Varela Round' !important;
+    }
+  }
+}
+
+form .ng2-tag-input__text-input {
+  border-radius: 6px;
+  font-family: 'Varela Round' !important;
+}
+
+tag-input .ng2-tag-input.bootstrap div tag {
+  font-family: 'Varela Round';
+}
+
 .slides {
   padding-top: 60px;
 }

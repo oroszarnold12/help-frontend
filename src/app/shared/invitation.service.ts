@@ -31,7 +31,20 @@ export class InvitationService {
     });
   }
 
-  saveInvitation(invitations: InvitationCreation): Observable<void> {
-    return this.httpClient.post<void>(`${SERVER_URL}/invitations`, invitations);
+  saveInvitation(
+    invitations: InvitationCreation,
+    inviteByEmails: boolean,
+    inviteByGroups: boolean
+  ): Observable<void> {
+    const httpParams = new HttpParams()
+      .set('inviteByEmails', String(inviteByEmails))
+      .set('inviteByPersonGroups', String(inviteByGroups));
+    return this.httpClient.post<void>(
+      `${SERVER_URL}/invitations`,
+      invitations,
+      {
+        params: httpParams,
+      }
+    );
   }
 }

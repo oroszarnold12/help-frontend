@@ -8,7 +8,6 @@ import { SERVER_URL } from 'src/environments/environment';
 import { ConversationMessage } from '../model/conversation-message.model';
 import { Conversation } from '../model/conversation.model';
 import { Person } from '../model/person.model';
-import { ThinPerson } from '../model/thin.person.model';
 import { ConversationService } from '../shared/conversation.service';
 import { PersonService } from '../shared/person.service';
 import { ToasterService } from '../shared/toaster.service';
@@ -296,7 +295,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     if (!!conversation.name) {
       return conversation.name;
     } else {
-      let recipient: ThinPerson = conversation.participants.filter(
+      let recipient: Person = conversation.participants.filter(
         (particpant) => particpant.id !== this.user.id
       )[0];
 
@@ -310,7 +309,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     if (!!conversation.name) {
       return '';
     } else {
-      let recipient: ThinPerson = conversation.participants.filter(
+      let recipient: Person = conversation.participants.filter(
         (particpant) => particpant.id !== this.user.id
       )[0];
 

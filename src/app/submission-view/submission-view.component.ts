@@ -7,7 +7,6 @@ import { takeUntil } from 'rxjs/operators';
 import { AssignmentGrade } from '../model/assignment-grade.model';
 import { Assignment } from '../model/assignment.model';
 import { Submission } from '../model/submission.model';
-import { ThinPerson } from '../model/thin.person.model';
 import { AuthService } from '../shared/auth.service';
 import { BackButtonService } from '../shared/back-button.service';
 import { CommentService } from '../shared/comment.service';
@@ -17,6 +16,7 @@ import { SubmissionService } from '../shared/submission.service';
 import { ToasterService } from '../shared/toaster.service';
 import { AssignmentComment } from '../model/assignment-comment.model';
 import { SERVER_URL } from 'src/environments/environment';
+import { Person } from '../model/person.model';
 
 @Component({
   selector: 'app-submission-view',
@@ -27,7 +27,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   stop: Subject<void> = new Subject();
   submissions: Submission[];
   assignment: Assignment;
-  participants: ThinPerson[];
+  participants: Person[];
   grades: number[] = [];
   gradesObject: AssignmentGrade[] = [];
 
@@ -162,7 +162,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  compareWith(o1: ThinPerson, o2: ThinPerson): boolean {
+  compareWith(o1: Person, o2: Person): boolean {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 

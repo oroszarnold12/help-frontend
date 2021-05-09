@@ -1,11 +1,11 @@
 import { ConversationMessage } from './conversation-message.model';
-import { ThinPerson } from './thin.person.model';
+import { Person } from './person.model';
 
 export interface Conversation {
   id?: number;
   name?: string;
-  participants?: ThinPerson[];
-  creator?: ThinPerson;
+  participants?: Person[];
+  creator?: Person;
   messages?: ConversationMessage[];
   lastMessage?: ConversationMessage;
 }

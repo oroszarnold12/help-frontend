@@ -1,9 +1,9 @@
 import { AssignmentFileObject } from './assignment-file-object.model';
-import { ThinPerson } from './thin.person.model';
+import { Person } from './person.model';
 
 export class Submission {
   id?: number;
-  submitter?: ThinPerson;
+  submitter?: Person;
   date?: Date;
   grade?: number;
   files?: AssignmentFileObject[];

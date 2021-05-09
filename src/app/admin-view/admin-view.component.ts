@@ -1,11 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { PersonSignup } from '../model/person-signup.model';
 import { Person } from '../model/person.model';
 import { Role } from '../model/role.enum';
 import { PersonService } from '../shared/person.service';
 import { ToasterService } from '../shared/toaster.service';
+import { RegistrationComponent } from './registration/registration.component';
 
 @Component({
   selector: 'app-admin-view',
@@ -19,10 +22,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   filteredPersons: Person[];
   personsSettings: any;
 
+  file: File;
+
+  showErrorMessage: boolean;
+  errorMessage: string;
+
   constructor(
     private personService: PersonService,
     private alertController: AlertController,
-    private toasterService: ToasterService
+    private toasterService: ToasterService,
+    private modalController: ModalController,
+    private ngxCsvParser: NgxCsvParser
   ) {
     this.personsSettings = {
       actions: {
@@ -50,6 +60,11 @@ export class AdminViewComponent implements OnInit, OnDestroy {
             return row.firstName + ' ' + row.lastName;
           },
         },
+        personGroup: {
+          title: 'Group',
+          filter: false,
+          name: 'personGroup',
+        },
         role: {
           title: 'Role',
           filter: false,
@@ -57,14 +72,20 @@ export class AdminViewComponent implements OnInit, OnDestroy {
             type: 'list',
             config: {
               list: [
-                { value: 'ROLE_TEACHER', title: 'ROLE_TEACHER' },
-                { value: 'ROLE_STUDENT', title: 'ROLE_STUDENT' },
+                { value: 'ROLE_TEACHER', title: 'TEACHER' },
+                { value: 'ROLE_STUDENT', title: 'STUDENT' },
               ],
             },
+          },
+          valuePrepareFunction: (cell) => {
+            return String(cell).substring(String(cell).indexOf('_') + 1);
           },
         },
       },
     };
+
+    this.showErrorMessage = false;
+    this.errorMessage = '';
   }
 
   ngOnInit(): void {
@@ -167,5 +188,60 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     } else {
       this.filteredPersons = this.persons;
     }
+  }
+
+  async presentRegistrationModal(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: RegistrationComponent,
+      cssClass: 'my-custom-modal-css',
+    });
+
+    modal.onDidDismiss().then(() => this.loadPersons());
+
+    await modal.present();
+  }
+
+  onFileChange(fileChangeEvent): void {
+    this.file = fileChangeEvent.target.files[0];
+  }
+
+  onRegisterWithFileClicked(): void {
+    this.ngxCsvParser
+      .parse(this.file, { header: true, delimiter: ',' })
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        (results: any[]) => {
+          const personsToRegister: PersonSignup[] = [];
+          results.forEach((result) => {
+            personsToRegister.push(result as PersonSignup);
+          });
+
+          this.personService
+            .savePerson(personsToRegister)
+            .pipe(takeUntil(this.stop))
+            .subscribe(
+              () => {
+                this.showErrorMessage = false;
+                this.errorMessage = '';
+
+                this.file = null;
+
+                this.loadPersons();
+
+                this.toasterService.success(
+                  'Persons registered successfully!',
+                  'Congratulations!'
+                );
+              },
+              (error) => {
+                this.errorMessage = error.error.message;
+                this.showErrorMessage = true;
+              }
+            );
+        },
+        (error) => {
+          this.toasterService.error(error.message, 'Please try again!');
+        }
+      );
   }
 }

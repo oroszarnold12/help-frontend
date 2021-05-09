@@ -14,7 +14,7 @@ import { CourseCardComponent } from './dashboard/course-card/course-card.compone
 import { TopbarComponent } from './topbar/topbar.component';
 import { CourseViewComponent } from './course-view/course-view.component';
 import { LogInComponent } from './log-in/log-in.component';
-import { RegistrationComponent } from './registration/registration.component';
+import { RegistrationComponent } from './admin-view/registration/registration.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 import { ToastrModule } from 'ngx-toastr';
@@ -46,6 +46,7 @@ import { ChatViewComponent } from './chat-view/chat-view.component';
 import { ConversationFormComponent } from './chat-view/conversation-form/conversation-form.component';
 import { TagInputModule } from 'ngx-chips';
 import { ParticipantViewComponent } from './chat-view/participant-view/participant-view.component';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { ParticipantViewComponent } from './chat-view/participant-view/participa
     QuestionFormComponent,
     ConversationFormComponent,
     ParticipantViewComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -103,6 +105,7 @@ import { ParticipantViewComponent } from './chat-view/participant-view/participa
     ReactiveFormsModule,
     QuillModule.forRoot(),
     TagInputModule,
+    NgxCsvParserModule,
   ],
   providers: [
     StatusBar,

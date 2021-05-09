@@ -1,9 +1,9 @@
 import { Assignment } from './assignment.model';
-import { ThinPerson } from './thin.person.model';
+import { Person } from './person.model';
 
 export class AssignmentGrade {
   id?: number;
   grade?: number;
-  submitter?: ThinPerson;
+  submitter?: Person;
   assignment?: Assignment;
 }

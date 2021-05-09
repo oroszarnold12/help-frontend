@@ -335,22 +335,102 @@
                   (userRowSelect)="onUserRowSelected($event)"
                 ></ng2-smart-table>
               </ion-card-content>
+              <ion-card-content class="ion-text-end">
+                <ion-button
+                  color="secondary"
+                  (click)="inviteClicked()"
+                  [disabled]="!personsToInvite.length"
+                >
+                  <ion-icon
+                    name="add-circle-outline"
+                    class="button-icon"
+                  ></ion-icon>
+                  Invite
+                </ion-button>
+              </ion-card-content>
             </ion-card>
           </ion-col>
         </ion-row>
-        <ion-row fixed class="button-row">
+        <ion-row>
           <ion-col>
-            <ion-button
-              color="secondary"
-              (click)="inviteClicked()"
-              [disabled]="!personsToInvite.length"
-            >
-              <ion-icon
-                name="add-circle-outline"
-                class="button-icon"
-              ></ion-icon>
-              Invite
-            </ion-button>
+            <ion-card class="card ion-no-margin">
+              <ion-card-header>
+                <ion-card-title class="dark-blue">
+                  Inivte By E-mail Addresses
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-item lines="full">
+                  <ion-label position="floating">E-mail addresses</ion-label>
+                  <ion-textarea
+                    type="text"
+                    rows="4"
+                    [(ngModel)]="emailListString"
+                    placeholder="Type e-mail addresses here seperated by ' , '"
+                  ></ion-textarea>
+                </ion-item>
+              </ion-card-content>
+              <ion-card-content *ngIf="showErrorMessage" class="ion-text-start">
+                <ion-text color="danger">
+                  {{ errorMessage }}
+                </ion-text>
+              </ion-card-content>
+              <ion-card-content class="ion-text-end">
+                <ion-button
+                  [disabled]="!emailListString.length"
+                  color="secondary"
+                  (click)="onInviteByEmailClicked()"
+                >
+                  <ion-icon
+                    name="add-circle-outline"
+                    class="button-icon"
+                  ></ion-icon>
+                  Invite
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card class="card ion-no-margin">
+              <ion-card-header>
+                <ion-card-title class="dark-blue">
+                  Inivte By Groups
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <tag-input
+                  [(ngModel)]="groupsToInvite"
+                  [identifyBy]="'id'"
+                  theme="bootstrap"
+                  [onlyFromAutocomplete]="true"
+                  class="ion-margin item-radius"
+                  placeholder="+ Group"
+                  secondaryPlaceholder="+ Group"
+                >
+                  <tag-input-dropdown
+                    [showDropdownIfEmpty]="true"
+                    [autocompleteItems]="groups"
+                    [identifyBy]="'id'"
+                  >
+                  </tag-input-dropdown>
+                </tag-input>
+              </ion-card-content>
+              <ion-card-content class="ion-text-end">
+                <ion-button
+                  [disabled]="!groupsToInvite.length"
+                  color="secondary"
+                  (click)="onInviteByGroupClicked()"
+                >
+                  <ion-icon
+                    name="add-circle-outline"
+                    class="button-icon"
+                  ></ion-icon>
+                  Invite
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
           </ion-col>
         </ion-row>
         <ion-row *ngIf="isTeacher && canDelete" fixed class="button-row">

@@ -67,13 +67,6 @@ export class AuthService {
       );
   }
 
-  register(personSignup: PersonSignup): Observable<any> {
-    return this.httpClient.post<Person>(
-      `${SERVER_URL}/auth/sign-up`,
-      personSignup
-    );
-  }
-
   pingBackend(): Observable<void> {
     return this.httpClient.get<void>(`${SERVER_URL}/server-status/ping`, {
       withCredentials: true,

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { SERVER_URL } from 'src/environments/environment';
+import { PersonSignup } from '../model/person-signup.model';
 import { Person } from '../model/person.model';
-import { ThinPerson } from '../model/thin.person.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +14,8 @@ export class PersonService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getPersons(): Observable<{ persons: ThinPerson[] }> {
-    return this.httpClient.get<{ persons: ThinPerson[] }>(
-      `${SERVER_URL}/persons`
-    );
+  getPersons(): Observable<{ persons: Person[] }> {
+    return this.httpClient.get<{ persons: Person[] }>(`${SERVER_URL}/persons`);
   }
 
   getPersonsForAdmin(): Observable<{ persons: Person[] }> {
@@ -54,5 +52,15 @@ export class PersonService {
 
   saveNotificationToken(token: string): Observable<void> {
     return this.httpClient.post<void>(`${SERVER_URL}/notificationToken`, token);
+  }
+
+  getPersonGroups(): Observable<{ personGroups: string[] }> {
+    return this.httpClient.get<{ personGroups: string[] }>(
+      `${SERVER_URL}/groups`
+    );
+  }
+
+  savePerson(personSignup: PersonSignup[]): Observable<any> {
+    return this.httpClient.post<Person>(`${SERVER_URL}/persons`, personSignup);
   }
 }

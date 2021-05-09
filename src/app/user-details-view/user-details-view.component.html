@@ -80,6 +80,17 @@
               <ion-row>
                 <ion-col>
                   <ion-item>
+                    <ion-label position="stacked">Group</ion-label>
+                    <ion-input
+                      readonly
+                      [value]="!!user.personGroup ? user.personGroup : 'None'"
+                    ></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
                     <ion-label position="stacked">Role</ion-label>
                     <ion-input
                       readonly

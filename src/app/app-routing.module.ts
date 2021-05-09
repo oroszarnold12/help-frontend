@@ -5,7 +5,7 @@ import { CourseViewComponent } from './course-view/course-view.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { GuardService } from './guards/guard.service';
 import { AuthGuardService } from './guards/auth-guard.service';
-import { RegistrationComponent } from './registration/registration.component';
+import { RegistrationComponent } from './admin-view/registration/registration.component';
 import { AdminViewComponent } from './admin-view/admin-view.component';
 import { AdminGuardService } from './guards/admin-guard.service';
 import { AnnouncementViewComponent } from './announcement-view/announcement-view.component';
@@ -50,10 +50,6 @@ const routes: Routes = [
     path: 'courses/:courseId',
     component: CourseViewComponent,
     canActivate: [AuthGuardService, NonAdminGuardService],
-  },
-  {
-    path: 'registration',
-    component: RegistrationComponent,
   },
   {
     path: 'admin',

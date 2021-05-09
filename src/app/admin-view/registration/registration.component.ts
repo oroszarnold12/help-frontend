@@ -5,11 +5,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { PersonSignup } from '../model/person-signup.model';
-import { AuthService } from '../shared/auth.service';
-import { BackButtonService } from '../shared/back-button.service';
-import { passwordMatchValidator } from '../shared/passwordUtils';
-import { ToasterService } from '../shared/toaster.service';
+import { ModalController } from '@ionic/angular';
+import { PersonSignup } from '../../model/person-signup.model';
+import { AuthService } from '../../shared/auth.service';
+import { passwordMatchValidator } from '../../shared/passwordUtils';
+import { ToasterService } from '../../shared/toaster.service';
+import { Role } from '../../model/role.enum';
+import { PersonService } from 'src/app/shared/person.service';
 
 @Component({
   selector: 'app-registration',
@@ -20,15 +22,16 @@ export class RegistrationComponent implements OnInit {
   registrationForm: FormGroup;
   personSignup: PersonSignup;
 
+  Role = Role;
+
   constructor(
-    private authService: AuthService,
+    private personService: PersonService,
     private toasterService: ToasterService,
-    private backButtonService: BackButtonService
+    private modalController: ModalController
   ) {}
 
   ngOnInit(): void {
     this.registrationForm = this.createFormGroup();
-    this.backButtonService.turnOn();
   }
 
   createFormGroup(): FormGroup {
@@ -42,11 +45,16 @@ export class RegistrationComponent implements OnInit {
           Validators.required,
           Validators.maxLength(255),
         ]),
+        personGroup: new FormControl('', [
+          Validators.required,
+          Validators.maxLength(255),
+        ]),
         email: new FormControl('', [
           Validators.required,
           Validators.maxLength(255),
           Validators.pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'),
         ]),
+        role: new FormControl(''),
         password: new FormControl('', [
           Validators.required,
           Validators.maxLength(255),
@@ -74,7 +82,7 @@ export class RegistrationComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.personSignup = this.registrationForm.value;
 
-      this.authService.register(this.personSignup).subscribe(
+      this.personService.savePerson([this.personSignup]).subscribe(
         () => {
           this.registrationForm.reset();
           this.toasterService.success(
@@ -92,5 +100,9 @@ export class RegistrationComponent implements OnInit {
         'Registration failed!'
       );
     }
+  }
+
+  dismissModal(): void {
+    this.modalController.dismiss();
   }
 }

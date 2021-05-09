@@ -1,9 +1,9 @@
-import { ThinPerson } from './thin.person.model';
+import { Person } from './person.model';
 
 export interface ConversationMessage {
   id?: number;
   content?: string;
   creationDate?: Date;
-  creator?: ThinPerson;
+  creator?: Person;
   deleted?: boolean;
 }

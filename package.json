@@ -39,6 +39,7 @@
     "ng2-completer": "^9.0.1",
     "ng2-smart-table": "^1.7.2",
     "ngx-chips": "^2.2.2",
+    "ngx-csv-parser": "0.0.7",
     "ngx-filesaver": "^11.0.0",
     "ngx-quill": "^13.0.1",
     "ngx-toastr": "^13.0.0",

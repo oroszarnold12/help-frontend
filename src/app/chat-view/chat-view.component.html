@@ -2,7 +2,7 @@
   <ion-grid class="header-grid">
     <ion-row>
       <ion-col class="header-col">
-        <ion-card class="card ion-no-margin">
+        <ion-card class="card ion-no-margin no-bottom-radius">
           <ng-container *ngIf="!openConversationDetails">
             <ion-card-header>
               <ion-item>
@@ -71,7 +71,7 @@
   <ion-grid class="grid">
     <ion-row>
       <ion-col class="content-col">
-        <ion-card class="card ion-no-margin">
+        <ion-card class="card ion-no-margin no-top-radius">
           <ng-container *ngIf="!openConversationDetails">
             <ion-card-content>
               <ion-item>
@@ -172,7 +172,7 @@
                           <br />
                           <span>{{ message.content }} </span>
                           <div class="time ion-text-right">
-                            <br />{{ message.creationDate | date: "short" }}
+                            <br />{{ message.creationDate | date: 'short' }}
                           </div>
                         </ion-col>
                       </ion-row>

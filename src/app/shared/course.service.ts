@@ -7,9 +7,9 @@ import { CourseCreation } from '../model/course-creation.model';
 import { Announcement } from '../model/announcement.model';
 import { Assignment } from '../model/assignment.model';
 import { Discussion } from '../model/discussion.model';
-import { ThinPerson } from '../model/thin.person.model';
 import { CourseFile } from '../model/course-file.model';
 import { SERVER_URL } from 'src/environments/environment';
+import { Person } from '../model/person.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,8 +43,8 @@ export class CourseService {
     );
   }
 
-  getParticipants(courseId: number): Observable<ThinPerson[]> {
-    return this.http.get<ThinPerson[]>(
+  getParticipants(courseId: number): Observable<Person[]> {
+    return this.http.get<Person[]>(
       `${SERVER_URL}/courses/${courseId}/participants`
     );
   }

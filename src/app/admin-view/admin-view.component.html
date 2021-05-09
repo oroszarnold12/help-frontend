@@ -23,7 +23,41 @@
               (editConfirm)="onEditConfirm($event)"
             ></ng2-smart-table>
           </ion-card-content>
+          <ion-card-content class="ion-text-start">
+            <ion-label>
+              Register mutliple persons with csv file(header:
+              firstName,lastName,personGroup,email,role,password)
+            </ion-label>
+            <ion-item>
+              <ion-input
+                type="file"
+                (change)="onFileChange($event)"
+              ></ion-input>
+              <ion-buttons slot="end">
+                <ion-button
+                  (click)="onRegisterWithFileClicked()"
+                  color="success"
+                  [disabled]="!!!file"
+                >
+                  Register
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          </ion-card-content>
+          <ion-card-content *ngIf="showErrorMessage" class="ion-text-start">
+            <ion-text color="danger">
+              {{ errorMessage }}
+            </ion-text>
+          </ion-card-content>
         </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row class="button-row">
+      <ion-col class="ion-text-end">
+        <ion-button (click)="presentRegistrationModal()">
+          <ion-icon name="reader-outline" class="button-icon"></ion-icon>
+          Registrate one person
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -20,7 +20,6 @@ import { CourseFormComponent } from '../dashboard/course-form/course-form.compon
 import { Course } from '../model/course.model';
 import { GeneralOverview } from '../model/general-overview.model';
 import { InvitationCreation } from '../model/invitation.creation.model';
-import { ThinPerson } from '../model/thin.person.model';
 import { AuthService } from '../shared/auth.service';
 import { BackButtonService } from '../shared/back-button.service';
 import { CourseService } from '../shared/course.service';
@@ -37,6 +36,7 @@ import { QuizFormComponent } from './quiz-form/quiz-form.component';
 import { Grades } from '../model/grades.model';
 import { CourseFile } from '../model/course-file.model';
 import { FileSaverService } from 'ngx-filesaver';
+import { Person } from '../model/person.model';
 
 @Component({
   selector: 'app-course-view',
@@ -65,14 +65,20 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   gradeOverviews: any[];
   originalGradeOverviews: any[];
 
-  thinPersons: ThinPerson[];
-  filteredThinPersons: ThinPerson[];
-  participants: ThinPerson[];
-  filteredParticipants: ThinPerson[];
-  personsToInvite: ThinPerson[];
+  thinPersons: Person[];
+  filteredThinPersons: Person[];
+  participants: Person[];
+  filteredParticipants: Person[];
+  personsToInvite: Person[];
   gradeTableSettings: any;
   availablePersonsTableSettings: any;
   participantsTableSettings: any;
+  emailListString: string;
+  groups: string[];
+  groupsToInvite: any[];
+
+  showErrorMessage: boolean;
+  errorMessage: string;
 
   grades: Grades;
   sumOfGrades: number;
@@ -271,6 +277,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
     this.defaultSlide = defaultSlideService.getDefaultSlide();
     this.personsToInvite = [];
+    this.emailListString = '';
+    this.groupsToInvite = [];
+
+    this.showErrorMessage = false;
+    this.errorMessage = '';
   }
 
   ngOnInit(): void {
@@ -278,6 +289,10 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.uploadingCourseFile = false;
     this.backButtonService.turnOn();
     this.loadCourse();
+
+    if (this.isTeacher) {
+      this.loadGroups();
+    }
   }
 
   ngOnDestroy(): void {
@@ -368,6 +383,23 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           if (this.isTeacher) {
             this.loadPersons();
           }
+        },
+        (error) => {
+          this.toasterService.error(
+            error.error.message,
+            'Something went wrong!'
+          );
+        }
+      );
+  }
+
+  loadGroups(): void {
+    this.personService
+      .getPersonGroups()
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        ({ personGroups }) => {
+          this.groups = personGroups;
         },
         (error) => {
           this.toasterService.error(
@@ -800,7 +832,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         invitations.emails.push(person.email);
       });
       this.invitationService
-        .saveInvitation(invitations)
+        .saveInvitation(invitations, true, false)
         .pipe(takeUntil(this.stop))
         .subscribe(
           () => {
@@ -810,9 +842,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
             );
           },
           (error) => {
-            console.log(error);
             this.toasterService.error(
-              error.error,
+              error.error.message,
               'Sending invitations failed!'
             );
           }
@@ -820,6 +851,72 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     } else {
       this.toasterService.error(
         'The invitation list must contain atleast one person!',
+        'Sending invitations failed!'
+      );
+    }
+  }
+
+  onInviteByEmailClicked(): void {
+    if (this.emailListString.length) {
+      const emails: string[] = this.emailListString
+        .split(',')
+        .map((email) => email.trim());
+
+      const invitations: InvitationCreation = {};
+      invitations.courseId = this.course.id;
+      invitations.emails = emails;
+
+      this.invitationService
+        .saveInvitation(invitations, true, false)
+        .pipe(takeUntil(this.stop))
+        .subscribe(
+          () => {
+            this.errorMessage = '';
+            this.showErrorMessage = false;
+
+            this.toasterService.success(
+              'Invitations sent!',
+              'Congratulations!'
+            );
+          },
+          (error) => {
+            this.showErrorMessage = true;
+            this.errorMessage = error.error.message;
+          }
+        );
+    } else {
+      this.toasterService.error(
+        'The e-mail list must contain atleast one email!',
+        'Sending invitations failed!'
+      );
+    }
+  }
+
+  onInviteByGroupClicked(): void {
+    if (this.groupsToInvite.length) {
+      const invitations: InvitationCreation = {};
+      invitations.courseId = this.course.id;
+      invitations.personGroups = this.groupsToInvite.map(
+        (groupToInvite) => groupToInvite.display
+      );
+
+      this.invitationService
+        .saveInvitation(invitations, false, true)
+        .pipe(takeUntil(this.stop))
+        .subscribe(
+          () => {
+            this.toasterService.success(
+              'Invitations sent!',
+              'Congratulations!'
+            );
+          },
+          (error) => {
+            this.toasterService.error(error.error.message, 'Please try again!');
+          }
+        );
+    } else {
+      this.toasterService.error(
+        'The group list must contain atleast one group!',
         'Sending invitations failed!'
       );
     }

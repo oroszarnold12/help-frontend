@@ -1,8 +1,8 @@
-import { ThinPerson } from './thin.person.model';
+import { Person } from './person.model';
 
 export interface DiscussionComment {
   id?: number;
   date?: Date;
   content?: string;
-  commenter?: ThinPerson;
+  commenter?: Person;
 }

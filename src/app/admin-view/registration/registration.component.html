@@ -1,3 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Registration </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="content">
   <form
     class="form-signing ion-padding"
@@ -52,6 +63,30 @@
       Last name is too long.
     </span>
     <ion-item lines="full" class="form-group item-radius">
+      <ion-label position="floating" for="personGroup">Group</ion-label>
+      <ion-input
+        type="text"
+        id="personGroup"
+        name="personGroup"
+        formControlName="personGroup"
+      ></ion-input>
+    </ion-item>
+    <span
+      class="ion-padding-bottom text-danger block"
+      *ngIf="
+        errorControl.personGroup.touched &&
+        errorControl.personGroup.errors?.required
+      "
+    >
+      Group is required.
+    </span>
+    <span
+      class="text-danger ion-padding-bottom block"
+      *ngIf="errorControl.personGroup.errors?.maxlength"
+    >
+      Group is too long.
+    </span>
+    <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="email">Email address</ion-label>
       <ion-input
         type="email"
@@ -78,6 +113,17 @@
     >
       Email address is not valid.
     </span>
+    <ion-item class="form-group item-radius">
+      <ion-label>Role</ion-label>
+      <ion-select interface="popover" formControlName="role">
+        <ion-select-option
+          *ngFor="let role of Role | keyvalue"
+          [value]="role.value"
+        >
+          {{ role.value.substring(role.value.indexOf('_') + 1) }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
     <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="password">Password</ion-label>
       <ion-input
