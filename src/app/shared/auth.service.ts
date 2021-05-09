@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { SERVER_URL } from 'src/environments/environment';
 import { LoginRequest } from '../model/login-request.model';
 import { PersonSignup } from '../model/person-signup.model';
 import { Person } from '../model/person.model';
 import { Role } from '../model/role.enum';
-import { url } from './api-config';
 import { FcmService } from './fcm.service';
 import { LoginStatusService } from './login-status.service';
 
@@ -26,7 +26,7 @@ export class AuthService {
 
   login(loginRequest: LoginRequest): Observable<any> {
     return this.httpClient
-      .post<LoginRequest>(`${url}/auth/login`, loginRequest, {
+      .post<LoginRequest>(`${SERVER_URL}/auth/login`, loginRequest, {
         withCredentials: true,
         observe: 'response',
       })
@@ -48,7 +48,7 @@ export class AuthService {
 
   logout(): Observable<any> {
     return this.httpClient
-      .get(`${url}/auth/logout`, {
+      .get(`${SERVER_URL}/auth/logout`, {
         withCredentials: true,
       })
       .pipe(
@@ -68,11 +68,14 @@ export class AuthService {
   }
 
   register(personSignup: PersonSignup): Observable<any> {
-    return this.httpClient.post<Person>(`${url}/auth/sign-up`, personSignup);
+    return this.httpClient.post<Person>(
+      `${SERVER_URL}/auth/sign-up`,
+      personSignup
+    );
   }
 
   pingBackend(): Observable<void> {
-    return this.httpClient.get<void>(`${url}/server-status/ping`, {
+    return this.httpClient.get<void>(`${SERVER_URL}/server-status/ping`, {
       withCredentials: true,
     });
   }

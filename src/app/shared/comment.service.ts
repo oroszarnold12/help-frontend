@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SERVER_URL } from 'src/environments/environment';
 import { AnnouncementComment } from '../model/announcement-comment.model';
 import { AssignmentComment } from '../model/assignment-comment.model';
 import { DiscussionComment } from '../model/discussion-comment.model';
-import { url } from './api-config';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class CommentService {
     comment: AnnouncementComment
   ): Observable<AnnouncementComment> {
     return this.httpClient.post<AnnouncementComment>(
-      `${url}/courses/${courseId}/announcements/${announcementId}/comments`,
+      `${SERVER_URL}/courses/${courseId}/announcements/${announcementId}/comments`,
       comment
     );
   }
@@ -29,7 +29,7 @@ export class CommentService {
     comment: DiscussionComment
   ): Observable<DiscussionComment> {
     return this.httpClient.post<DiscussionComment>(
-      `${url}/courses/${courseId}/discussions/${discussionId}/comments`,
+      `${SERVER_URL}/courses/${courseId}/discussions/${discussionId}/comments`,
       comment
     );
   }
@@ -41,7 +41,7 @@ export class CommentService {
     comment: string
   ): Observable<AssignmentComment> {
     return this.httpClient.post<AssignmentComment>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/comments`,
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}/comments`,
       {
         content: comment,
         recipientEmail,
@@ -56,7 +56,7 @@ export class CommentService {
     comment: AnnouncementComment
   ): Observable<AnnouncementComment> {
     return this.httpClient.put<AnnouncementComment>(
-      `${url}/courses/${courseId}/announcements/${announcementId}/comments/${commentId}`,
+      `${SERVER_URL}/courses/${courseId}/announcements/${announcementId}/comments/${commentId}`,
       comment
     );
   }
@@ -68,7 +68,7 @@ export class CommentService {
     comment: DiscussionComment
   ): Observable<DiscussionComment> {
     return this.httpClient.put<DiscussionComment>(
-      `${url}/courses/${courseId}/discussions/${discussionId}/comments/${commentId}`,
+      `${SERVER_URL}/courses/${courseId}/discussions/${discussionId}/comments/${commentId}`,
       comment
     );
   }
@@ -80,7 +80,7 @@ export class CommentService {
     comment: AssignmentComment
   ): Observable<AssignmentComment> {
     return this.httpClient.put<AssignmentComment>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/comments/${commentId}`,
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}/comments/${commentId}`,
       comment
     );
   }
@@ -91,7 +91,7 @@ export class CommentService {
     commentId: number
   ): Observable<void> {
     return this.httpClient.delete<void>(
-      `${url}/courses/${courseId}/announcements/${announcementId}/comments/${commentId}`
+      `${SERVER_URL}/courses/${courseId}/announcements/${announcementId}/comments/${commentId}`
     );
   }
 
@@ -101,7 +101,7 @@ export class CommentService {
     commentId: number
   ): Observable<void> {
     return this.httpClient.delete<void>(
-      `${url}/courses/${courseId}/discussions/${discussionId}/comments/${commentId}`
+      `${SERVER_URL}/courses/${courseId}/discussions/${discussionId}/comments/${commentId}`
     );
   }
 
@@ -111,7 +111,7 @@ export class CommentService {
     commentId: number
   ): Observable<void> {
     return this.httpClient.delete<void>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/comments/${commentId}`
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}/comments/${commentId}`
     );
   }
 }

@@ -7,9 +7,9 @@ import { CourseCreation } from '../model/course-creation.model';
 import { Announcement } from '../model/announcement.model';
 import { Assignment } from '../model/assignment.model';
 import { Discussion } from '../model/discussion.model';
-import { url } from './api-config';
 import { ThinPerson } from '../model/thin.person.model';
 import { CourseFile } from '../model/course-file.model';
+import { SERVER_URL } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,11 +18,11 @@ export class CourseService {
   constructor(private http: HttpClient) {}
 
   getCourses(): Observable<{ courses: Course[] }> {
-    return this.http.get<{ courses: Course[] }>(`${url}/courses`);
+    return this.http.get<{ courses: Course[] }>(`${SERVER_URL}/courses`);
   }
 
   getCourse(id: number): Observable<Course> {
-    return this.http.get<Course>(`${url}/courses/${id}`);
+    return this.http.get<Course>(`${SERVER_URL}/courses/${id}`);
   }
 
   getAnnouncement(
@@ -30,7 +30,7 @@ export class CourseService {
     announcementId: number
   ): Observable<Announcement> {
     return this.http.get<Announcement>(
-      `${url}/courses/${courseId}/announcements/${announcementId}`
+      `${SERVER_URL}/courses/${courseId}/announcements/${announcementId}`
     );
   }
 
@@ -39,13 +39,13 @@ export class CourseService {
     assignmentId: number
   ): Observable<Assignment> {
     return this.http.get<Assignment>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}`
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}`
     );
   }
 
   getParticipants(courseId: number): Observable<ThinPerson[]> {
     return this.http.get<ThinPerson[]>(
-      `${url}/courses/${courseId}/participants`
+      `${SERVER_URL}/courses/${courseId}/participants`
     );
   }
 
@@ -54,18 +54,18 @@ export class CourseService {
     discussionId: number
   ): Observable<Discussion> {
     return this.http.get<Discussion>(
-      `${url}/courses/${courseId}/discussions/${discussionId}`
+      `${SERVER_URL}/courses/${courseId}/discussions/${discussionId}`
     );
   }
 
   getCourseFile(courseId: number, fileId: number): Observable<Blob> {
-    return this.http.get(`${url}/courses/${courseId}/files/${fileId}`, {
+    return this.http.get(`${SERVER_URL}/courses/${courseId}/files/${fileId}`, {
       responseType: 'blob',
     });
   }
 
   getAllCourseFiles(courseId: number): Observable<Blob> {
-    return this.http.get(`${url}/courses/${courseId}/files`, {
+    return this.http.get(`${SERVER_URL}/courses/${courseId}/files`, {
       responseType: 'blob',
     });
   }
@@ -76,14 +76,14 @@ export class CourseService {
   ): Observable<Blob> {
     const headers = new HttpHeaders().set('courseFilesIds', courseFilesIds);
 
-    return this.http.get(`${url}/courses/${courseId}/files`, {
+    return this.http.get(`${SERVER_URL}/courses/${courseId}/files`, {
       responseType: 'blob',
       headers,
     });
   }
 
   saveCourse(course: CourseCreation): Observable<Course> {
-    return this.http.post<Course>(`${url}/courses`, course);
+    return this.http.post<Course>(`${SERVER_URL}/courses`, course);
   }
 
   saveAnnouncement(
@@ -91,7 +91,7 @@ export class CourseService {
     courseId: number
   ): Observable<Announcement> {
     return this.http.post<Announcement>(
-      `${url}/courses/${courseId}/announcements`,
+      `${SERVER_URL}/courses/${courseId}/announcements`,
       announcement
     );
   }
@@ -101,7 +101,7 @@ export class CourseService {
     courseId: number
   ): Observable<Assignment> {
     return this.http.post<Assignment>(
-      `${url}/courses/${courseId}/assignments`,
+      `${SERVER_URL}/courses/${courseId}/assignments`,
       assignment
     );
   }
@@ -111,20 +111,20 @@ export class CourseService {
     courseId: number
   ): Observable<Discussion> {
     return this.http.post<Discussion>(
-      `${url}/courses/${courseId}/discussions`,
+      `${SERVER_URL}/courses/${courseId}/discussions`,
       discussion
     );
   }
 
   saveCourseFile(courseId: number, data: FormData): Observable<CourseFile[]> {
     return this.http.post<CourseFile[]>(
-      `${url}/courses/${courseId}/files`,
+      `${SERVER_URL}/courses/${courseId}/files`,
       data
     );
   }
 
   updateCourse(course: CourseCreation, id: number): Observable<Course> {
-    return this.http.put<Course>(`${url}/courses/${id}`, course);
+    return this.http.put<Course>(`${SERVER_URL}/courses/${id}`, course);
   }
 
   updateAnnouncement(
@@ -133,7 +133,7 @@ export class CourseService {
     announcementId: number
   ): Observable<Announcement> {
     return this.http.put<Announcement>(
-      `${url}/courses/${courseId}/announcements/${announcementId}`,
+      `${SERVER_URL}/courses/${courseId}/announcements/${announcementId}`,
       announcement
     );
   }
@@ -144,7 +144,7 @@ export class CourseService {
     assignmentId: number
   ): Observable<Assignment> {
     return this.http.put<Assignment>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}`,
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}`,
       assignment
     );
   }
@@ -155,13 +155,13 @@ export class CourseService {
     discussionId: number
   ): Observable<Discussion> {
     return this.http.put<Discussion>(
-      `${url}/courses/${courseId}/discussions/${discussionId}`,
+      `${SERVER_URL}/courses/${courseId}/discussions/${discussionId}`,
       discussion
     );
   }
 
   deleteCourse(id: number): Observable<void> {
-    return this.http.delete<void>(`${url}/courses/${id}`);
+    return this.http.delete<void>(`${SERVER_URL}/courses/${id}`);
   }
 
   deleteAnnouncement(
@@ -169,29 +169,31 @@ export class CourseService {
     announcementId: number
   ): Observable<void> {
     return this.http.delete<void>(
-      `${url}/courses/${courseId}/announcements/${announcementId}`
+      `${SERVER_URL}/courses/${courseId}/announcements/${announcementId}`
     );
   }
 
   deleteAssignment(courseId: number, assignmentId: number): Observable<void> {
     return this.http.delete<void>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}`
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}`
     );
   }
 
   deleteDiscussions(courseId: number, discussionId: number): Observable<void> {
     return this.http.delete<void>(
-      `${url}/courses/${courseId}/discussions/${discussionId}`
+      `${SERVER_URL}/courses/${courseId}/discussions/${discussionId}`
     );
   }
 
   deleteCourseFile(courseId: number, fileId: number): Observable<void> {
-    return this.http.delete<void>(`${url}/courses/${courseId}/files/${fileId}`);
+    return this.http.delete<void>(
+      `${SERVER_URL}/courses/${courseId}/files/${fileId}`
+    );
   }
 
   deleteParticipant(courseId: number, participantId: number): Observable<void> {
     return this.http.delete<void>(
-      `${url}/courses/${courseId}/participants/${participantId}`
+      `${SERVER_URL}/courses/${courseId}/participants/${participantId}`
     );
   }
 }

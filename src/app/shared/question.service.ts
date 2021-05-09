@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SERVER_URL } from 'src/environments/environment';
 import { Question } from '../model/question.model';
-import { url } from './api-config';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class QuestionService {
 
   getQuestions(courseId: number, quizId: number): Observable<Question[]> {
     return this.http.get<Question[]>(
-      `${url}/courses/${courseId}/quizzes/${quizId}/questions`
+      `${SERVER_URL}/courses/${courseId}/quizzes/${quizId}/questions`
     );
   }
 
@@ -22,7 +22,7 @@ export class QuestionService {
     question: Question
   ): Observable<Question> {
     return this.http.post<Question>(
-      `${url}/courses/${courseId}/quizzes/${quizId}/questions`,
+      `${SERVER_URL}/courses/${courseId}/quizzes/${quizId}/questions`,
       question
     );
   }
@@ -34,7 +34,7 @@ export class QuestionService {
     question: Question
   ): Observable<Question> {
     return this.http.put<Question>(
-      `${url}/courses/${courseId}/quizzes/${quizId}/questions/${questionId}`,
+      `${SERVER_URL}/courses/${courseId}/quizzes/${quizId}/questions/${questionId}`,
       question
     );
   }
@@ -45,7 +45,7 @@ export class QuestionService {
     questionId: number
   ): Observable<void> {
     return this.http.delete<void>(
-      `${url}/courses/${courseId}/quizzes/${quizId}/questions/${questionId}`
+      `${SERVER_URL}/courses/${courseId}/quizzes/${quizId}/questions/${questionId}`
     );
   }
 }

@@ -15,13 +15,13 @@
           <ion-grid>
             <ion-row>
               <ion-col>
-                <ion-button color="success" (click)="acceptClicked(item.id)">
+                <ion-button color="success" (click)="onAcceptClicked(item.id)">
                   <ion-icon name="checkmark-outline"></ion-icon>
                   Accept
                 </ion-button>
               </ion-col>
               <ion-col>
-                <ion-button color="danger" (click)="declineClicked(item.id)">
+                <ion-button color="danger" (click)="onDeclineClicked(item.id)">
                   <ion-icon name="close-outline"></ion-icon>
                   Decline
                 </ion-button>

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SERVER_URL } from 'src/environments/environment';
 import { Submission } from '../model/submission.model';
-import { url } from './api-config';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,7 @@ export class SubmissionService {
     assignmentId: number
   ): Observable<Blob> {
     return this.httpClient.get(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/files`,
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/files`,
       { responseType: 'blob' }
     );
   }
@@ -27,7 +27,7 @@ export class SubmissionService {
     fileId: number
   ): Observable<Blob> {
     return this.httpClient.get(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}/files/${fileId}`,
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${submissionId}/files/${fileId}`,
       { responseType: 'blob' }
     );
   }
@@ -37,7 +37,7 @@ export class SubmissionService {
     assignmentId: number
   ): Observable<Submission[]> {
     return this.httpClient.get<Submission[]>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions`
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`
     );
   }
 
@@ -47,7 +47,7 @@ export class SubmissionService {
     data: FormData
   ): Observable<Submission> {
     return this.httpClient.post<Submission>(
-      `${url}/courses/${courseId}/assignments/${assignmentId}/submissions`,
+      `${SERVER_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`,
       data
     );
   }

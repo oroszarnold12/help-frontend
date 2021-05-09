@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SERVER_URL } from 'src/environments/environment';
 import { QuizSubmission } from '../model/quiz-submission.model';
-import { url } from './api-config';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,7 @@ export class QuizSubmissionService {
     quizId: number
   ): Observable<QuizSubmission[]> {
     return this.http.get<QuizSubmission[]>(
-      `${url}/courses/${courseId}/quizzes/${quizId}/submissions`
+      `${SERVER_URL}/courses/${courseId}/quizzes/${quizId}/submissions`
     );
   }
 
@@ -25,7 +25,7 @@ export class QuizSubmissionService {
     questionSubmissions: any[]
   ): Observable<QuizSubmission[]> {
     return this.http.post<QuizSubmission[]>(
-      `${url}/courses/${courseId}/quizzes/${quizId}/submissions`,
+      `${SERVER_URL}/courses/${courseId}/quizzes/${quizId}/submissions`,
       questionSubmissions
     );
   }

@@ -8,8 +8,8 @@ import {
 import { AlertController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SERVER_URL } from 'src/environments/environment';
 import { Person } from '../model/person.model';
-import { url } from '../shared/api-config';
 import { BackButtonService } from '../shared/back-button.service';
 import { passwordMatchValidator } from '../shared/passwordUtils';
 import { PersonService } from '../shared/person.service';
@@ -122,7 +122,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
           }
         );
     } else {
-      this.toasterService.error('Passwords don\'t match!', 'Please try again!');
+      this.toasterService.error('Passwords do not match!', 'Please try again!');
     }
   }
 
@@ -216,7 +216,7 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
   }
 
   getImageUrl(): string {
-    const newUrl = url + '/user/image' + '?' + new Date().getTime();
+    const newUrl = SERVER_URL + '/user/image' + '?' + new Date().getTime();
     this.personService.setImageUrl(newUrl);
     return newUrl;
   }

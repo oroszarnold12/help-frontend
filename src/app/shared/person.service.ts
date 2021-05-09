@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { SERVER_URL } from 'src/environments/environment';
 import { Person } from '../model/person.model';
 import { ThinPerson } from '../model/thin.person.model';
-import { url } from './api-config';
 
 @Injectable({
   providedIn: 'root',
@@ -15,35 +15,37 @@ export class PersonService {
   constructor(private httpClient: HttpClient) {}
 
   getPersons(): Observable<{ persons: ThinPerson[] }> {
-    return this.httpClient.get<{ persons: ThinPerson[] }>(`${url}/persons`);
+    return this.httpClient.get<{ persons: ThinPerson[] }>(
+      `${SERVER_URL}/persons`
+    );
   }
 
   getPersonsForAdmin(): Observable<{ persons: Person[] }> {
-    return this.httpClient.get<{ persons: Person[] }>(`${url}/persons`);
+    return this.httpClient.get<{ persons: Person[] }>(`${SERVER_URL}/persons`);
   }
 
   updatePerson(person: Person, id: number): Observable<Person> {
-    return this.httpClient.put<Person>(`${url}/persons/${id}`, person);
+    return this.httpClient.put<Person>(`${SERVER_URL}/persons/${id}`, person);
   }
 
   deletePerson(id: number): Observable<void> {
-    return this.httpClient.delete<void>(`${url}/persons/${id}`);
+    return this.httpClient.delete<void>(`${SERVER_URL}/persons/${id}`);
   }
 
   getCurrentUser(): Observable<Person> {
-    return this.httpClient.get<Person>(`${url}/user`);
+    return this.httpClient.get<Person>(`${SERVER_URL}/user`);
   }
 
   changePassword(password: string): Observable<Person> {
-    return this.httpClient.put<Person>(`${url}/user`, { password });
+    return this.httpClient.put<Person>(`${SERVER_URL}/user`, { password });
   }
 
   saveImage(data: FormData): Observable<Person> {
-    return this.httpClient.post<Person>(`${url}/user/image`, data);
+    return this.httpClient.post<Person>(`${SERVER_URL}/user/image`, data);
   }
 
   removeImage(): Observable<void> {
-    return this.httpClient.delete<void>(`${url}/user/image`);
+    return this.httpClient.delete<void>(`${SERVER_URL}/user/image`);
   }
 
   setImageUrl(imageUrl: string): void {
@@ -51,6 +53,6 @@ export class PersonService {
   }
 
   saveNotificationToken(token: string): Observable<void> {
-    return this.httpClient.post<void>(`${url}/notificationToken`, token);
+    return this.httpClient.post<void>(`${SERVER_URL}/notificationToken`, token);
   }
 }

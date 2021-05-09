@@ -8,8 +8,8 @@ import { LoginStatusService } from '../shared/login-status.service';
 import { Router } from '@angular/router';
 import { BackButtonService } from '../shared/back-button.service';
 import { PathService } from '../shared/path.service';
-import { url } from '../shared/api-config';
 import { PersonService } from '../shared/person.service';
+import { SERVER_URL } from 'src/environments/environment';
 
 @Component({
   selector: 'app-topbar',
@@ -36,7 +36,7 @@ export class TopbarComponent implements OnInit {
     private personService: PersonService,
     public backButtonService: BackButtonService
   ) {
-    this.imageUrl = url + '/user/image';
+    this.imageUrl = `${SERVER_URL} + /user/image`;
     this.path = '';
 
     this.subscription = loginStatusService.loggedIn$.subscribe(() => {

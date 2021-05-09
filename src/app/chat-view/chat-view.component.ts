@@ -1,21 +1,14 @@
 import { DatePipe } from '@angular/common';
-import {
-  Component,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AlertController, IonContent, ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
-import { takeUntil, timeInterval } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { SERVER_URL } from 'src/environments/environment';
 import { ConversationMessage } from '../model/conversation-message.model';
 import { Conversation } from '../model/conversation.model';
 import { Person } from '../model/person.model';
 import { ThinPerson } from '../model/thin.person.model';
-import { url } from '../shared/api-config';
 import { ConversationService } from '../shared/conversation.service';
 import { PersonService } from '../shared/person.service';
 import { ToasterService } from '../shared/toaster.service';
@@ -171,7 +164,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   }
 
   getImageUrlById(id: number): string {
-    return url + '/user/' + id + '/image/?' + new Date().getTime();
+    return SERVER_URL + '/user/' + id + '/image/?' + new Date().getTime();
   }
 
   formatDate(date: Date): string {
@@ -180,9 +173,11 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
     if (this.isSameDate(today, date)) {
       return this.datePipe.transform(date, 'HH:mm');
+    } else if (this.isSameDate(yesterday, date)) {
+      return 'Yesterday';
+    } else {
+      return this.datePipe.transform(date, 'MMMM d');
     }
-    else if (this.isSameDate(yesterday, date)) { return 'Yesterday'; }
-    else { return this.datePipe.transform(date, 'MMMM d'); }
   }
 
   isSameDate(d1: Date, d2: Date): boolean {
@@ -247,7 +242,10 @@ export class ChatViewComponent implements OnInit, OnDestroy {
           }
         );
     } else {
-      this.toasterService.error('Message can\'t be empty!', 'Please try again!');
+      this.toasterService.error(
+        'Message can not be empty!',
+        'Please try again!'
+      );
     }
   }
 

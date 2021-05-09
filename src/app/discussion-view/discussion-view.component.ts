@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SERVER_URL } from 'src/environments/environment';
 import { DiscussionFormComponent } from '../course-view/discussion-form/discussion-form.component';
 import { Discussion } from '../model/discussion.model';
-import { url } from '../shared/api-config';
 import { AuthService } from '../shared/auth.service';
 import { BackButtonService } from '../shared/back-button.service';
 import { CommentService } from '../shared/comment.service';
@@ -164,6 +164,6 @@ export class DiscussionViewComponent implements OnInit, OnDestroy {
   }
 
   getImageUrlById(id: number): string {
-    return url + '/user/' + id + '/image/?' + new Date().getTime();
+    return SERVER_URL + '/user/' + id + '/image/?' + new Date().getTime();
   }
 }

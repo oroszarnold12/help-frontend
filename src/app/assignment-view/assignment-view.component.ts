@@ -15,8 +15,8 @@ import { GradeService } from '../shared/grade.service';
 import { SubmissionService } from '../shared/submission.service';
 import { ToasterService } from '../shared/toaster.service';
 import { CommentService } from '../shared/comment.service';
-import { url } from '../shared/api-config';
 import { AssignmentComment } from '../model/assignment-comment.model';
+import { SERVER_URL } from 'src/environments/environment';
 
 @Component({
   selector: 'app-assignment-view',
@@ -424,6 +424,6 @@ export class AssignmentViewComponent implements OnInit, OnDestroy {
   }
 
   getImageUrlById(id: number): string {
-    return url + '/user/' + id + '/image/?' + new Date().getTime();
+    return SERVER_URL + '/user/' + id + '/image/?' + new Date().getTime();
   }
 }

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { SERVER_URL } from 'src/environments/environment';
 import { ConversationMessage } from '../model/conversation-message.model';
 import { Conversation } from '../model/conversation.model';
-import { url } from './api-config';
 
 @Injectable({
   providedIn: 'root',
@@ -15,17 +15,17 @@ export class ConversationService {
   constructor(private httpClient: HttpClient) {}
 
   getConversations(): Observable<Conversation[]> {
-    return this.httpClient.get<Conversation[]>(`${url}/conversations`);
+    return this.httpClient.get<Conversation[]>(`${SERVER_URL}/conversations`);
   }
 
   getConversation(conversationId: number): Observable<Conversation> {
     return this.httpClient.get<Conversation>(
-      `${url}/conversations/${conversationId}`
+      `${SERVER_URL}/conversations/${conversationId}`
     );
   }
 
   saveConversation(emails: string[], name?: string): Observable<Conversation> {
-    return this.httpClient.post<Conversation>(`${url}/conversations/`, {
+    return this.httpClient.post<Conversation>(`${SERVER_URL}/conversations/`, {
       emails,
       name,
     });
@@ -36,7 +36,7 @@ export class ConversationService {
     emails: string[]
   ): Observable<Conversation> {
     return this.httpClient.post<Conversation>(
-      `${url}/conversations/${conversationId}/participants`,
+      `${SERVER_URL}/conversations/${conversationId}/participants`,
       {
         emails,
       }
@@ -48,7 +48,7 @@ export class ConversationService {
     participantId: number
   ): Observable<void> {
     return this.httpClient.delete<void>(
-      `${url}/conversations/${conversationId}/participants/${participantId}`
+      `${SERVER_URL}/conversations/${conversationId}/participants/${participantId}`
     );
   }
 
@@ -57,7 +57,7 @@ export class ConversationService {
     content: string
   ): Observable<ConversationMessage> {
     return this.httpClient.post<ConversationMessage>(
-      `${url}/conversations/${conversationId}/messages`,
+      `${SERVER_URL}/conversations/${conversationId}/messages`,
       {
         content,
       }
@@ -70,7 +70,7 @@ export class ConversationService {
     content: string
   ): Observable<ConversationMessage> {
     return this.httpClient.put<ConversationMessage>(
-      `${url}/conversations/${conversationId}/messages/${messageId}`,
+      `${SERVER_URL}/conversations/${conversationId}/messages/${messageId}`,
       {
         content,
       }
