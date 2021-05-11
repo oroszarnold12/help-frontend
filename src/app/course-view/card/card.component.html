@@ -3,25 +3,26 @@
     <ion-card-header>
       <ion-card-title class="dark-blue">{{ title }}</ion-card-title>
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content class="card-content">
       <ion-item>
         <ion-input [placeholder]="title" (ionChange)="onFilterItems($event)">
           <ion-icon name="search-outline" class="button-icon"></ion-icon>
         </ion-input>
       </ion-item>
-      <ion-item *ngFor="let item of filteredData">
+      <ion-item
+        *ngFor="let item of filteredData"
+        button
+        (click)="onViewClicked(item.id)"
+      >
         <ion-label text-wrap>
           <h2>{{ item.name }}</h2>
           <p>{{ item.description }}</p>
         </ion-label>
-        <ion-buttons slot="end">
-          <ion-button color="success" (click)="onViewClicked(item.id)">
-            <ion-icon name="eye-outline"></ion-icon>
-          </ion-button>
+        <ion-buttons slot="end" class="ion-no-margin">
           <ion-button
             *ngIf="isTeacher || item.creatorUsername === username"
             color="danger"
-            (click)="onDeleteClicked(item.id)"
+            (click)="onDeleteClicked(item.id); $event.stopPropagation()"
           >
             <ion-icon name="trash-outline"></ion-icon>
           </ion-button>
