@@ -1,4 +1,4 @@
-<ion-header *ngIf="!!user" class="header">
+<ion-header *ngIf="!!user" class="header ion-no-border">
   <ion-grid class="header-grid">
     <ion-row>
       <ion-col class="header-col">
@@ -67,7 +67,7 @@
   </ion-grid>
 </ion-header>
 
-<ion-content *ngIf="!!user" #content>
+<ion-content *ngIf="!!user" class="ion-no-border" #content>
   <ion-grid class="grid">
     <ion-row>
       <ion-col class="content-col">
