@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './shared/auth.service';
 import { LocalNotificationService } from './shared/local-notification.service';
 import { FcmService } from './shared/fcm.service';
+import { RetryService } from './shared/retry.service';
 
 @Component({
   selector: 'app-root',
@@ -13,14 +14,19 @@ import { FcmService } from './shared/fcm.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  retryState: boolean;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private authService: AuthService,
     private localNotificationService: LocalNotificationService,
-    private fcmService: FcmService
+    private fcmService: FcmService,
+    private retryService: RetryService
   ) {
+    this.retryState = false;
+
     this.initializeApp();
   }
 
@@ -41,5 +47,9 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+
+    this.retryService.retryState$.subscribe(
+      (retryState) => (this.retryState = retryState)
+    );
   }
 }

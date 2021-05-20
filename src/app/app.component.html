@@ -1,4 +1,5 @@
 <ion-app>
-  <app-topbar></app-topbar>
+  <app-retry-page *ngIf="retryState"></app-retry-page>
+  <app-topbar *ngIf="!retryState"></app-topbar>
   <ion-router-outlet id="main"></ion-router-outlet>
 </ion-app>

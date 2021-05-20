@@ -47,6 +47,7 @@ import { ConversationFormComponent } from './chat-view/conversation-form/convers
 import { TagInputModule } from 'ngx-chips';
 import { ParticipantViewComponent } from './chat-view/participant-view/participant-view.component';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
+import { RetryPageComponent } from './retry-page/retry-page.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
     ChatViewComponent,
     ConversationFormComponent,
     ParticipantViewComponent,
+    RetryPageComponent,
   ],
   entryComponents: [
     CourseFormComponent,

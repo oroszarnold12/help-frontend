@@ -5,11 +5,17 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { AuthService } from '../shared/auth.service';
+import { RetryService } from '../shared/retry.service';
 
 @Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(
+    private retryService: RetryService,
+    private authService: AuthService
+  ) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -21,6 +27,31 @@ export class TokenInterceptor implements HttpInterceptor {
       req = req.clone({ withCredentials: true });
     }
 
-    return next.handle(req);
+    return next.handle(req).pipe(
+      catchError((err: any) => {
+        switch (err.status) {
+          case 0: {
+            this.retryService.showRetryPage();
+            break;
+          }
+          case 401:
+          case 403: {
+            return this.authService.logout();
+          }
+          default: {
+            this.retryService.hideRetryPage();
+          }
+        }
+
+        return EMPTY;
+      }),
+      map((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          this.retryService.hideRetryPage();
+        }
+
+        return res;
+      })
+    );
   }
 }
