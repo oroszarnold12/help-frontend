@@ -101,6 +101,17 @@
               </ion-row>
               <ion-row>
                 <ion-col>
+                  <ion-item>
+                    <ion-label position="stacked">Send Notifications</ion-label>
+                    <ion-toggle
+                      [(ngModel)]="user.sendNotifications"
+                      (ionChange)="onNotificationsSettingsChanged($event)"
+                    ></ion-toggle>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
                   <ion-button
                     *ngIf="!changignPassword"
                     (click)="onChangePasswordClicked()"

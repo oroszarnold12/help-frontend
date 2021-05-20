@@ -6,5 +6,6 @@ export interface Person {
   lastName?: string;
   personGroup?: string;
   email?: string;
+  sendNotifications?: boolean;
   role?: Role;
 }

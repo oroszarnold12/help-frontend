@@ -54,6 +54,12 @@ export class PersonService {
     return this.httpClient.post<void>(`${SERVER_URL}/notificationToken`, token);
   }
 
+  changeNotificationSettings(sendNotifications: boolean): Observable<void> {
+    return this.httpClient.patch<void>(`${SERVER_URL}/user`, {
+      sendNotifications: sendNotifications,
+    });
+  }
+
   getPersonGroups(): Observable<{ personGroups: string[] }> {
     return this.httpClient.get<{ personGroups: string[] }>(
       `${SERVER_URL}/groups`

@@ -35,7 +35,7 @@ export class AppComponent {
       this.authService.pingBackend().subscribe(
         () => {},
         () => {
-          this.authService.logout().subscribe(() => {});
+          this.authService.logout();
         }
       );
     }

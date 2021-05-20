@@ -12,7 +12,6 @@ export class RetryPageComponent implements OnInit {
   ngOnInit() {}
 
   retryClicked(): void {
-    console.log('retry');
     this.authService.pingBackend().subscribe(() => {
       window.location.reload();
     });

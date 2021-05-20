@@ -220,4 +220,23 @@ export class UserDetailsViewComponent implements OnInit, OnDestroy {
     this.personService.setImageUrl(newUrl);
     return newUrl;
   }
+
+  onNotificationsSettingsChanged(event: CustomEvent): void {
+    this.personService
+      .changeNotificationSettings(event.detail.checked)
+      .pipe(takeUntil(this.stop))
+      .subscribe(
+        () => {
+          this.toasterService.success(
+            'Notifications are turned ' +
+              (event.detail.checked ? 'on!' : 'off!'),
+            'Congratualtions!'
+          );
+        },
+        (error) => {
+          this.loadUser();
+          this.toasterService.error(error.error.message, 'Please try again!');
+        }
+      );
+  }
 }
