@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      {{ !!announcement ? "Edit Announcement" : "Add Announcement" }}
+      {{ !!announcement ? 'Edit Announcement' : 'Add Announcement' }}
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
@@ -11,8 +11,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="announcementForm" (ngSubmit)="submitForm()">
+<ion-content>
+  <form
+    [formGroup]="announcementForm"
+    (ngSubmit)="submitForm()"
+    class="padding-8"
+  >
     <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input

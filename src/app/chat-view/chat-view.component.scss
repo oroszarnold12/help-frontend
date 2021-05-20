@@ -85,7 +85,7 @@
 }
 
 .conversation-details {
-  padding: 5px;
+  padding: 0px;
 }
 
 .send-button-col {
@@ -99,4 +99,10 @@
 .header-avatar {
   max-width: 30px;
   max-height: 30px;
+}
+
+.conversation-card-content {
+  padding: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

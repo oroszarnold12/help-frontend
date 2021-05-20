@@ -11,7 +11,7 @@
     <ion-row>
       <ion-col>
         <ion-card class="card ion-no-margin">
-          <ion-card-header>
+          <ion-card-header class="padding-8">
             <ion-card-title>
               <ion-avatar class="avatar">
                 <img
@@ -25,11 +25,11 @@
                 {{ announcement.creator.lastName }}
               </ion-card-subtitle>
               <ion-card-subtitle>
-                {{ announcement.date | date: "medium" }}
+                {{ announcement.date | date: 'medium' }}
               </ion-card-subtitle>
             </ion-card-title>
           </ion-card-header>
-          <ion-card-content class="ion-margin-top">
+          <ion-card-content class="ion-margin-top padding-8">
             <quill-view-html
               [content]="announcement.content"
               theme="snow"
@@ -76,17 +76,17 @@
                     <ion-icon name="trash-outline"></ion-icon>
                   </ion-button>
                 </ion-buttons>
-                <ion-card-subtitle class="dark-blue"
-                  >{{ comment.commenter.firstName }}
-                  {{ comment.commenter.lastName }}
-                </ion-card-subtitle>
                 <ion-card-subtitle>
-                  &nbsp;- {{ comment.date | date: "medium" }}
+                  <ion-text class="dark-blue">
+                    {{ comment.commenter.firstName }}
+                    {{ comment.commenter.lastName }}
+                  </ion-text>
+                  - {{ comment.date | date: 'medium' }}
                 </ion-card-subtitle>
               </ion-item>
             </ion-card-title>
           </ion-card-header>
-          <ion-card-content>
+          <ion-card-content class="ion-no-padding">
             <quill-view-html
               [content]="comment.content"
               theme="snow"

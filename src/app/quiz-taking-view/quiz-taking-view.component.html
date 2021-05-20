@@ -17,13 +17,13 @@
             class="timer"
             [ngClass]="!oneThirdReached ? 'dark-blue' : 'warning'"
           >
-            Time left: {{ timeLeft * 1000 | date: "H:mm:ss":"UTC" }}
+            Time left: {{ timeLeft * 1000 | date: 'H:mm:ss':'UTC' }}
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>
+          <ion-col class="ion-no-padding">
             <ion-card class="card ion-no-margin">
-              <ion-card-header>
+              <ion-card-header class="ion-no-padding">
                 <ion-card-title>
                   <ion-item>
                     <ion-label>
@@ -33,7 +33,7 @@
                   </ion-item>
                 </ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content class="padding-8">
                 <div *ngFor="let answer of question.answers; let j = index">
                   <ion-checkbox [formControlName]="j"> </ion-checkbox>
                   <ion-label>
@@ -65,7 +65,7 @@
               color="success"
               (click)="onSubmitClicked()"
             >
-            <ion-icon name="push-outline" class="button-icon"></ion-icon>
+              <ion-icon name="push-outline" class="button-icon"></ion-icon>
               Submit
             </ion-button>
           </ion-col>

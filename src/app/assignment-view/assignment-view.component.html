@@ -27,7 +27,7 @@
     <ion-row>
       <ion-col>
         <ion-card class="card ion-no-margin">
-          <ion-card-header>
+          <ion-card-header class="padding-8">
             <ion-card-title>
               <div class="inline-block">
                 {{ assignment.name }}
@@ -47,12 +47,12 @@
                     name="push-outline"
                     class="button-icon"
                   ></ion-icon>
-                  {{ isSubmitting ? "Cancel" : "Submit" }}
+                  {{ isSubmitting ? 'Cancel' : 'Submit' }}
                 </ion-button>
               </div>
             </ion-card-title>
             <ion-card-subtitle class="dark-blue">
-              <b>Due:</b> {{ assignment.dueDate | date: "medium" }} |
+              <b>Due:</b> {{ assignment.dueDate | date: 'medium' }} |
               <b>Points:</b>
               {{ assignment.points }}
             </ion-card-subtitle>
@@ -98,7 +98,7 @@
                   *ngFor="let file of submission.files"
                 >
                   {{ file.fileName }} -
-                  {{ submission.date | date: "medium" }}
+                  {{ submission.date | date: 'medium' }}
                   <div *ngIf="submission.date > assignment.dueDate" class="dc">
                     &nbsp;(late)
                   </div>
@@ -122,7 +122,7 @@
               <ng-template #elseTemplate> <p>Not yet graded.</p></ng-template>
             </div>
           </ion-card-header>
-          <ion-card-content class="ion-margin-top">
+          <ion-card-content class="ion-margin-top padding-8">
             <quill-view-html
               [content]="assignment.description"
               theme="snow"
@@ -168,7 +168,7 @@
                     {{ comment.commenter.lastName }}
                   </ion-card-subtitle>
                   <ion-card-subtitle>
-                    &nbsp;- {{ comment.date | date: "medium" }}
+                    &nbsp;- {{ comment.date | date: 'medium' }}
                   </ion-card-subtitle>
                 </ion-item>
               </ion-card-title>

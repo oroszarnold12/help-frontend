@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> {{ !!course ? "Edit Course" : "Add Course" }} </ion-title>
+    <ion-title> {{ !!course ? 'Edit Course' : 'Add Course' }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -9,8 +9,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="courseForm" (ngSubmit)="submitForm()">
+<ion-content>
+  <form [formGroup]="courseForm" (ngSubmit)="submitForm()" class="padding-8">
     <ion-item class="form-group item-radius">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input

@@ -87,7 +87,7 @@
               <ion-card-header>
                 <ion-card-title class="dark-blue"> Grades </ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content class="ion-no-padding">
                 <ng2-smart-table
                   [settings]="gradeTableSettings"
                   [source]="gradeOverviews"
@@ -165,7 +165,7 @@
               <ion-card-header>
                 <ion-card-title class="dark-blue">Files</ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content class="ion-no-padding">
                 <ng2-smart-table
                   [settings]="courseFilesTableSettings"
                   [source]="course.files"
@@ -199,7 +199,7 @@
         <ion-row *ngIf="uploadingCourseFile">
           <ion-col>
             <ion-card class="card ion-no-margin">
-              <ion-card-content>
+              <ion-card-content class="ion-no-padding">
                 <ion-item
                   *ngFor="
                     let item of [].constructor(numOfCourseFiles);
@@ -267,7 +267,7 @@
               <ion-card-header>
                 <ion-card-title class="dark-blue">Description</ion-card-title>
               </ion-card-header>
-              <ion-card-content class="description">
+              <ion-card-content class="description ion-no-padding">
                 <quill-view-html
                   [content]="course.description"
                   theme="snow"
@@ -288,7 +288,7 @@
                   Participants
                 </ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content class="ion-no-padding">
                 <ion-item>
                   <ion-input
                     placeholder="Name"
@@ -317,7 +317,7 @@
                   Available Persons
                 </ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content class="ion-no-padding">
                 <ion-item>
                   <ion-input
                     placeholder="Name"
@@ -359,7 +359,7 @@
                   Inivte By E-mail Addresses
                 </ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content class="ion-no-padding">
                 <ion-item lines="full">
                   <ion-label position="floating">E-mail addresses</ion-label>
                   <ion-textarea
@@ -399,7 +399,7 @@
                   Inivte By Groups
                 </ion-card-title>
               </ion-card-header>
-              <ion-card-content>
+              <ion-card-content class="ion-no-padding">
                 <tag-input
                   [(ngModel)]="groupsToInvite"
                   [identifyBy]="'id'"

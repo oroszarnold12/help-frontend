@@ -4,7 +4,7 @@
       <ion-col>
         <ion-item class="dark-blue title">
           Submissions for {{ assignment.name }}
-          <ion-buttons slot="end">
+          <ion-buttons slot="end" class="ion-no-margin">
             <ion-button (click)="onDownloadAllClicked()" color="tertiary">
               <ion-icon name="download-outline" class="button-icon"></ion-icon>
               Download all
@@ -16,7 +16,7 @@
     <ion-row>
       <ion-col>
         <ion-card class="card ion-no-margin">
-          <ion-card-header>
+          <ion-card-header class="ion-no-padding">
             <ion-card-title>
               <ion-grid class="ion-text-center">
                 <ion-row>
@@ -46,7 +46,7 @@
                           }"
                         >
                           {{
-                            participant.firstName + " " + participant.lastName
+                            participant.firstName + ' ' + participant.lastName
                           }}
                         </ion-select-option>
                       </ion-select>
@@ -70,7 +70,7 @@
               </ion-grid>
             </ion-card-title>
           </ion-card-header>
-          <ion-card-content>
+          <ion-card-content class="ion-no-padding">
             <ion-grid>
               <ion-row>
                 <ion-col class="minw-150">
@@ -83,13 +83,14 @@
                     "
                   >
                     <ion-buttons
+                      class="submission-file-name"
                       [ngClass]="
                         submission.date > assignment.dueDate ? 'late' : ''
                       "
                       *ngFor="let file of submission.files"
                     >
                       {{ file.fileName }} -
-                      {{ submission.date | date: "MMM d, h:mm a" }}
+                      {{ submission.date | date: 'MMM d, h:mm a' }}
                       <div
                         *ngIf="submission.date > assignment.dueDate"
                         class="dc"
@@ -202,17 +203,17 @@
                     <ion-icon name="trash-outline"></ion-icon>
                   </ion-button>
                 </ion-buttons>
-                <ion-card-subtitle class="dark-blue"
-                  >{{ comment.commenter.firstName }}
-                  {{ comment.commenter.lastName }}
-                </ion-card-subtitle>
                 <ion-card-subtitle>
-                  &nbsp;- {{ comment.date | date: "medium" }}
+                  <ion-text class="dark-blue">
+                    {{ comment.commenter.firstName }}
+                    {{ comment.commenter.lastName }}
+                  </ion-text>
+                  - {{ comment.date | date: 'medium' }}
                 </ion-card-subtitle>
               </ion-item>
             </ion-card-title>
           </ion-card-header>
-          <ion-card-content>
+          <ion-card-content class="padding-8">
             <div
               *ngIf="!editingComment[comment.id]"
               [innerHTML]="comment.content"
@@ -266,7 +267,7 @@
     <ion-row>
       <ion-col>
         <ion-card class="comment-card ion-no-margin">
-          <ion-card-content>
+          <ion-card-content class="ion-no-padding">
             <ion-grid>
               <ion-row>
                 <ion-col>

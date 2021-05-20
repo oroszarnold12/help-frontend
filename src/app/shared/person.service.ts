@@ -56,7 +56,7 @@ export class PersonService {
 
   changeNotificationSettings(sendNotifications: boolean): Observable<void> {
     return this.httpClient.patch<void>(`${SERVER_URL}/user`, {
-      sendNotifications: sendNotifications,
+      sendNotifications,
     });
   }
 

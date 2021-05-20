@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-item class="ion-margin item-radius">
+  <ion-item class="margin-8 item-radius">
     <ion-label>Type</ion-label>
     <ion-select
       interface="popover"
@@ -22,7 +22,7 @@
     </ion-select>
   </ion-item>
   <form [formGroup]="conversationFrom">
-    <ion-item class="ion-margin item-radius" *ngIf="groupConversation">
+    <ion-item class="margin-8 item-radius" *ngIf="groupConversation">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input
         type="text"

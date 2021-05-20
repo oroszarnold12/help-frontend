@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      {{ !!discussion ? "Edit Discussion" : "Add Discussion" }}
+      {{ !!discussion ? 'Edit Discussion' : 'Add Discussion' }}
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
@@ -11,8 +11,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="discussionFrom" (ngSubmit)="submitForm()">
+<ion-content>
+  <form
+    [formGroup]="discussionFrom"
+    (ngSubmit)="submitForm()"
+    class="padding-8"
+  >
     <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="name">Name</ion-label>
       <ion-input

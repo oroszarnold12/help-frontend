@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> {{ !!question ? "Edit Question" : "Add Question" }} </ion-title>
+    <ion-title> {{ !!question ? 'Edit Question' : 'Add Question' }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -9,8 +9,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="questionForm" (ngSubmit)="submitForm()">
+<ion-content>
+  <form [formGroup]="questionForm" (ngSubmit)="submitForm()" class="padding-8">
     <ion-item lines="full" class="form-group item-radius">
       <ion-label position="floating" for="points">Points</ion-label>
       <ion-input
