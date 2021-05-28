@@ -72,7 +72,12 @@ export class ConversationFormComponent implements OnInit, OnDestroy {
           this.persons = data.persons;
 
           this.persons.forEach((person) => {
-            person.fullName = person.firstName + ' ' + person.lastName;
+            person.fullName =
+              person.firstName +
+              ' ' +
+              person.lastName +
+              ' - Group: ' +
+              (person.personGroup ? person.personGroup : 'None');
           });
         },
         () => {
