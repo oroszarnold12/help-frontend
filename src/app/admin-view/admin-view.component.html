@@ -19,8 +19,8 @@
               class="ion-text-center"
               [settings]="personsSettings"
               [source]="filteredPersons"
-              (deleteConfirm)="onDeleteConfirm($event)"
-              (editConfirm)="onEditConfirm($event)"
+              (delete)="onDelete($event)"
+              (edit)="onEdit($event)"
             ></ng2-smart-table>
           </ion-card-content>
           <ion-card-content class="ion-text-start padding-8">

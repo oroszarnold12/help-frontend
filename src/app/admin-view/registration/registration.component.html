@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Registration </ion-title>
+    <ion-title> {{ !!person ? 'Edit Profile' : 'Registration' }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -86,33 +86,37 @@
     >
       Group is too long.
     </span>
-    <ion-item lines="full" class="form-group item-radius">
-      <ion-label position="floating" for="email">Email address</ion-label>
-      <ion-input
-        type="email"
-        id="email"
-        name="email"
-        formControlName="email"
-      ></ion-input>
-    </ion-item>
-    <span
-      class="ion-padding-bottom text-danger block"
-      *ngIf="errorControl.email.touched && errorControl.email.errors?.required"
-    >
-      Email address is required.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="errorControl.email.errors?.maxlength"
-    >
-      Email address is too long.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="errorControl.email.errors?.pattern"
-    >
-      Email address is not valid.
-    </span>
+    <ng-container *ngIf="!!!person">
+      <ion-item lines="full" class="form-group item-radius">
+        <ion-label position="floating" for="email">Email address</ion-label>
+        <ion-input
+          type="email"
+          id="email"
+          name="email"
+          formControlName="email"
+        ></ion-input>
+      </ion-item>
+      <span
+        class="ion-padding-bottom text-danger block"
+        *ngIf="
+          errorControl.email.touched && errorControl.email.errors?.required
+        "
+      >
+        Email address is required.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="errorControl.email.errors?.maxlength"
+      >
+        Email address is too long.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="errorControl.email.errors?.pattern"
+      >
+        Email address is not valid.
+      </span>
+    </ng-container>
     <ion-item class="form-group item-radius">
       <ion-label>Role</ion-label>
       <ion-select interface="popover" formControlName="role">
@@ -124,94 +128,100 @@
         </ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item lines="full" class="form-group item-radius">
-      <ion-label position="floating" for="password">Password</ion-label>
-      <ion-input
-        type="password"
-        id="password"
-        name="password"
-        formControlName="password"
-      ></ion-input>
-    </ion-item>
-    <span
-      class="ion-padding-bottom text-danger block"
-      *ngIf="
-        errorControl.password.touched && errorControl.password.errors?.required
-      "
-    >
-      Password is required.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="errorControl.password.errors?.maxlength"
-    >
-      Password is too long.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="errorControl.password.errors?.minlength"
-    >
-      Password is too short.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="
-        errorControl.password.errors?.pattern?.requiredPattern ===
-        '^.*[^A-Za-z0-9].*$'
-      "
-    >
-      Password doesn't contain special character.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="
-        errorControl.password.errors?.pattern?.requiredPattern === '^.*[0-9].*$'
-      "
-    >
-      Password doesn't contain number.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="
-        errorControl.password.errors?.pattern?.requiredPattern === '^.*[a-z].*$'
-      "
-    >
-      Password doesn't contain lowercase.
-    </span>
-    <span
-      class="text-danger ion-padding-bottom block"
-      *ngIf="
-        errorControl.password.errors?.pattern?.requiredPattern === '^.*[A-Z].*$'
-      "
-    >
-      Password doesn't contain uppercase.
-    </span>
-    <ion-item lines="full" class="form-group item-radius">
-      <ion-label position="floating" for="confirmPassword"
-        >Confirm password</ion-label
+    <ng-container *ngIf="!!!person">
+      <ion-item lines="full" class="form-group item-radius">
+        <ion-label position="floating" for="password">Password</ion-label>
+        <ion-input
+          type="password"
+          id="password"
+          name="password"
+          formControlName="password"
+        ></ion-input>
+      </ion-item>
+      <span
+        class="ion-padding-bottom text-danger block"
+        *ngIf="
+          errorControl.password.touched &&
+          errorControl.password.errors?.required
+        "
       >
-      <ion-input
-        type="password"
-        id="confirmPassword"
-        name="confirmPassword"
-        formControlName="confirmPassword"
-      ></ion-input>
-    </ion-item>
-    <span
-      class="ion-padding-bottom text-danger block"
-      *ngIf="
-        errorControl.confirmPassword.touched &&
-        errorControl.confirmPassword.errors?.required
-      "
-    >
-      Confirm password is required.
-    </span>
-    <span
-      class="ion-padding-bottom text-danger block"
-      *ngIf="errorControl.confirmPassword.errors?.passwordMissmatch"
-    >
-      Passwords must match.
-    </span>
+        Password is required.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="errorControl.password.errors?.maxlength"
+      >
+        Password is too long.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="errorControl.password.errors?.minlength"
+      >
+        Password is too short.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="
+          errorControl.password.errors?.pattern?.requiredPattern ===
+          '^.*[^A-Za-z0-9].*$'
+        "
+      >
+        Password doesn't contain special character.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="
+          errorControl.password.errors?.pattern?.requiredPattern ===
+          '^.*[0-9].*$'
+        "
+      >
+        Password doesn't contain number.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="
+          errorControl.password.errors?.pattern?.requiredPattern ===
+          '^.*[a-z].*$'
+        "
+      >
+        Password doesn't contain lowercase.
+      </span>
+      <span
+        class="text-danger ion-padding-bottom block"
+        *ngIf="
+          errorControl.password.errors?.pattern?.requiredPattern ===
+          '^.*[A-Z].*$'
+        "
+      >
+        Password doesn't contain uppercase.
+      </span>
+      <ion-item lines="full" class="form-group item-radius">
+        <ion-label position="floating" for="confirmPassword"
+          >Confirm password</ion-label
+        >
+        <ion-input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          formControlName="confirmPassword"
+        ></ion-input>
+      </ion-item>
+      <span
+        class="ion-padding-bottom text-danger block"
+        *ngIf="
+          errorControl.confirmPassword.touched &&
+          errorControl.confirmPassword.errors?.required
+        "
+      >
+        Confirm password is required.
+      </span>
+      <span
+        class="ion-padding-bottom text-danger block"
+        *ngIf="errorControl.confirmPassword.errors?.passwordMissmatch"
+      >
+        Passwords must match.
+      </span>
+    </ng-container>
     <ion-row>
       <ion-col>
         <ion-button
@@ -221,7 +231,10 @@
           [disabled]="registrationForm.invalid"
         >
           <ion-icon name="reader-outline" class="button-icon"></ion-icon>
-          Register
+          <ng-container *ngIf="!!person; else elseTemplate">
+            Save
+          </ng-container>
+          <ng-template #elseTemplate> Register </ng-template>
         </ion-button>
       </ion-col>
     </ion-row>

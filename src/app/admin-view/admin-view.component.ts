@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
+import { DataSource } from 'ng2-smart-table/lib/lib/data-source/data-source';
 import { NgxCsvParser } from 'ngx-csv-parser';
 import { FileSaverService } from 'ngx-filesaver';
 import { generate, Subject } from 'rxjs';
@@ -28,10 +29,10 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   showErrorMessage: boolean;
   errorMessage: string;
 
-  lowerCase: string = 'abcdefghijklmnopqrstuvwxyz';
-  upperCase: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  numbers: string = '0123456789';
-  symbols: string = '!@#$%^&*_-+=';
+  lowerCase = 'abcdefghijklmnopqrstuvwxyz';
+  upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  numbers = '0123456789';
+  symbols = '!@#$%^&*_-+=';
 
   constructor(
     private personService: PersonService,
@@ -42,6 +43,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     private fileSaverService: FileSaverService
   ) {
     this.personsSettings = {
+      mode: 'external',
       actions: {
         add: false,
         edit: true,
@@ -49,11 +51,9 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         columnTitle: '',
       },
       delete: {
-        confirmDelete: true,
         deleteButtonContent: '<i class="bi bi-trash"></i>',
       },
       edit: {
-        confirmSave: true,
         saveButtonContent: '<i class="bi bi-check2"></i>',
         cancelButtonContent: '<i class="bi bi-x"></i>',
         editButtonContent: '<i class="bi bi-pencil-square"></i>',
@@ -122,7 +122,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       );
   }
 
-  async onDeleteConfirm(event: any): Promise<void> {
+  async onDelete(event: any): Promise<void> {
     const alert = await this.alertController.create({
       header: 'Confirm!',
       message: 'Are you sure that you want to delete this user?',
@@ -144,7 +144,12 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                     'Congratulations!'
                   );
 
-                  event.confirm.resolve();
+                  this.persons = this.persons.filter(
+                    (person) => person.id !== event.data.id
+                  );
+                  this.filteredPersons = this.filteredPersons.filter(
+                    (person) => person.id !== event.data.id
+                  );
                 },
                 (error) => {
                   this.toasterService.error(
@@ -161,23 +166,18 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  onEditConfirm(event: any): void {
-    this.personService
-      .updatePerson(event.newData, event.newData.id)
-      .pipe(takeUntil(this.stop))
-      .subscribe(
-        () => {
-          this.toasterService.success(
-            'Person update successful!',
-            'Congratulations!'
-          );
+  async onEdit(event: any): Promise<void> {
+    const modal = await this.modalController.create({
+      component: RegistrationComponent,
+      cssClass: 'my-custom-modal-css',
+      componentProps: {
+        person: event.data,
+      },
+    });
 
-          event.confirm.resolve();
-        },
-        (error) => {
-          this.toasterService.error(error.error.message, 'Please try again!');
-        }
-      );
+    modal.onDidDismiss().then(() => this.loadPersons());
+
+    await modal.present();
   }
 
   onFilterPersons(event: CustomEvent): void {
@@ -229,7 +229,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.stop))
             .subscribe(
               () => {
-                let registeredUsers: string =
+                let registeredUsers =
                   '   Name               Email           Password\n';
 
                 personsToRegister.forEach((person) => {
@@ -290,7 +290,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     );
 
     for (let i = 0; i < 8; i++) {
-      let type = Math.floor(Math.random() * 4);
+      const type = Math.floor(Math.random() * 4);
 
       switch (type) {
         case 0: {

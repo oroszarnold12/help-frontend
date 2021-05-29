@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -7,22 +7,28 @@ import {
 } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { PersonSignup } from '../../model/person-signup.model';
-import { AuthService } from '../../shared/auth.service';
 import { passwordMatchValidator } from '../../shared/passwordUtils';
 import { ToasterService } from '../../shared/toaster.service';
 import { Role } from '../../model/role.enum';
 import { PersonService } from 'src/app/shared/person.service';
+import { takeUntil } from 'rxjs/operators';
+import { Person } from 'src/app/model/person.model';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss'],
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
+  private stop: Subject<void> = new Subject();
+
   registrationForm: FormGroup;
   personSignup: PersonSignup;
 
   Role = Role;
+
+  @Input() person: Person;
 
   constructor(
     private personService: PersonService,
@@ -32,6 +38,19 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     this.registrationForm = this.createFormGroup();
+
+    if (!!this.person) {
+      this.registrationForm.patchValue(this.person);
+
+      this.registrationForm.removeControl('email');
+      this.registrationForm.removeControl('password');
+      this.registrationForm.removeControl('confirmPassword');
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.stop.next();
+    this.stop.complete();
   }
 
   createFormGroup(): FormGroup {
@@ -80,20 +99,42 @@ export class RegistrationComponent implements OnInit {
 
   submitForm(): void {
     if (this.registrationForm.valid) {
-      this.personSignup = this.registrationForm.value;
+      if (!!this.person) {
+        this.personService
+          .updatePerson(this.registrationForm.value, this.person.id)
+          .pipe(takeUntil(this.stop))
+          .subscribe(
+            () => {
+              this.toasterService.success(
+                'Person update successful!',
+                'Congratulations!'
+              );
 
-      this.personService.savePerson([this.personSignup]).subscribe(
-        () => {
-          this.registrationForm.reset();
-          this.toasterService.success(
-            'Congratulations!',
-            'Registration successful!'
+              this.dismissModal();
+            },
+            (error) => {
+              this.toasterService.error(
+                error.error.message,
+                'Please try again!'
+              );
+            }
           );
-        },
-        (error) => {
-          this.toasterService.error(error.error.message, 'Please try again!');
-        }
-      );
+      } else {
+        this.personSignup = this.registrationForm.value;
+
+        this.personService.savePerson([this.personSignup]).subscribe(
+          () => {
+            this.registrationForm.reset();
+            this.toasterService.success(
+              'Congratulations!',
+              'Registration successful!'
+            );
+          },
+          (error) => {
+            this.toasterService.error(error.error.message, 'Please try again!');
+          }
+        );
+      }
     } else {
       this.toasterService.error(
         'All fields are required!',
