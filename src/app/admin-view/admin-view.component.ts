@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
-import { Subject } from 'rxjs';
+import { NgxCsvParser } from 'ngx-csv-parser';
+import { FileSaverService } from 'ngx-filesaver';
+import { generate, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PersonSignup } from '../model/person-signup.model';
 import { Person } from '../model/person.model';
@@ -27,12 +28,18 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   showErrorMessage: boolean;
   errorMessage: string;
 
+  lowerCase: string = 'abcdefghijklmnopqrstuvwxyz';
+  upperCase: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  numbers: string = '0123456789';
+  symbols: string = '!@#$%^&*_-+=';
+
   constructor(
     private personService: PersonService,
     private alertController: AlertController,
     private toasterService: ToasterService,
     private modalController: ModalController,
-    private ngxCsvParser: NgxCsvParser
+    private ngxCsvParser: NgxCsvParser,
+    private fileSaverService: FileSaverService
   ) {
     this.personsSettings = {
       actions: {
@@ -213,6 +220,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         (results: any[]) => {
           const personsToRegister: PersonSignup[] = [];
           results.forEach((result) => {
+            result.password = this.generatePassword();
             personsToRegister.push(result as PersonSignup);
           });
 
@@ -221,6 +229,26 @@ export class AdminViewComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.stop))
             .subscribe(
               () => {
+                let registeredUsers: string =
+                  '   Name               Email           Password\n';
+
+                personsToRegister.forEach((person) => {
+                  registeredUsers +=
+                    person.firstName +
+                    ' ' +
+                    person.lastName +
+                    ' - ' +
+                    person.email +
+                    ' - ' +
+                    person.password +
+                    '\n';
+                });
+
+                this.fileSaverService.save(
+                  new Blob([registeredUsers]),
+                  'registeredUsers.txt'
+                );
+
                 this.showErrorMessage = false;
                 this.errorMessage = '';
 
@@ -243,5 +271,55 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           this.toasterService.error(error.message, 'Please try again!');
         }
       );
+  }
+
+  generatePassword(): string {
+    let password = '';
+
+    password += this.upperCase.charAt(
+      Math.floor(Math.random() * this.upperCase.length)
+    );
+    password += this.lowerCase.charAt(
+      Math.floor(Math.random() * this.lowerCase.length)
+    );
+    password += this.numbers.charAt(
+      Math.floor(Math.random() * this.numbers.length)
+    );
+    password += this.symbols.charAt(
+      Math.floor(Math.random() * this.symbols.length)
+    );
+
+    for (let i = 0; i < 8; i++) {
+      let type = Math.floor(Math.random() * 4);
+
+      switch (type) {
+        case 0: {
+          password += this.upperCase.charAt(
+            Math.floor(Math.random() * this.upperCase.length)
+          );
+          break;
+        }
+        case 1: {
+          password += this.lowerCase.charAt(
+            Math.floor(Math.random() * this.lowerCase.length)
+          );
+          break;
+        }
+        case 2: {
+          password += this.numbers.charAt(
+            Math.floor(Math.random() * this.numbers.length)
+          );
+          break;
+        }
+        case 3: {
+          password += this.symbols.charAt(
+            Math.floor(Math.random() * this.symbols.length)
+          );
+          break;
+        }
+      }
+    }
+
+    return password;
   }
 }
