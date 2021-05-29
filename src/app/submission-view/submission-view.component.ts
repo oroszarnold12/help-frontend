@@ -28,8 +28,10 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
   submissions: Submission[];
   assignment: Assignment;
   participants: Person[];
+  filteredParticipants: Person[];
   grades: number[] = [];
   gradesObject: AssignmentGrade[] = [];
+  newGrades: number[] = [];
 
   courseId: number;
   assingmentId: number;
@@ -102,6 +104,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       .subscribe(
         (participants) => {
           this.participants = participants;
+          this.filteredParticipants = participants;
         },
         (error) => {
           this.toasterService.error(
@@ -187,7 +190,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
               )
               .pipe(takeUntil(this.stop))
               .subscribe(
-                (comment) => {
+                () => {
                   this.toasterService.success(
                     'Grade with comment saved successfully!',
                     'Congratulations!'
@@ -212,6 +215,7 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.toasterService.error(error.error.message, 'Please try again!');
+          this.loadGrades();
         }
       );
   }
@@ -239,9 +243,8 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
       (participant) => participant.id === this.studentSelector.value.id
     );
 
-    this.studentSelector.value = this.participants[
-      (index + 1) % this.participants.length
-    ];
+    this.studentSelector.value =
+      this.participants[(index + 1) % this.participants.length];
   }
 
   onPreviousClicked(): void {
@@ -414,5 +417,33 @@ export class SubmissionViewComponent implements OnInit, OnDestroy {
     return this.assignment.comments.filter((comment) => {
       return comment.recipient.id === submitterId;
     });
+  }
+
+  onGradeChangedInTable(studentId: number, event: CustomEvent): void {
+    this.newGrades[studentId] = Number(event.detail.value);
+  }
+
+  onGradeLostFocusInTable(studentId: number, studentEmail: string): void {
+    if (this.newGrades[studentId] !== this.grades[studentId]) {
+      this.grades[studentId] = this.newGrades[studentId];
+      this.grade(studentEmail, studentId);
+    }
+  }
+
+  onFilterParticipants(event: CustomEvent): void {
+    if (event.detail.value !== '') {
+      this.filteredParticipants = this.participants.filter((participant) => {
+        return (
+          participant.firstName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase()) ||
+          participant.lastName
+            .toLowerCase()
+            .includes(String(event.detail.value).toLowerCase())
+        );
+      });
+    } else {
+      this.filteredParticipants = this.participants;
+    }
   }
 }

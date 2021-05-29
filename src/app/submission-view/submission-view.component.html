@@ -14,293 +14,345 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
-        <ion-card class="card ion-no-margin">
-          <ion-card-header class="ion-no-padding">
-            <ion-card-title>
-              <ion-grid class="ion-text-center">
-                <ion-row>
-                  <ion-col class="tac">
-                    <ion-item class="student-selector">
-                      <ion-label>Student</ion-label>
-                      <ion-select
-                        [compareWith]="compareWith"
-                        interface="popover"
-                        #student
-                        [value]="participants[0]"
-                        [ngClass]="{
-                          'not-graded':
-                            getSubmissionsBySubmitterId(student.value.id)
-                              .length > 0 && !!!grades[student.value.id],
-                          graded: !!grades[student.value.id]
-                        }"
-                      >
-                        <ion-select-option
-                          *ngFor="let participant of participants"
-                          [value]="participant"
+      <ion-col class="no-padding-bottom">
+        <ion-segment value="single" #view class="segment">
+          <ion-segment-button value="single">
+            <ion-label>Single view</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="table">
+            <ion-label>Table view</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+    </ion-row>
+    <ng-container *ngIf="view.value === 'single'">
+      <ion-row>
+        <ion-col class="no-padding-top">
+          <ion-card class="card ion-no-margin no-top-radius">
+            <ion-card-header class="ion-no-padding">
+              <ion-card-title>
+                <ion-grid class="ion-text-center">
+                  <ion-row>
+                    <ion-col class="tac">
+                      <ion-item class="student-selector">
+                        <ion-label>Student</ion-label>
+                        <ion-select
+                          [compareWith]="compareWith"
+                          interface="popover"
+                          #student
+                          [value]="participants[0]"
                           [ngClass]="{
                             'not-graded':
-                              getSubmissionsBySubmitterId(participant.id)
-                                .length > 0 && !!!grades[participant.id],
-                            graded: !!grades[participant.id]
+                              getSubmissionsBySubmitterId(student.value.id)
+                                .length > 0 && !!!grades[student.value.id],
+                            graded: !!grades[student.value.id]
                           }"
                         >
-                          {{
-                            participant.firstName + ' ' + participant.lastName
-                          }}
-                        </ion-select-option>
-                      </ion-select>
-                    </ion-item>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-button (click)="onPreviousClicked()">
-                      <ion-icon name="caret-back-outline"></ion-icon>
-                      Previous
-                    </ion-button>
-                  </ion-col>
-                  <ion-col>
-                    <ion-button (click)="onNextClicked()">
-                      Next
-                      <ion-icon name="caret-forward-outline"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content class="ion-no-padding">
-            <ion-grid>
-              <ion-row>
-                <ion-col class="minw-150">
-                  <ion-row> Submitted files: </ion-row>
-                  <ng-container
-                    *ngFor="
-                      let submission of getSubmissionsBySubmitterId(
-                        student.value.id
-                      )
-                    "
-                  >
-                    <ion-buttons
-                      class="submission-file-name"
-                      [ngClass]="
-                        submission.date > assignment.dueDate ? 'late' : ''
-                      "
-                      *ngFor="let file of submission.files"
-                    >
-                      {{ file.fileName }} -
-                      {{ submission.date | date: 'MMM d, h:mm a' }}
-                      <div
-                        *ngIf="submission.date > assignment.dueDate"
-                        class="dc"
-                      >
-                        &nbsp;(late by
-                        {{
-                          getDifferenceInDays(
-                            submission.date,
-                            assignment.dueDate
-                          )
-                        }})
-                      </div>
-                      <ion-button
-                        (click)="
-                          onSubmissionClicked(
-                            submission.id,
-                            file.fileName,
-                            file.id
-                          )
-                        "
-                      >
-                        <ion-icon
-                          class="dark-blue"
-                          name="download-outline"
-                        ></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </ng-container>
-                  <ion-row>
-                    <ion-col size="6">
-                      <form #gradeFrom="ngForm">
-                        <ion-item lines="full" class="form-group">
-                          <ion-label position="floating" for="grade">
-                            Enter grade
-                          </ion-label>
-                          <ion-input
-                            type="number"
-                            id="points"
-                            name="grade"
-                            [(ngModel)]="grades[student.value.id]"
-                            required
-                          ></ion-input>
-                        </ion-item>
-                        <ion-text class="max-points">
-                          out of {{ assignment.points }}
-                        </ion-text>
-                      </form>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col>
-                      <ion-item
-                        lines="full"
-                        class="form-group my-input-padding"
-                      >
-                        <ion-textarea
-                          type="text"
-                          [(ngModel)]="uploadCommentContent"
-                          rows="4"
-                          placeholder="Type comment here..."
-                          maxlength="2048"
-                        ></ion-textarea>
+                          <ion-select-option
+                            *ngFor="let participant of participants"
+                            [value]="participant"
+                            [ngClass]="{
+                              'not-graded':
+                                getSubmissionsBySubmitterId(participant.id)
+                                  .length > 0 && !!!grades[participant.id],
+                              graded: !!grades[participant.id]
+                            }"
+                          >
+                            {{
+                              participant.firstName + ' ' + participant.lastName
+                            }}
+                          </ion-select-option>
+                        </ion-select>
                       </ion-item>
                     </ion-col>
                   </ion-row>
                   <ion-row>
-                    <ion-col class="ion-align-self-end">
-                      <ion-button
-                        color="success"
-                        [disabled]="!gradeFrom.form.valid"
-                        (click)="grade(student.value.email, student.value.id)"
-                      >
-                        <ion-icon name="ribbon-outline"></ion-icon>
-                        Grade
+                    <ion-col>
+                      <ion-button (click)="onPreviousClicked()">
+                        <ion-icon name="caret-back-outline"></ion-icon>
+                        Previous
+                      </ion-button>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button (click)="onNextClicked()">
+                        Next
+                        <ion-icon name="caret-forward-outline"></ion-icon>
                       </ion-button>
                     </ion-col>
                   </ion-row>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-    <ion-row class="comment-row"> Comments: </ion-row>
-    <ion-row *ngFor="let comment of getComments(student.value.id)">
-      <ion-col>
-        <ion-card class="comment-card ion-no-margin">
-          <ion-card-header class="ion-no-padding">
-            <ion-card-title>
-              <ion-item>
-                <ion-avatar class="avatar" slot="start">
-                  <img
-                    [src]="commentImageUrls[comment.commenter.id]"
-                    onerror="this.src='assets/icon/account-icon.png'"
-                  />
-                </ion-avatar>
-                <ion-buttons
-                  slot="end"
-                  *ngIf="comment.commenter.email === username"
-                  class="ion-no-margin"
-                >
-                  <ion-button color="primary" (click)="onEditClicked(comment)">
-                    <ion-icon name="create-outline"></ion-icon>
-                  </ion-button>
-                  <ion-button
-                    color="danger"
-                    (click)="onDeleteClicked(comment.id)"
+                </ion-grid>
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding">
+              <ion-grid>
+                <ion-row>
+                  <ion-col class="minw-150">
+                    <ion-row> Submitted files: </ion-row>
+                    <ng-container
+                      *ngFor="
+                        let submission of getSubmissionsBySubmitterId(
+                          student.value.id
+                        )
+                      "
+                    >
+                      <ion-buttons
+                        class="submission-file-name"
+                        [ngClass]="
+                          submission.date > assignment.dueDate ? 'late' : ''
+                        "
+                        *ngFor="let file of submission.files"
+                      >
+                        {{ file.fileName }} -
+                        {{ submission.date | date: 'MMM d, h:mm a' }}
+                        <div
+                          *ngIf="submission.date > assignment.dueDate"
+                          class="dc"
+                        >
+                          &nbsp;(late by
+                          {{
+                            getDifferenceInDays(
+                              submission.date,
+                              assignment.dueDate
+                            )
+                          }})
+                        </div>
+                        <ion-button
+                          (click)="
+                            onSubmissionClicked(
+                              submission.id,
+                              file.fileName,
+                              file.id
+                            )
+                          "
+                        >
+                          <ion-icon
+                            class="dark-blue"
+                            name="download-outline"
+                          ></ion-icon>
+                        </ion-button>
+                      </ion-buttons>
+                    </ng-container>
+                    <ion-row>
+                      <ion-col size="6">
+                        <form #gradeFrom="ngForm">
+                          <ion-item lines="full" class="form-group">
+                            <ion-label position="floating" for="grade">
+                              Enter grade
+                            </ion-label>
+                            <ion-input
+                              type="number"
+                              id="points"
+                              name="grade"
+                              [(ngModel)]="grades[student.value.id]"
+                              required
+                            ></ion-input>
+                          </ion-item>
+                          <ion-text class="max-points">
+                            out of {{ assignment.points }}
+                          </ion-text>
+                        </form>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col>
+                        <ion-item
+                          lines="full"
+                          class="form-group my-input-padding"
+                        >
+                          <ion-textarea
+                            type="text"
+                            [(ngModel)]="uploadCommentContent"
+                            rows="4"
+                            placeholder="Type comment here..."
+                            maxlength="2048"
+                          ></ion-textarea>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col class="ion-align-self-end">
+                        <ion-button
+                          color="success"
+                          [disabled]="!gradeFrom.form.valid"
+                          (click)="grade(student.value.email, student.value.id)"
+                        >
+                          <ion-icon name="ribbon-outline"></ion-icon>
+                          Grade
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row class="comment-row"> Comments: </ion-row>
+      <ion-row *ngFor="let comment of getComments(student.value.id)">
+        <ion-col>
+          <ion-card class="comment-card ion-no-margin">
+            <ion-card-header class="ion-no-padding">
+              <ion-card-title>
+                <ion-item>
+                  <ion-avatar class="avatar" slot="start">
+                    <img
+                      [src]="commentImageUrls[comment.commenter.id]"
+                      onerror="this.src='assets/icon/account-icon.png'"
+                    />
+                  </ion-avatar>
+                  <ion-buttons
+                    slot="end"
+                    *ngIf="comment.commenter.email === username"
+                    class="ion-no-margin"
                   >
-                    <ion-icon name="trash-outline"></ion-icon>
-                  </ion-button>
-                </ion-buttons>
-                <ion-card-subtitle>
-                  <ion-text class="dark-blue">
-                    {{ comment.commenter.firstName }}
-                    {{ comment.commenter.lastName }}
-                  </ion-text>
-                  - {{ comment.date | date: 'medium' }}
-                </ion-card-subtitle>
-              </ion-item>
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content class="padding-8">
-            <div
-              *ngIf="!editingComment[comment.id]"
-              [innerHTML]="comment.content"
-            ></div>
-            <ion-grid *ngIf="editingComment[comment.id]">
-              <ion-row>
-                <ion-col>
-                  <ion-item lines="full" class="form-group my-input-padding">
-                    <ion-textarea
-                      type="text"
-                      [(ngModel)]="updateCommentContent"
-                      rows="4"
-                      placeholder="Type comment here..."
-                      maxlength="2048"
-                    ></ion-textarea>
-                  </ion-item>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col class="ion-align-self-end">
-                  <ion-button
-                    (click)="onUpdateClicked(comment.id)"
-                    [disabled]="!!!updateCommentContent"
-                  >
-                    <ion-icon
-                      name="save-outline"
-                      class="button-icon"
-                    ></ion-icon>
-                    Save
-                  </ion-button>
-                </ion-col>
-                <ion-col class="ion-text-end">
-                  <ion-button
-                    color="danger"
-                    (click)="onCancelClicked(comment.id)"
-                    [disabled]="!!!updateCommentContent"
-                  >
-                    <ion-icon
-                      name="close-outline"
-                      class="button-icon"
-                    ></ion-icon>
-                    Cancel
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-card class="comment-card ion-no-margin">
-          <ion-card-content class="ion-no-padding">
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <ion-item lines="full" class="form-group my-input-padding">
-                    <ion-textarea
-                      type="text"
-                      [(ngModel)]="simpleCommentContent"
-                      rows="4"
-                      placeholder="Type comment here..."
-                      maxlength="2048"
-                    ></ion-textarea>
-                  </ion-item>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col class="ion-align-self-end">
-                  <ion-button
-                    color="success"
-                    [disabled]="!!!simpleCommentContent"
-                    (click)="onLeaveCommentClicked(student.value.email)"
-                  >
-                    <ion-icon
-                      name="chatbox-ellipses-outline"
-                      class="button-icon"
-                    ></ion-icon>
-                    Leave comment
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
+                    <ion-button
+                      color="primary"
+                      (click)="onEditClicked(comment)"
+                    >
+                      <ion-icon name="create-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button
+                      color="danger"
+                      (click)="onDeleteClicked(comment.id)"
+                    >
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                  <ion-card-subtitle>
+                    <ion-text class="dark-blue">
+                      {{ comment.commenter.firstName }}
+                      {{ comment.commenter.lastName }}
+                    </ion-text>
+                    - {{ comment.date | date: 'medium' }}
+                  </ion-card-subtitle>
+                </ion-item>
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="padding-8">
+              <div
+                *ngIf="!editingComment[comment.id]"
+                [innerHTML]="comment.content"
+              ></div>
+              <ion-grid *ngIf="editingComment[comment.id]">
+                <ion-row>
+                  <ion-col>
+                    <ion-item lines="full" class="form-group my-input-padding">
+                      <ion-textarea
+                        type="text"
+                        [(ngModel)]="updateCommentContent"
+                        rows="4"
+                        placeholder="Type comment here..."
+                        maxlength="2048"
+                      ></ion-textarea>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-align-self-end">
+                    <ion-button
+                      (click)="onUpdateClicked(comment.id)"
+                      [disabled]="!!!updateCommentContent"
+                    >
+                      <ion-icon
+                        name="save-outline"
+                        class="button-icon"
+                      ></ion-icon>
+                      Save
+                    </ion-button>
+                  </ion-col>
+                  <ion-col class="ion-text-end">
+                    <ion-button
+                      color="danger"
+                      (click)="onCancelClicked(comment.id)"
+                      [disabled]="!!!updateCommentContent"
+                    >
+                      <ion-icon
+                        name="close-outline"
+                        class="button-icon"
+                      ></ion-icon>
+                      Cancel
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-card class="comment-card ion-no-margin">
+            <ion-card-content class="ion-no-padding">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-item lines="full" class="form-group my-input-padding">
+                      <ion-textarea
+                        type="text"
+                        [(ngModel)]="simpleCommentContent"
+                        rows="4"
+                        placeholder="Type comment here..."
+                        maxlength="2048"
+                      ></ion-textarea>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-align-self-end">
+                    <ion-button
+                      color="success"
+                      [disabled]="!!!simpleCommentContent"
+                      (click)="onLeaveCommentClicked(student.value.email)"
+                    >
+                      <ion-icon
+                        name="chatbox-ellipses-outline"
+                        class="button-icon"
+                      ></ion-icon>
+                      Leave comment
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+    <ng-container *ngIf="view.value === 'table'">
+      <ion-card class="card ion-no-margin">
+        <ion-card-header>
+          <ion-item>
+            <ion-input
+              placeholder="Name"
+              (ionChange)="onFilterParticipants($event)"
+            >
+              <ion-icon name="search-outline" class="button-icon"></ion-icon>
+            </ion-input>
+          </ion-item>
+        </ion-card-header>
+        <ion-card-content class="padding-8">
+          <ion-row class="table-header">
+            <ion-col class="border ion-padding"> Student </ion-col>
+            <ion-col class="border ion-padding"> Grade </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let student of filteredParticipants">
+            <ion-col class="border ion-padding">
+              {{ student.firstName }} {{ student.lastName }}
+            </ion-col>
+            <ion-col class="border ion-padding">
+              <ion-input
+                type="number"
+                name="grade"
+                class="ion-no-padding"
+                [ngModel]="grades[student.id]"
+                (ionBlur)="onGradeLostFocusInTable(student.id, student.email)"
+                (ionChange)="onGradeChangedInTable(student.id, $event)"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
   </ion-grid>
 </ion-content>

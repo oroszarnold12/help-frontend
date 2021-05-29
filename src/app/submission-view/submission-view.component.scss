@@ -27,6 +27,10 @@
   text-align: start;
 }
 
+.segment {
+  max-width: 1000px;
+}
+
 .minw-150 {
   min-width: 150px;
 }
@@ -82,4 +86,23 @@
 
 .submission-file-name {
   overflow-wrap: anywhere;
+}
+
+.no-padding-top {
+  padding-top: 0px;
+}
+
+.no-padding-bottom {
+  padding-bottom: 0px;
+}
+
+.table-header {
+  font-size: medium;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ion-color-dark);
+}
+
+.border {
+  border: 2px solid var(--ion-color-medium-shade);
 }
