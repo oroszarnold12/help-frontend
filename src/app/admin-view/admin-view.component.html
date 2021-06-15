@@ -4,7 +4,7 @@
       <ion-col>
         <ion-card class="card ion-no-margin">
           <ion-card-header>
-            <ion-card-title> Registered users </ion-card-title>
+            <ion-card-title> Created users </ion-card-title>
           </ion-card-header>
           <ion-card-content class="ion-no-padding">
             <ion-item>
@@ -25,7 +25,7 @@
           </ion-card-content>
           <ion-card-content class="ion-text-start padding-8">
             <ion-label>
-              Register mutliple persons with csv file(header:
+              Create mutliple persons with csv file(header:
               firstName,lastName,personGroup,email,role)
             </ion-label>
             <ion-item>
@@ -39,7 +39,7 @@
                   color="success"
                   [disabled]="!!!file"
                 >
-                  Register
+                  Create
                 </ion-button>
               </ion-buttons>
             </ion-item>
@@ -56,7 +56,7 @@
       <ion-col class="ion-text-end">
         <ion-button (click)="presentRegistrationModal()">
           <ion-icon name="reader-outline" class="button-icon"></ion-icon>
-          Registrate one person
+          Create one person
         </ion-button>
       </ion-col>
     </ion-row>

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> {{ !!person ? 'Edit Profile' : 'Registration' }} </ion-title>
+    <ion-title> {{ !!person ? 'Edit Profile' : 'Create' }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismissModal()">
         <ion-icon name="close-outline"></ion-icon>
@@ -234,7 +234,7 @@
           <ng-container *ngIf="!!person; else elseTemplate">
             Save
           </ng-container>
-          <ng-template #elseTemplate> Register </ng-template>
+          <ng-template #elseTemplate> Create </ng-template>
         </ion-button>
       </ion-col>
     </ion-row>

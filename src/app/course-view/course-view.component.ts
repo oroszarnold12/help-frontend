@@ -1124,13 +1124,13 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   async onKickParticipantClicked(event: any): Promise<void> {
     if (event.data.email === this.authService.getUsername()) {
       this.toasterService.error(
-        'You can not kick yourself!',
+        'You can not exclude yourself!',
         'Choose another participant!'
       );
     } else {
       const alert = await this.alertController.create({
         header: 'Confirm!',
-        message: 'Are you sure that you want to kick this student?',
+        message: 'Are you sure that you want to exclude this person?',
         buttons: [
           {
             text: 'Cancel',
@@ -1145,7 +1145,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
                 .subscribe(
                   () => {
                     this.toasterService.success(
-                      'Participant kicked successfuly!',
+                      'Participant excluded successfuly!',
                       'Congratulations!'
                     );
 

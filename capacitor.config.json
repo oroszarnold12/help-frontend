@@ -1,6 +1,6 @@
 {
-  "appId": "bbte.styoudent.frontend",
-  "appName": "styoudent-frontend",
+  "appId": "com.help.frontend",
+  "appName": "help-frontend",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
@@ -9,11 +9,7 @@
       "launchShowDuration": 0
     },
     "PushNotifications": {
-      "presentationOptions": [
-        "badge",
-        "sound",
-        "alert"
-      ]
+      "presentationOptions": ["badge", "sound", "alert"]
     }
   },
   "cordova": {}
